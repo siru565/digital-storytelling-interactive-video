@@ -1,11 +1,18 @@
 # 디지털스토리텔링 인터랙티브 비디오 제작용
 
 웹 기반 **인터랙티브 비디오(분기형 영상 게임) 엔진** 프로토타입입니다. 디지털스토리텔링 과목 과제로 제작했습니다.
+
+🔗 **[웹에서 바로 열기](https://siru565.github.io/digital-storytelling-interactive-video/)**
 영상을 넣고, 선택지로 장면을 이어서, 플레이어와 영상을 폴더째 내보낼 수 있습니다.
 
-## 실행
+## 바로 실행하기
 
-`index.html`을 브라우저(Chrome·Edge 권장)로 열면 편집기가 실행됩니다.
+**▶ [https://siru565.github.io/digital-storytelling-interactive-video/](https://siru565.github.io/digital-storytelling-interactive-video/)**
+
+설치 없이 위 링크를 열면 편집기가 실행됩니다 (Chrome·Edge 권장).
+만든 영상과 프로젝트는 각자 브라우저에 저장되므로, 팀원과 주고받을 때는 **내보내기(zip) → 불러오기**를 사용하세요.
+
+로컬에서 실행하려면 저장소를 내려받아 `index.html`을 브라우저로 열면 됩니다.
 
 ## 구조
 
