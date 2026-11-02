@@ -252,11 +252,26 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 
 /* 영상 보관함 패널 */
 .lib-list{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-.lib-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
-.lib-row .nm{font:13px var(--f-mono);word-break:break-all}
-.lib-row .use{font-size:12px;color:var(--mute)}
+.lib-row{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:4px 10px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.lib-row.on{border-color:var(--accent-ink);background:var(--accent-soft)}
+.lib-ck{grid-row:span 2;display:grid;place-items:center;padding:4px;cursor:pointer}
+.lib-ck input{width:16px;height:16px;cursor:pointer}
+.lib-th{grid-row:span 2;width:72px;height:41px;object-fit:cover;border-radius:5px;background:var(--monitor);display:block}
+.lib-info{min-width:0;display:flex;flex-direction:column;gap:2px}
+.lib-name{display:flex;align-items:center;min-width:0;border:1px solid transparent;border-radius:5px;padding:1px 4px;margin-left:-5px}
+.lib-name:hover{border-color:var(--line2)}
+.lib-name:focus-within{border-color:var(--accent-ink);background:var(--bg)}
+.lib-rn{min-width:3ch;max-width:100%;field-sizing:content;background:none;border:0;outline:none;font:600 13px var(--f-mono);padding:2px 0}
+.lib-name .ext{font:13px var(--f-mono);color:var(--dim)}
+.lib-row .use{font-size:12px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lib-row .use.none{color:var(--danger)}
-.lib-row .sz{font:12px var(--f-mono);color:var(--mute);white-space:nowrap}
+.lib-row .sz{font-family:var(--f-mono);color:var(--dim)}
+.lib-act{grid-column:3;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.lib-act .x{width:28px;height:28px;border-radius:6px;background:none;border:1px solid transparent;color:var(--mute);font-size:17px;line-height:1}
+.lib-act .x:hover{border-color:var(--line2);color:var(--danger)}
+.lib-act .x.armed{background:var(--danger);color:#fff;width:auto;padding:0 8px;font-size:12px}
+.btn:disabled{opacity:.45;cursor:default}
+@media (max-width:560px){.lib-th{display:none}.lib-row{grid-template-columns:auto minmax(0,1fr)}.lib-act{grid-column:2}}
 
 /* 점수 변수 패널 */
 .vp{display:flex;flex-direction:column;gap:14px}
@@ -547,12 +562,6 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .msg{font-size:13px;color:var(--mute)}
 .msg.bad{color:var(--danger)}
-.lib-list{display:flex;flex-direction:column;gap:6px;max-height:44vh;overflow:auto}
-.lib-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
-.lib-row .nm{font:13px var(--f-mono);word-break:break-all}
-.lib-row .use{font-size:12px;color:var(--mute)}
-.lib-row .use.none{color:var(--danger)}
-.lib-row .sz{font:12px var(--f-mono);color:var(--mute);white-space:nowrap}
 .toast{pointer-events:none;position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line2);border-left:3px solid var(--branch);color:var(--fg);padding:9px 16px;border-radius:8px;font-size:14px;z-index:60;max-width:calc(100% - 32px)}
 .toast.bad{border-left-color:var(--danger)}
 @media (max-width:560px){.seg2,.row2,.ch-grid{grid-template-columns:1fr}.ch-row2,.ch details{padding-left:0}}
@@ -693,11 +702,13 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
   <section class="panel" data-panel="library" data-title="영상 보관함">
     <div class="ptool">
       <label class="btn sm primary">영상 추가<input type="file" accept="video/*" id="libAdd" multiple hidden></label>
-      <button class="btn sm danger" id="libClean">안 쓰는 영상 정리</button>
+      <button class="btn sm" id="libAll">모두 선택</button>
+      <button class="btn sm" id="libUnused" title="어느 장면에서도 안 쓰는 영상만 골라요">안 쓰는 영상 고르기</button>
+      <button class="btn sm danger" id="libDelSel" disabled>선택한 영상 삭제</button>
       <span class="msg" id="libMsg"></span>
     </div>
     <div class="pscroll">
-      <p class="hint">이 브라우저에 저장된 영상이에요. 새로고침해도 남아 있고, 여러 장면에서 같은 영상을 골라 쓸 수 있어요.</p>
+      <p class="hint">이 브라우저에 저장된 영상이에요. 이름 칸을 눌러 파일 이름을 바꿀 수 있고(쓰는 장면도 함께 바뀌어요), 체크해서 여러 개를 한 번에 지울 수 있어요. <b>이 장면에 넣기</b>는 지금 고른 장면에 바로 연결해요.</p>
       <div class="lib-list" id="libList"></div>
     </div>
   </section>
@@ -1385,11 +1396,11 @@ function usedVideos(){return[...new Set(Object.values(P.scenes).filter(s=>s.medi
 const PANELS={};
 document.querySelectorAll('#panelStore [data-panel]').forEach(p=>PANELS[p.dataset.panel]=p);
 const PRESETS={
-  edit:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:30,R:27,T:52},
+  edit:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:30,R:27,T:66},
   link:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:30,R:24,T:38},
   watch:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:22,R:24,T:64}
 };
-const LKEY='dsiv-layout-v3',ws=$('ws');
+const LKEY='dsiv-layout-v4',ws=$('ws');
 function cloneLayout(k){const p=PRESETS[k];return{slots:JSON.parse(JSON.stringify(p.slots)),L:p.L,R:p.R,T:p.T,H:LY?.H,active:{},preset:k}}
 function validLayout(l){
   if(!l||!l.slots)return false;
@@ -1763,6 +1774,7 @@ function selectScene(id,choiceIdx){
   }
 }
 function cuePreview(id){
+  renderLib();
   if(placing||!$('pvFollow')?.checked||!P.scenes[id])return;
   if(engine.cur&&engine.cur.scene.id===id&&cover.hidden)return;   // 이미 그 장면이면 그대로 둡니다
   cover.hidden=true;engine.cue(id);
@@ -2321,30 +2333,83 @@ $('jApply').onclick=()=>{
   catch(e){$('jMsg').textContent='JSON 형식이 맞지 않아요. scenes와 start가 있어야 해요.';$('jMsg').className='msg bad'}
 };
 
-/* --- 영상 보관함 --- */
+/* --- 영상 보관함 ---------------------------------------------------------
+   · 체크해서 여러 개 골라 삭제, 이름 칸을 고쳐서 파일 이름 바꾸기
+   · "이 장면에 넣기"로 지금 고른 장면에 바로 연결
+   -------------------------------------------------------------------- */
+const libSel=new Set();
 function usersOf(name){return Object.values(P.scenes).filter(s=>s.media?.type==='file'&&s.media.name===name)}
+function splitExt(n){const m=n.match(/^(.*?)(\.[A-Za-z0-9]{1,5})?$/);return[m[1],m[2]||'']}
 function renderLib(){
   const names=Library.names();
-  $('libList').innerHTML=names.length?names.map(n=>{const u=usersOf(n);
-    return`<div class="lib-row" data-name="${esc(n)}"><div><div class="nm">${esc(n)}</div>
-      <div class="use ${u.length?'':'none'}">${u.length?'사용 중: '+u.map(s=>esc(s.title)).join(', '):'어느 장면에서도 안 쓰는 중'}</div></div>
-      <span class="sz">${fmtSize(Library.blobs.get(n)?.size)}</span><button class="btn sm danger" data-del>삭제</button></div>`}).join('')
+  [...libSel].forEach(n=>{if(!Library.has(n))libSel.delete(n)});
+  const cur=P.scenes[sel];
+  $('libList').innerHTML=names.length?names.map(n=>{
+    const u=usersOf(n),[base,ext]=splitExt(n),on=libSel.has(n),here=cur&&cur.media?.type==='file'&&cur.media.name===n;
+    return`<div class="lib-row ${on?'on':''}" data-name="${esc(n)}">
+      <label class="lib-ck" title="선택"><input type="checkbox" class="lib-sel" ${on?'checked':''} aria-label="${esc(n)} 선택"></label>
+      <video class="lib-th" src="${Library.urls.get(n)}#t=0.1" muted preload="metadata" playsinline></video>
+      <div class="lib-info">
+        <div class="lib-name"><input class="lib-rn" value="${esc(base)}" size="${Math.max(3,[...base].length+1)}" spellcheck="false" aria-label="파일 이름" title="눌러서 이름 바꾸기"><span class="ext">${esc(ext)}</span></div>
+        <div class="use ${u.length?'':'none'}">${u.length?'사용 중: '+u.map(s=>esc(s.title)).join(', '):'어느 장면에서도 안 쓰는 중'} · <span class="sz">${fmtSize(Library.blobs.get(n)?.size)}</span></div>
+      </div>
+      <div class="lib-act">
+        ${cur&&!here?`<button class="btn sm" data-put title="'${esc(cur.title)}' 장면에 이 영상 넣기">이 장면에 넣기</button>`:here?'<span class="chip ph">이 장면에서 사용 중</span>':''}
+        <button class="x" data-del title="이 영상 삭제" aria-label="${esc(n)} 삭제">×</button>
+      </div></div>`}).join('')
     :'<p class="empty" style="margin:0">아직 저장된 영상이 없어요. "영상 추가"로 여러 개를 한 번에 넣을 수 있어요.</p>';
+  const n=libSel.size;
+  $('libDelSel').disabled=!n;$('libDelSel').textContent=n?`선택한 ${n}개 삭제`:'선택한 영상 삭제';
+  $('libDelSel').classList.remove('armed');
+  $('libAll').textContent=names.length&&n===names.length?'선택 해제':'모두 선택';
+  $('libAll').disabled=!names.length;$('libUnused').disabled=!names.some(x=>!usersOf(x).length);
 }
 function openLib(){$('libMsg').textContent=Store.ok?'':'이 환경에서는 브라우저 저장소를 쓸 수 없어서 새로고침하면 영상이 사라져요';renderLib();focusPanel('library')}
-$('libAdd').onchange=async e=>{for(const f of e.target.files)await Library.add(f.name,f,true);toast(`영상 ${e.target.files.length}개를 저장했어요`);e.target.value='';renderLib();renderGraph();renderGuide()};
-$('libList').addEventListener('click',async e=>{
-  const b=e.target.closest('[data-del]');if(!b)return;
-  if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='정말?';setTimeout(()=>{b.classList.remove('armed');b.textContent='삭제'},2500);return}
-  const name=b.closest('.lib-row').dataset.name;await Library.remove(name);toast(`삭제했어요 · ${name}`);renderLib();renderGraph();renderGuide();
+async function deleteVideos(list){
+  for(const n of list){await Library.remove(n);libSel.delete(n)}
+  renderLib();renderGraph();renderGuide();renderInspector();
+  if(engine.cur&&list.includes(engine.cur.scene.media?.name))refreshPreview(engine.cur.scene.id);
+}
+async function renameVideo(old,base){
+  const[,ext]=splitExt(old);base=base.trim().replace(/[\\/:*?"<>|]+/g,'');
+  const nw=base+ext;
+  if(!base){toast('이름을 비울 수 없어요',true);return false}
+  if(nw===old)return false;
+  if(Library.has(nw)){toast(`'${nw}' 이름의 영상이 이미 있어요`,true);return false}
+  const blob=Library.blobs.get(old);
+  await Library.add(nw,blob,true);await Library.remove(old);
+  if(libSel.delete(old))libSel.add(nw);
+  const used=usersOf(old);used.forEach(s=>s.media.name=nw);
+  save();renderGraph();renderInspector();
+  toast(`이름을 '${nw}'(으)로 바꿨어요${used.length?` · 장면 ${used.length}개도 함께 바뀌었어요`:''}`);
+  return true;
+}
+$('libAdd').onchange=async e=>{for(const f of e.target.files)await Library.add(f.name,f,true);toast(`영상 ${e.target.files.length}개를 저장했어요`);e.target.value='';renderLib();renderGraph();renderGuide();renderInspector()};
+$('libList').addEventListener('change',async e=>{
+  const row=e.target.closest('.lib-row');if(!row)return;const n=row.dataset.name;
+  if(e.target.classList.contains('lib-sel')){e.target.checked?libSel.add(n):libSel.delete(n);renderLib()}
+  else if(e.target.classList.contains('lib-rn')){if(!await renameVideo(n,e.target.value))e.target.value=splitExt(n)[0];renderLib()}
 });
-$('libClean').onclick=async e=>{
-  const b=e.currentTarget,unused=Library.names().filter(n=>!usersOf(n).length);
-  if(!unused.length){$('libMsg').textContent='정리할 영상이 없어요';return}
-  if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent=`${unused.length}개 삭제하려면 한 번 더`;setTimeout(()=>{b.classList.remove('armed');b.textContent='안 쓰는 영상 정리'},2500);return}
-  b.classList.remove('armed');b.textContent='안 쓰는 영상 정리';
-  for(const n of unused)await Library.remove(n);
-  $('libMsg').textContent=`${unused.length}개를 정리했어요`;renderLib();
+$('libList').addEventListener('keydown',e=>{if(e.target.classList.contains('lib-rn')&&e.key==='Enter'){e.preventDefault();e.target.blur()}});
+$('libList').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;const n=b.closest('.lib-row').dataset.name;
+  if(b.hasAttribute('data-put')){
+    const s=P.scenes[sel];if(!s)return;
+    s.media.type='file';s.media.name=n;s.media.duration=await Library.probe(n)||s.media.duration;
+    save();renderGraph();renderInspector();renderLib();refreshPreview(s.id);toast(`'${s.title}' 장면에 '${n}'을 넣었어요`);
+  }else if(b.hasAttribute('data-del')){
+    const u=usersOf(n).length;
+    if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent=u?`장면 ${u}곳에서 쓰는 중 · 삭제?`:'삭제?';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='×'}},2800);return}
+    await deleteVideos([n]);toast(`'${n}'을 삭제했어요`);
+  }
+});
+$('libAll').onclick=()=>{const all=Library.names();if(libSel.size===all.length)libSel.clear();else all.forEach(n=>libSel.add(n));renderLib()};
+$('libUnused').onclick=()=>{libSel.clear();Library.names().filter(n=>!usersOf(n).length).forEach(n=>libSel.add(n));renderLib();toast(`안 쓰는 영상 ${libSel.size}개를 골랐어요 · 확인하고 삭제하세요`)};
+$('libDelSel').onclick=async e=>{
+  const b=e.currentTarget,list=[...libSel];if(!list.length)return;
+  const used=list.filter(n=>usersOf(n).length).length;
+  if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent=used?`${list.length}개 삭제 (${used}개는 장면에서 쓰는 중) · 한 번 더`:`${list.length}개 삭제하려면 한 번 더`;setTimeout(()=>{if(b.classList.contains('armed'))renderLib()},2800);return}
+  await deleteVideos(list);toast(`영상 ${list.length}개를 삭제했어요`);
 };
 
 /* --- 내보내기 (zip: index.html + project.json + videos/) --- */
