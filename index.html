@@ -750,11 +750,11 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
     <p class="lead">플레이어가 고른 것을 <b>기억해 두는 값</b>이에요. 친절한 선택을 할 때마다 <span class="mono">호감</span>을 1씩 올리고, 마지막에 호감이 3 이상이면 다른 엔딩으로 보낼 수 있어요.</p>
     <div class="vh-kinds">
       <div><span class="vtype num">점수</span><b>숫자 점수</b><p>호감, 용기, 실수처럼 더하고 빼는 값. "3 이상일 때" 같은 조건에 써요.</p></div>
-      <div><span class="vtype flag">스위치</span><b>켬/끔 스위치</b><p>열쇠를 얻었는지, 비밀을 알았는지처럼 예/아니오로 기억하는 값이에요.</p></div>
+      <div><span class="vtype flag">스위치</span><b>스위치</b><p>열쇠를 얻었는지, 비밀을 알았는지처럼 예/아니오로 기억하는 값이에요.</p></div>
     </div>
     <h3>3단계로 쓰기</h3>
     <ol class="vh-steps">
-      <li><b>만들기</b><span>점수 변수 패널에서 <i>＋ 숫자 점수</i>나 <i>＋ 켬/끔 스위치</i>, 또는 예시 버튼으로 추가해요.</span></li>
+      <li><b>만들기</b><span>점수 변수 패널에서 <i>＋ 숫자 점수</i>나 <i>＋ 스위치</i>, 또는 예시 버튼으로 추가해요.</span></li>
       <li><b>바꾸기</b><span>장면 편집 › 선택지 › <i>조건 · 점수</i>를 펼치고 <i>고르면 점수 바꾸기</i>에서 정해요. 장면에 들어올 때 바꾸려면 아래쪽 <i>이 장면에 들어올 때 점수 바꾸기</i>를 써요.</span></li>
       <li><b>쓰기</b><span><i>이럴 때만 이 선택지 보이기</i>로 선택지를 조건부로 보이게 하거나, 장면의 <i>영상이 끝나면</i>을 <i>점수에 따라 자동 이동</i>으로 바꿔 갈래를 나눠요.</span></li>
     </ol>
@@ -1293,7 +1293,7 @@ const TEMPLATES=[
       happy:tplScene('happy','다음 약속','#4a3a24',6,'"다음 주에 같이 책 보러 갈래요?"',{end:true,loop:false,pos:{x:1160,y:0}}),
       normal:tplScene('normal','스쳐 간 인연','#23262e',6,'그냥 스쳐 지나간 인연이었다.',{end:true,loop:false,pos:{x:1160,y:150}})
     }})},
-  {id:'escape',slug:'escape-room',name:'열쇠와 문 · 방 탈출',desc:'창고에서 열쇠를 주워야만 "문을 연다" 선택지가 나타나요.',tags:['켬/끔 스위치','조건 선택지','되돌아가기'],
+  {id:'escape',slug:'escape-room',name:'열쇠와 문 · 방 탈출',desc:'창고에서 열쇠를 주워야만 "문을 연다" 선택지가 나타나요.',tags:['스위치','조건 선택지','되돌아가기'],
    make:()=>({title:'열쇠와 문',start:'hall',skin:'cinema',
     vars:{열쇠:0},varMeta:{열쇠:{type:'flag',show:true}},
     scenes:{
@@ -2204,7 +2204,7 @@ function renderVarsPanel(){
     </button>
     <div class="vp-add">
       <button class="btn sm primary" data-vadd="num">＋ 숫자 점수</button>
-      <button class="btn sm primary" data-vadd="flag">＋ 켬/끔 스위치</button>
+      <button class="btn sm primary" data-vadd="flag">＋ 스위치</button>
     </div>
     <div class="vp-ex"><span class="hint">예시로 바로 추가</span>
       ${VAR_EX.map((x,i)=>`<button class="chipbtn" data-vex="${i}" title="${esc(x[3])}">${esc(x[0])}<small>${x[1]==='flag'?'스위치':'점수'}</small></button>`).join('')}</div>

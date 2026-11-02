@@ -56,7 +56,7 @@
 |---|---|:---:|
 | **자정의 골목길** | 기본 분기 · 제한 시간 · 조건 선택지 · 엔딩 3개 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/midnight-alley/) |
 | **첫 만남 · 호감도 엔딩** | 점수 변수 · 점수에 따라 자동 이동 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/first-meeting/) |
-| **열쇠와 문 · 방 탈출** | 켬/끔 스위치 · 아이템이 있어야 보이는 선택지 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/escape-room/) |
+| **열쇠와 문 · 방 탈출** | 스위치 · 아이템이 있어야 보이는 선택지 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/escape-room/) |
 | **추격전 · 시간 제한 선택** | 짧은 제한 시간 · 실수 카운트 · 자동 이동 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/chase/) |
 
 각 폴더(`prototypes/…`)는 내보내기 결과와 같은 구조(`index.html`, `project.json`, `README.txt`)예요.
@@ -190,7 +190,7 @@
 | 종류 | 예 | 바꾸기 | 조건 |
 |---|---|---|---|
 | **숫자 점수** | 호감, 용기, 실수 | 더하기 · 빼기 · 로 바꾸기 | 이상 · 이하 · 같음 · 아님 · 초과 · 미만 |
-| **켬/끔 스위치** | 열쇠, 비밀을_알았다 | 켜기 · 끄기 | 켜져 있을 때 · 꺼져 있을 때 |
+| **스위치** | 열쇠, 비밀을_알았다 | 켜기 · 끄기 | 켜져 있을 때 · 꺼져 있을 때 |
 
 | 기능 | 설명 |
 |---|---|
@@ -249,7 +249,7 @@
 | 빈 프로젝트 | 장면 하나에서 시작 |
 | 자정의 골목길 | 기본 프로토타입 (6장면, 엔딩 3개) |
 | 첫 만남 · 호감도 엔딩 | 점수 변수 + 자동 이동 |
-| 열쇠와 문 · 방 탈출 | 켬/끔 스위치 + 조건 선택지 |
+| 열쇠와 문 · 방 탈출 | 스위치 + 조건 선택지 |
 | 추격전 · 시간 제한 선택 | 짧은 제한 시간 + 실수 카운트 |
 
 각 템플릿 카드의 **▶ 바로 플레이**로 완성본을 먼저 볼 수 있어요.
