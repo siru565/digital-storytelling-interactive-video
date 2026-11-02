@@ -65,7 +65,32 @@
 .vh{font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#eef1f5;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);padding:.25em .75em;border-radius:999px;transition:transform .25s}
 .vh b{color:var(--accent);font-family:var(--f-mono);margin-left:.3em}
 .vh.bump{transform:scale(1.15)}
-@media (prefers-reduced-motion:reduce){.layer,.cin-choices,.cd-panel,.cin-title,.cd-bar{transition:none!important}}
+/* 선택지 위치 프리셋 */
+.cin-choices.pos-top{top:0;bottom:auto;padding:4cqw 5cqw 8cqw;background:linear-gradient(rgba(0,0,0,.82),transparent);transform:translateY(-1.5cqw)}
+.cin-choices.pos-center{top:0;justify-content:center;background:rgba(0,0,0,.45);padding:5cqw}
+.cin-choices.pos-left,.cin-choices.pos-right{top:0;justify-content:center;width:46cqw;padding:4cqw 5cqw;transform:none}
+.cin-choices.pos-left{right:auto;align-items:flex-start;background:linear-gradient(90deg,rgba(0,0,0,.85),transparent)}
+.cin-choices.pos-right{left:auto;align-items:flex-end;background:linear-gradient(270deg,rgba(0,0,0,.85),transparent)}
+.cin-choices.pos-left .cin-row,.cin-choices.pos-right .cin-row{flex-direction:column;align-items:inherit;gap:1.4cqw}
+.cin-choices.show{transform:none}
+.cd-panel.pos-left{right:auto;left:2.6cqw;transform:translate(-3cqw,-50%)}
+.cd-panel.pos-left.show{transform:translate(0,-50%)}
+.cd-panel.pos-center{right:auto;left:50%;transform:translate(-50%,-44%)}
+.cd-panel.pos-center.show{transform:translate(-50%,-50%)}
+.cd-panel.pos-top{top:6cqw;right:auto;left:50%;transform:translate(-50%,-1cqw)}
+.cd-panel.pos-top.show{transform:translate(-50%,0)}
+.cd-panel.pos-bottom{top:auto;bottom:3cqw;right:auto;left:50%;transform:translate(-50%,1cqw)}
+.cd-panel.pos-bottom.show{transform:translate(-50%,0)}
+/* 직접 배치 */
+.free-layer{position:absolute;inset:0;pointer-events:none}
+.free-layer .free-btn{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;white-space:nowrap;animation:freeIn .35s ease both}
+@keyframes freeIn{from{opacity:0;transform:translate(-50%,-30%)}to{opacity:1;transform:translate(-50%,-50%)}}
+.cin-free .cin-btn{background:rgba(0,0,0,.55);border:1px solid rgba(244,239,230,.35);border-radius:999px;padding:.35em 1.1em}
+.cin-free .cin-btn:hover,.cin-free .cin-btn:focus-visible{border-color:var(--accent)}
+.cd-free .cd-btn{max-width:46cqw}
+.free-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden}
+.free-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
+@media (prefers-reduced-motion:reduce){.layer,.cin-choices,.cd-panel,.cin-title,.cd-bar{transition:none!important}.free-layer .free-btn{animation:none}}
 
 html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui)}
 .wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
@@ -78,7 +103,7 @@ html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui
 <div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
 <div class="cover" id="cover"><button id="coverPlay">▶ 시작하기</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div></div></div>
 <div class="ctrl"><button id="cBack">↶ 이전 선택</button><button id="cRestart">처음부터</button><button id="cMute">소리 끄기</button><button id="cFull">전체화면</button></div>
-<script type="application/json" id="project">{"title":"자정의 골목길","start":"intro","skin":"cinema","vars":{"courage":0,"kind":0},"varMeta":{"courage":{"type":"num","show":false},"kind":{"type":"num","show":true}},"scenes":{"intro":{"id":"intro","title":"퇴근길 골목","media":{"type":"placeholder","color":"#26324a","duration":8,"caption":"가로등이 깜빡이는 골목.\n어디선가 작은 울음소리가 들린다.","name":""},"choiceAt":5,"timeLimit":7,"loop":true,"ending":false,"auto":false,"defaultChoice":"c2","enter":"","choices":[{"id":"c1","label":"소리를 따라간다","target":"box","set":"kind += 1","if":"kind = 0"},{"id":"c2","label":"모른 척 집으로 간다","target":"home","set":"","if":""}],"pos":{"x":0,"y":0}},"box":{"id":"box","title":"젖은 상자","media":{"type":"placeholder","color":"#3a2f2a","duration":7,"caption":"상자 안에서 젖은 새끼 고양이가\n나를 올려다본다.","name":""},"choiceAt":4,"timeLimit":6,"loop":true,"ending":false,"auto":false,"defaultChoice":"c5","enter":"","choices":[{"id":"c3","label":"품에 안고 간다","target":"adopt","set":"kind+=1","if":""},{"id":"c4","label":"편의점에서 우유를 사 온다","target":"store","set":"kind+=1","if":""},{"id":"c5","label":"그냥 두고 간다","target":"home","set":"","if":""}],"pos":{"x":290,"y":0}},"store":{"id":"store","title":"새벽 편의점","media":{"type":"placeholder","color":"#22413c","duration":7,"caption":"알바생이 우유를 계산하다\n내 젖은 소매를 본다.","name":""},"choiceAt":4,"timeLimit":8,"loop":true,"ending":false,"auto":false,"defaultChoice":"c7","enter":"","choices":[{"id":"c6","label":"같이 가 달라고 부탁한다","target":"together","set":"","if":"courage>=1"},{"id":"c7","label":"우유만 들고 돌아간다","target":"adopt","set":"","if":""}],"pos":{"x":580,"y":0}},"home":{"id":"home","title":"평범한 밤","media":{"type":"placeholder","color":"#1c1f27","duration":6,"caption":"따뜻한 방. 그런데 울음소리가\n자꾸 귀에 맴돈다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":296,"y":232}},"adopt":{"id":"adopt","title":"새 식구","media":{"type":"placeholder","color":"#4a3a24","duration":6,"caption":"수건으로 감싼 작은 몸이\n골골 소리를 낸다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":580,"y":181}},"together":{"id":"together","title":"둘이서 구조","media":{"type":"placeholder","color":"#2c3f55","duration":6,"caption":"퇴근한 알바생과 함께\n동물병원 문을 두드린다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0}}},"savedAt":1793596719345}</script>
+<script type="application/json" id="project">{"title":"자정의 골목길","start":"intro","skin":"cinema","vars":{"courage":0,"kind":0},"varMeta":{"courage":{"type":"num","show":false},"kind":{"type":"num","show":true}},"scenes":{"intro":{"id":"intro","title":"퇴근길 골목","media":{"type":"placeholder","color":"#26324a","duration":8,"caption":"가로등이 깜빡이는 골목.\n어디선가 작은 울음소리가 들린다.","name":""},"choiceAt":5,"timeLimit":7,"loop":true,"ending":false,"auto":false,"defaultChoice":"c2","enter":"","choices":[{"id":"c1","label":"소리를 따라간다","target":"box","set":"kind += 1","if":"kind = 0"},{"id":"c2","label":"모른 척 집으로 간다","target":"home","set":"","if":""}],"pos":{"x":0,"y":0}},"box":{"id":"box","title":"젖은 상자","media":{"type":"placeholder","color":"#3a2f2a","duration":7,"caption":"상자 안에서 젖은 새끼 고양이가\n나를 올려다본다.","name":""},"choiceAt":4,"timeLimit":6,"loop":true,"ending":false,"auto":false,"defaultChoice":"c5","enter":"","choices":[{"id":"c3","label":"품에 안고 간다","target":"adopt","set":"kind+=1","if":""},{"id":"c4","label":"편의점에서 우유를 사 온다","target":"store","set":"kind+=1","if":""},{"id":"c5","label":"그냥 두고 간다","target":"home","set":"","if":""}],"pos":{"x":290,"y":0}},"store":{"id":"store","title":"새벽 편의점","media":{"type":"placeholder","color":"#22413c","duration":7,"caption":"알바생이 우유를 계산하다\n내 젖은 소매를 본다.","name":""},"choiceAt":4,"timeLimit":8,"loop":true,"ending":false,"auto":false,"defaultChoice":"c7","enter":"","choices":[{"id":"c6","label":"같이 가 달라고 부탁한다","target":"together","set":"","if":"courage>=1"},{"id":"c7","label":"우유만 들고 돌아간다","target":"adopt","set":"","if":""}],"pos":{"x":580,"y":0}},"home":{"id":"home","title":"평범한 밤","media":{"type":"placeholder","color":"#1c1f27","duration":6,"caption":"따뜻한 방. 그런데 울음소리가\n자꾸 귀에 맴돈다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":296,"y":232}},"adopt":{"id":"adopt","title":"새 식구","media":{"type":"placeholder","color":"#4a3a24","duration":6,"caption":"수건으로 감싼 작은 몸이\n골골 소리를 낸다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":580,"y":181}},"together":{"id":"together","title":"둘이서 구조","media":{"type":"placeholder","color":"#2c3f55","duration":6,"caption":"퇴근한 알바생과 함께\n동물병원 문을 두드린다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0}}},"savedAt":1793598091786}</script>
 <script>
 /* 발행 이벤트 (UI는 이것만 구독하면 됩니다)
    scene {scene,vars} · time {t,d,scene,phase} · choices {list,timeLimit,defaultId}
@@ -277,7 +302,7 @@ class IVEngine extends Emitter{
     if(s.auto){this.choose(list[0].id);return}   // 점수에 따라 자동 이동
     const lim=+s.timeLimit||0;
     c.deadline=lim>0?performance.now()+lim*1000:null;
-    this.emit('choices',{list,timeLimit:lim,defaultId:this._defaultId(c)});
+    this.emit('choices',{list,timeLimit:lim,defaultId:this._defaultId(c),scene:s});
   }
   _defaultId(c){return c.list.find(x=>x.id===c.scene.defaultChoice)?.id||c.list[0].id}
   _loopStart(s,d){return this._hasChoiceAt(s)?+s.choiceAt:Math.max(0,d-2)}
@@ -327,7 +352,7 @@ class IVEngine extends Emitter{
   refreshUI(){
     const c=this.cur;if(!c)return;
     this.emit('scene',{scene:c.scene,vars:this.vars});
-    if(c.phase==='waiting')this.emit('choices',{list:c.list,timeLimit:+c.scene.timeLimit||0,defaultId:this._defaultId(c)});
+    if(c.phase==='waiting')this.emit('choices',{list:c.list,timeLimit:+c.scene.timeLimit||0,defaultId:this._defaultId(c),scene:c.scene});
     if(c.phase==='ended')this.emit('end',{scene:c.scene,vars:this.vars,path:this.history.map(h=>h.label).filter(Boolean)});
   }
 }
@@ -343,33 +368,56 @@ function bindSkinClicks(root,engine){
   };
   root.addEventListener('click',f);return()=>root.removeEventListener('click',f);
 }
+/* 선택지 화면 위치
+   · 장면의 cpos: ''(스킨 기본) · bottom · top · center · left · right · free
+   · free일 때는 선택지마다 spot{x,y}(화면 비율 %) 위치에 버튼을 놓습니다 */
+function freeSpot(c,i,n){return c.spot||{x:Math.round((i+1)/(n+1)*100),y:80}}
+function renderFree(layer,list,timeLimit,btn){
+  layer.innerHTML=list.map((c,i)=>{const p=freeSpot(c,i,list.length);return btn(c,i,`left:${p.x}%;top:${p.y}%`)}).join('')+
+    (timeLimit?'<div class="free-timer"><i></i></div>':'');
+  layer.hidden=false;
+}
 Skins.register({
   id:'cinema',name:'시네마 (아래 자막형)',
   mount(engine,root){
     root.innerHTML=`<div class="sk-cinema">
       <div class="cin-title"></div>
       <div class="cin-choices" role="group" aria-label="선택지"><div class="cin-row"></div><div class="cin-timer"><i></i></div></div>
+      <div class="free-layer cin-free" role="group" aria-label="선택지" hidden></div>
       <div class="cin-end" hidden><small>THE END</small><h3></h3>
         <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
     const $=s=>root.querySelector(s);
-    const title=$('.cin-title'),box=$('.cin-choices'),row=$('.cin-row'),bar=$('.cin-timer i'),timer=$('.cin-timer'),end=$('.cin-end');
+    const title=$('.cin-title'),box=$('.cin-choices'),row=$('.cin-row'),bar=$('.cin-timer i'),timer=$('.cin-timer'),end=$('.cin-end'),free=$('.cin-free');
     let tHide;
+    const btns=()=>root.querySelectorAll('.cin-btn');
     const offs=[
       engine.on('scene',({scene})=>{
-        end.hidden=true;box.classList.remove('show');
+        end.hidden=true;box.classList.remove('show');free.hidden=true;
         title.textContent=scene.title;title.classList.add('show');
         clearTimeout(tHide);tHide=setTimeout(()=>title.classList.remove('show'),2600);
       }),
-      engine.on('choices',({list,timeLimit})=>{
+      engine.on('choices',({list,timeLimit,scene})=>{
+        const mode=scene?.cpos||'';
+        if(mode==='free'){
+          row.innerHTML='';box.classList.remove('show');
+          renderFree(free,list,timeLimit,(c,i,st)=>`<button class="cin-btn free-btn" data-id="${c.id}" style="${st}">${esc(c.label)}</button>`);
+          return;
+        }
+        free.hidden=true;
+        box.className='cin-choices'+(mode&&mode!=='bottom'?' pos-'+mode:'');
         row.innerHTML=list.map(c=>`<button class="cin-btn" data-id="${c.id}">${esc(c.label)}</button>`).join('');
-        timer.hidden=!timeLimit;bar.style.transform='scaleX(1)';box.classList.add('show');
+        timer.hidden=!timeLimit;bar.style.transform='scaleX(1)';
+        requestAnimationFrame(()=>box.classList.add('show'));
       }),
-      engine.on('timer',({remain,total})=>{bar.style.transform=`scaleX(${remain/total})`}),
+      engine.on('timer',({remain,total})=>{
+        bar.style.transform=`scaleX(${remain/total})`;
+        const fb=free.querySelector('.free-timer i');if(fb)fb.style.transform=`scaleX(${remain/total})`;
+      }),
       engine.on('chosen',({choice})=>{
-        row.querySelectorAll('.cin-btn').forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
-        setTimeout(()=>box.classList.remove('show'),250);
+        btns().forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
+        setTimeout(()=>{box.classList.remove('show');free.hidden=true},250);
       }),
-      engine.on('end',({scene})=>{box.classList.remove('show');end.querySelector('h3').textContent=scene?.title||'';end.hidden=false}),
+      engine.on('end',({scene})=>{box.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';end.hidden=false}),
       bindSkinClicks(root,engine)
     ];
     return()=>{offs.forEach(f=>f());clearTimeout(tHide);root.innerHTML=''};
@@ -383,28 +431,41 @@ Skins.register({
       <div class="cd-panel" role="group" aria-label="선택지">
         <div class="cd-head"><svg class="cd-ring" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.66" stroke-dashoffset="0"/><text x="24" y="24"></text></svg><span>선택하세요</span></div>
         <div class="cd-list"></div></div>
+      <div class="free-layer cd-free" role="group" aria-label="선택지" hidden></div>
       <div class="cd-end" hidden><small>ENDING</small><h3></h3><div class="cd-path"></div>
         <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
     const $=s=>root.querySelector(s);
-    const bar=$('.cd-bar'),panel=$('.cd-panel'),list=$('.cd-list'),ring=$('.cd-ring'),fg=$('.cd-ring .fg'),num=$('.cd-ring text'),end=$('.cd-end');
+    const bar=$('.cd-bar'),panel=$('.cd-panel'),list=$('.cd-list'),ring=$('.cd-ring'),fg=$('.cd-ring .fg'),num=$('.cd-ring text'),end=$('.cd-end'),free=$('.cd-free');
+    const btn=(c,i,def,st='')=>`<button class="cd-btn ${def?'def':''} ${st?'free-btn':''}" data-id="${c.id}" ${st?`style="${st}"`:''}><kbd>${i+1}</kbd><span>${esc(c.label)}</span></button>`;
     const offs=[
       engine.on('scene',({scene})=>{
-        end.hidden=true;panel.classList.remove('show');
+        end.hidden=true;panel.classList.remove('show');free.hidden=true;
         $('.cd-bar b').textContent=`CH.${String(engine.history.length+1).padStart(2,'0')}`;
         $('.cd-bar span').textContent=scene.title;bar.classList.add('show');
       }),
-      engine.on('choices',({list:l,timeLimit,defaultId})=>{
-        list.innerHTML=l.map((c,i)=>`<button class="cd-btn ${c.id===defaultId&&timeLimit?'def':''}" data-id="${c.id}"><kbd>${i+1}</kbd><span>${esc(c.label)}</span></button>`).join('');
+      engine.on('choices',({list:l,timeLimit,defaultId,scene})=>{
+        const mode=scene?.cpos||'';
+        if(mode==='free'){
+          panel.classList.remove('show');
+          renderFree(free,l,timeLimit,(c,i,st)=>btn(c,i,c.id===defaultId&&timeLimit,st));
+          return;
+        }
+        free.hidden=true;
+        panel.className='cd-panel'+(mode&&mode!=='right'?' pos-'+mode:'');
+        list.innerHTML=l.map((c,i)=>btn(c,i,c.id===defaultId&&timeLimit)).join('');
         ring.style.display=timeLimit?'':'none';fg.style.strokeDashoffset=0;num.textContent=timeLimit||'';
-        panel.classList.add('show');
+        requestAnimationFrame(()=>panel.classList.add('show'));
       }),
-      engine.on('timer',({remain,total})=>{fg.style.strokeDashoffset=125.66*(1-remain/total);num.textContent=Math.ceil(remain/1000)}),
+      engine.on('timer',({remain,total})=>{
+        fg.style.strokeDashoffset=125.66*(1-remain/total);num.textContent=Math.ceil(remain/1000);
+        const fb=free.querySelector('.free-timer i');if(fb)fb.style.transform=`scaleX(${remain/total})`;
+      }),
       engine.on('chosen',({choice})=>{
-        list.querySelectorAll('.cd-btn').forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
-        setTimeout(()=>panel.classList.remove('show'),250);
+        root.querySelectorAll('.cd-btn').forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
+        setTimeout(()=>{panel.classList.remove('show');free.hidden=true},250);
       }),
       engine.on('end',({scene,path})=>{
-        panel.classList.remove('show');end.querySelector('h3').textContent=scene?.title||'';
+        panel.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';
         $('.cd-path').textContent=path.length?'경로: '+path.join(' → '):'';end.hidden=false;
       }),
       bindSkinClicks(root,engine)

@@ -72,7 +72,32 @@
 .vh{font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#eef1f5;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);padding:.25em .75em;border-radius:999px;transition:transform .25s}
 .vh b{color:var(--accent);font-family:var(--f-mono);margin-left:.3em}
 .vh.bump{transform:scale(1.15)}
-@media (prefers-reduced-motion:reduce){.layer,.cin-choices,.cd-panel,.cin-title,.cd-bar{transition:none!important}}
+/* 선택지 위치 프리셋 */
+.cin-choices.pos-top{top:0;bottom:auto;padding:4cqw 5cqw 8cqw;background:linear-gradient(rgba(0,0,0,.82),transparent);transform:translateY(-1.5cqw)}
+.cin-choices.pos-center{top:0;justify-content:center;background:rgba(0,0,0,.45);padding:5cqw}
+.cin-choices.pos-left,.cin-choices.pos-right{top:0;justify-content:center;width:46cqw;padding:4cqw 5cqw;transform:none}
+.cin-choices.pos-left{right:auto;align-items:flex-start;background:linear-gradient(90deg,rgba(0,0,0,.85),transparent)}
+.cin-choices.pos-right{left:auto;align-items:flex-end;background:linear-gradient(270deg,rgba(0,0,0,.85),transparent)}
+.cin-choices.pos-left .cin-row,.cin-choices.pos-right .cin-row{flex-direction:column;align-items:inherit;gap:1.4cqw}
+.cin-choices.show{transform:none}
+.cd-panel.pos-left{right:auto;left:2.6cqw;transform:translate(-3cqw,-50%)}
+.cd-panel.pos-left.show{transform:translate(0,-50%)}
+.cd-panel.pos-center{right:auto;left:50%;transform:translate(-50%,-44%)}
+.cd-panel.pos-center.show{transform:translate(-50%,-50%)}
+.cd-panel.pos-top{top:6cqw;right:auto;left:50%;transform:translate(-50%,-1cqw)}
+.cd-panel.pos-top.show{transform:translate(-50%,0)}
+.cd-panel.pos-bottom{top:auto;bottom:3cqw;right:auto;left:50%;transform:translate(-50%,1cqw)}
+.cd-panel.pos-bottom.show{transform:translate(-50%,0)}
+/* 직접 배치 */
+.free-layer{position:absolute;inset:0;pointer-events:none}
+.free-layer .free-btn{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;white-space:nowrap;animation:freeIn .35s ease both}
+@keyframes freeIn{from{opacity:0;transform:translate(-50%,-30%)}to{opacity:1;transform:translate(-50%,-50%)}}
+.cin-free .cin-btn{background:rgba(0,0,0,.55);border:1px solid rgba(244,239,230,.35);border-radius:999px;padding:.35em 1.1em}
+.cin-free .cin-btn:hover,.cin-free .cin-btn:focus-visible{border-color:var(--accent)}
+.cd-free .cd-btn{max-width:46cqw}
+.free-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden}
+.free-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
+@media (prefers-reduced-motion:reduce){.layer,.cin-choices,.cd-panel,.cin-title,.cd-bar{transition:none!important}.free-layer .free-btn{animation:none}}
 </style>
 
 <!-- 편집기 CSS -->
@@ -138,7 +163,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .slot.dropt{outline:2px solid var(--branch);outline-offset:-2px}
 .slot.flash{animation:flash .8s}
 @keyframes flash{0%{box-shadow:inset 0 0 0 2px var(--accent)}100%{box-shadow:inset 0 0 0 2px transparent}}
-.slot.max{position:absolute;inset:0;z-index:30}
+.slot.max{position:fixed;inset:max(3vh,16px) max(3vw,16px);z-index:45;border-color:var(--line2);box-shadow:0 30px 80px rgba(0,0,0,.65)}
+.slot.max .tabs{background:#181b21}
+.slot.max .tmax{color:var(--fg);width:auto;padding:0 12px;font-size:13px}
+.max-bd{position:fixed;inset:0;z-index:44;background:rgba(5,6,8,.72)}
 .tabs{display:flex;align-items:stretch;gap:2px;height:34px;padding:0 4px;background:#13161b;border-bottom:1px solid var(--line);flex:none;overflow-x:auto;scrollbar-width:none}
 .tab{background:none;border:0;padding:0 12px;font-size:13px;font-weight:500;color:var(--mute);border-bottom:2px solid transparent;cursor:grab;white-space:nowrap;touch-action:none}
 .tab:hover{color:var(--fg)}
@@ -307,6 +335,29 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .kbhelp dt{font:600 11.5px var(--f-mono);color:var(--accent);white-space:nowrap}
 .kbhelp dd{margin:0;color:var(--mute)}
 .kbhelp p{margin:0;color:var(--dim);font-size:12px}
+.cpos{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px}
+.cpos-seg{display:grid;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));gap:6px}
+.cpos-seg button{display:flex;flex-direction:column;align-items:center;gap:5px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 4px;font-size:12px;color:var(--mute)}
+.cpos-seg button:hover{border-color:var(--line2);color:var(--fg)}
+.cpos-seg button.on{border-color:var(--accent);color:var(--fg);background:#1f1c16}
+.cp-ic{position:relative;width:38px;height:22px;border:1.5px solid #5a6373;border-radius:3px;display:block}
+.cp-ic::after{content:"";position:absolute;background:var(--accent);border-radius:1px}
+.cp-def::after,.cp-bottom::after{left:5px;right:5px;bottom:3px;height:4px}
+.cp-top::after{left:5px;right:5px;top:3px;height:4px}
+.cp-center::after{left:9px;right:9px;top:8px;height:4px}
+.cp-left::after{left:3px;top:4px;bottom:4px;width:9px}
+.cp-right::after{right:3px;top:4px;bottom:4px;width:9px}
+.cp-free::after{left:6px;top:4px;width:7px;height:4px;box-shadow:16px 9px 0 var(--accent)}
+.cp-def{border-style:dashed}
+.place-root{position:absolute;inset:0;z-index:5;background:rgba(0,0,0,.22);outline:2px dashed var(--accent);outline-offset:-2px}
+.pl-bar{position:absolute;left:8px;right:8px;top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:rgba(16,18,22,.9);border:1px solid var(--line2);border-radius:8px;padding:6px 8px;font-size:12.5px;color:var(--fg);z-index:1}
+.pl-bar span{flex:1;min-width:120px}
+.pl-chip{position:absolute;transform:translate(-50%,-50%);display:inline-flex;gap:.5em;align-items:center;background:rgba(14,16,20,.9);border:1.5px solid var(--accent);color:#fff;padding:.4em .9em;border-radius:999px;font:600 clamp(11px,1.6cqw,16px) var(--f-ui);cursor:grab;touch-action:none;user-select:none;white-space:nowrap}
+.pl-chip.drag{cursor:grabbing;box-shadow:0 0 0 4px rgba(240,168,58,.35)}
+.pl-chip kbd{font:600 .8em var(--f-mono);color:var(--accent)}
+.pl-gv,.pl-gh{position:absolute;background:var(--branch);pointer-events:none}
+.pl-gv{top:0;bottom:0;left:50%;width:1px}
+.pl-gh{left:0;right:0;top:50%;height:1px}
 .nrow.rsel{background:rgba(240,168,58,.16);box-shadow:inset 3px 0 0 var(--accent)}
 .ch.hl{border-color:var(--accent)}
 .legend .lg-dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid var(--branch);margin-right:5px;vertical-align:-1px}
@@ -480,6 +531,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
       </div>
     </div>
     <button class="btn" id="bPlayAll">▶ 처음부터 플레이</button>
+    <button class="btn" id="bTheater" title="미리보기를 화면 위 큰 창으로 띄워서 지금 선택한 장면부터 플레이">⛶ 큰 화면 미리보기</button>
     <button class="btn primary" id="bExport">내보내기</button>
     <div class="more">
       <button class="btn ghost" id="bMore" aria-haspopup="true" aria-expanded="false">더보기 ▾</button>
@@ -562,6 +614,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
         <div class="layers" id="layers"></div>
         <div class="skin-root" id="skinRoot"></div>
         <div class="hud-root" id="hudRoot"></div>
+        <div class="place-root" id="placeRoot" hidden></div>
         <div class="cover" id="cover"><button id="coverPlay">▶ 처음부터 플레이</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div>
       </div>
     </div>
@@ -839,7 +892,7 @@ class IVEngine extends Emitter{
     if(s.auto){this.choose(list[0].id);return}   // 점수에 따라 자동 이동
     const lim=+s.timeLimit||0;
     c.deadline=lim>0?performance.now()+lim*1000:null;
-    this.emit('choices',{list,timeLimit:lim,defaultId:this._defaultId(c)});
+    this.emit('choices',{list,timeLimit:lim,defaultId:this._defaultId(c),scene:s});
   }
   _defaultId(c){return c.list.find(x=>x.id===c.scene.defaultChoice)?.id||c.list[0].id}
   _loopStart(s,d){return this._hasChoiceAt(s)?+s.choiceAt:Math.max(0,d-2)}
@@ -889,7 +942,7 @@ class IVEngine extends Emitter{
   refreshUI(){
     const c=this.cur;if(!c)return;
     this.emit('scene',{scene:c.scene,vars:this.vars});
-    if(c.phase==='waiting')this.emit('choices',{list:c.list,timeLimit:+c.scene.timeLimit||0,defaultId:this._defaultId(c)});
+    if(c.phase==='waiting')this.emit('choices',{list:c.list,timeLimit:+c.scene.timeLimit||0,defaultId:this._defaultId(c),scene:c.scene});
     if(c.phase==='ended')this.emit('end',{scene:c.scene,vars:this.vars,path:this.history.map(h=>h.label).filter(Boolean)});
   }
 }
@@ -905,33 +958,56 @@ function bindSkinClicks(root,engine){
   };
   root.addEventListener('click',f);return()=>root.removeEventListener('click',f);
 }
+/* 선택지 화면 위치
+   · 장면의 cpos: ''(스킨 기본) · bottom · top · center · left · right · free
+   · free일 때는 선택지마다 spot{x,y}(화면 비율 %) 위치에 버튼을 놓습니다 */
+function freeSpot(c,i,n){return c.spot||{x:Math.round((i+1)/(n+1)*100),y:80}}
+function renderFree(layer,list,timeLimit,btn){
+  layer.innerHTML=list.map((c,i)=>{const p=freeSpot(c,i,list.length);return btn(c,i,`left:${p.x}%;top:${p.y}%`)}).join('')+
+    (timeLimit?'<div class="free-timer"><i></i></div>':'');
+  layer.hidden=false;
+}
 Skins.register({
   id:'cinema',name:'시네마 (아래 자막형)',
   mount(engine,root){
     root.innerHTML=`<div class="sk-cinema">
       <div class="cin-title"></div>
       <div class="cin-choices" role="group" aria-label="선택지"><div class="cin-row"></div><div class="cin-timer"><i></i></div></div>
+      <div class="free-layer cin-free" role="group" aria-label="선택지" hidden></div>
       <div class="cin-end" hidden><small>THE END</small><h3></h3>
         <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
     const $=s=>root.querySelector(s);
-    const title=$('.cin-title'),box=$('.cin-choices'),row=$('.cin-row'),bar=$('.cin-timer i'),timer=$('.cin-timer'),end=$('.cin-end');
+    const title=$('.cin-title'),box=$('.cin-choices'),row=$('.cin-row'),bar=$('.cin-timer i'),timer=$('.cin-timer'),end=$('.cin-end'),free=$('.cin-free');
     let tHide;
+    const btns=()=>root.querySelectorAll('.cin-btn');
     const offs=[
       engine.on('scene',({scene})=>{
-        end.hidden=true;box.classList.remove('show');
+        end.hidden=true;box.classList.remove('show');free.hidden=true;
         title.textContent=scene.title;title.classList.add('show');
         clearTimeout(tHide);tHide=setTimeout(()=>title.classList.remove('show'),2600);
       }),
-      engine.on('choices',({list,timeLimit})=>{
+      engine.on('choices',({list,timeLimit,scene})=>{
+        const mode=scene?.cpos||'';
+        if(mode==='free'){
+          row.innerHTML='';box.classList.remove('show');
+          renderFree(free,list,timeLimit,(c,i,st)=>`<button class="cin-btn free-btn" data-id="${c.id}" style="${st}">${esc(c.label)}</button>`);
+          return;
+        }
+        free.hidden=true;
+        box.className='cin-choices'+(mode&&mode!=='bottom'?' pos-'+mode:'');
         row.innerHTML=list.map(c=>`<button class="cin-btn" data-id="${c.id}">${esc(c.label)}</button>`).join('');
-        timer.hidden=!timeLimit;bar.style.transform='scaleX(1)';box.classList.add('show');
+        timer.hidden=!timeLimit;bar.style.transform='scaleX(1)';
+        requestAnimationFrame(()=>box.classList.add('show'));
       }),
-      engine.on('timer',({remain,total})=>{bar.style.transform=`scaleX(${remain/total})`}),
+      engine.on('timer',({remain,total})=>{
+        bar.style.transform=`scaleX(${remain/total})`;
+        const fb=free.querySelector('.free-timer i');if(fb)fb.style.transform=`scaleX(${remain/total})`;
+      }),
       engine.on('chosen',({choice})=>{
-        row.querySelectorAll('.cin-btn').forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
-        setTimeout(()=>box.classList.remove('show'),250);
+        btns().forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
+        setTimeout(()=>{box.classList.remove('show');free.hidden=true},250);
       }),
-      engine.on('end',({scene})=>{box.classList.remove('show');end.querySelector('h3').textContent=scene?.title||'';end.hidden=false}),
+      engine.on('end',({scene})=>{box.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';end.hidden=false}),
       bindSkinClicks(root,engine)
     ];
     return()=>{offs.forEach(f=>f());clearTimeout(tHide);root.innerHTML=''};
@@ -945,28 +1021,41 @@ Skins.register({
       <div class="cd-panel" role="group" aria-label="선택지">
         <div class="cd-head"><svg class="cd-ring" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.66" stroke-dashoffset="0"/><text x="24" y="24"></text></svg><span>선택하세요</span></div>
         <div class="cd-list"></div></div>
+      <div class="free-layer cd-free" role="group" aria-label="선택지" hidden></div>
       <div class="cd-end" hidden><small>ENDING</small><h3></h3><div class="cd-path"></div>
         <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
     const $=s=>root.querySelector(s);
-    const bar=$('.cd-bar'),panel=$('.cd-panel'),list=$('.cd-list'),ring=$('.cd-ring'),fg=$('.cd-ring .fg'),num=$('.cd-ring text'),end=$('.cd-end');
+    const bar=$('.cd-bar'),panel=$('.cd-panel'),list=$('.cd-list'),ring=$('.cd-ring'),fg=$('.cd-ring .fg'),num=$('.cd-ring text'),end=$('.cd-end'),free=$('.cd-free');
+    const btn=(c,i,def,st='')=>`<button class="cd-btn ${def?'def':''} ${st?'free-btn':''}" data-id="${c.id}" ${st?`style="${st}"`:''}><kbd>${i+1}</kbd><span>${esc(c.label)}</span></button>`;
     const offs=[
       engine.on('scene',({scene})=>{
-        end.hidden=true;panel.classList.remove('show');
+        end.hidden=true;panel.classList.remove('show');free.hidden=true;
         $('.cd-bar b').textContent=`CH.${String(engine.history.length+1).padStart(2,'0')}`;
         $('.cd-bar span').textContent=scene.title;bar.classList.add('show');
       }),
-      engine.on('choices',({list:l,timeLimit,defaultId})=>{
-        list.innerHTML=l.map((c,i)=>`<button class="cd-btn ${c.id===defaultId&&timeLimit?'def':''}" data-id="${c.id}"><kbd>${i+1}</kbd><span>${esc(c.label)}</span></button>`).join('');
+      engine.on('choices',({list:l,timeLimit,defaultId,scene})=>{
+        const mode=scene?.cpos||'';
+        if(mode==='free'){
+          panel.classList.remove('show');
+          renderFree(free,l,timeLimit,(c,i,st)=>btn(c,i,c.id===defaultId&&timeLimit,st));
+          return;
+        }
+        free.hidden=true;
+        panel.className='cd-panel'+(mode&&mode!=='right'?' pos-'+mode:'');
+        list.innerHTML=l.map((c,i)=>btn(c,i,c.id===defaultId&&timeLimit)).join('');
         ring.style.display=timeLimit?'':'none';fg.style.strokeDashoffset=0;num.textContent=timeLimit||'';
-        panel.classList.add('show');
+        requestAnimationFrame(()=>panel.classList.add('show'));
       }),
-      engine.on('timer',({remain,total})=>{fg.style.strokeDashoffset=125.66*(1-remain/total);num.textContent=Math.ceil(remain/1000)}),
+      engine.on('timer',({remain,total})=>{
+        fg.style.strokeDashoffset=125.66*(1-remain/total);num.textContent=Math.ceil(remain/1000);
+        const fb=free.querySelector('.free-timer i');if(fb)fb.style.transform=`scaleX(${remain/total})`;
+      }),
       engine.on('chosen',({choice})=>{
-        list.querySelectorAll('.cd-btn').forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
-        setTimeout(()=>panel.classList.remove('show'),250);
+        root.querySelectorAll('.cd-btn').forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
+        setTimeout(()=>{panel.classList.remove('show');free.hidden=true},250);
       }),
       engine.on('end',({scene,path})=>{
-        panel.classList.remove('show');end.querySelector('h3').textContent=scene?.title||'';
+        panel.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';
         $('.cd-path').textContent=path.length?'경로: '+path.join(' → '):'';end.hidden=false;
       }),
       bindSkinClicks(root,engine)
@@ -1250,8 +1339,9 @@ function applyLayout(){
     if(!list.includes(LY.active[id]))LY.active[id]=list[0];
     const tabs=sl.querySelector('.tabs'),body=sl.querySelector('.slot-body');
     tabs.innerHTML=list.map(p=>`<button class="tab ${p===LY.active[id]?'on':''}" data-tab="${p}" title="클릭: 보기 · 끌기: 다른 칸으로 옮기기">${PANELS[p].dataset.title}</button>`).join('')+
-      `<span class="sp"></span><button class="tmax" title="이 칸 크게 보기 / 되돌리기" aria-label="이 칸 크게 보기">⤢</button>`;
+      `<span class="sp"></span><button class="tmax" title="이 칸을 큰 창으로 보기" aria-label="이 칸을 큰 창으로 보기">⤢</button>`;
     list.forEach(p=>{const el=PANELS[p];if(el.parentElement!==body)body.appendChild(el);el.hidden=p!==LY.active[id]});
+    if(sl.classList.contains('max')){const b=tabs.querySelector('.tmax');b.textContent='✕ 닫기';b.title='큰 창 닫기 (Esc)'}
     let ph=body.querySelector('.empty-slot');
     if(!list.length){if(!ph){ph=document.createElement('div');ph.className='empty-slot';ph.textContent='빈 칸이에요. 다른 칸의 탭을 여기로 끌어오세요.';body.appendChild(ph)}}
     else ph?.remove();
@@ -1293,12 +1383,26 @@ document.addEventListener('pointerup',e=>{
   ws.querySelectorAll('.slot.dropt').forEach(s=>s.classList.remove('dropt'));
   if(sl&&sl.dataset.slot!==slotOf(d.id)){movePanel(d.id,sl.dataset.slot);toast(`'${PANELS[d.id].dataset.title}' 패널을 옮겼어요`)}
 });
+/* 칸을 화면 위에 뜨는 큰 창으로 보기 (⤢ 버튼 · Esc · 바깥 클릭으로 닫기) */
+function setMax(sl,on){
+  ws.querySelectorAll('.slot.max').forEach(x=>{x.classList.remove('max');const b=x.querySelector('.tmax');if(b){b.textContent='⤢';b.title='이 칸을 큰 창으로 보기'}});
+  $('maxBd')?.remove();
+  if(sl&&on){
+    sl.classList.add('max');const b=sl.querySelector('.tmax');if(b){b.textContent='✕ 닫기';b.title='큰 창 닫기 (Esc)'}
+    const bd=document.createElement('div');bd.id='maxBd';bd.className='max-bd';bd.onclick=()=>setMax(null,false);document.body.appendChild(bd);
+  }
+  setTimeout(()=>{fitStage();const g=(sl&&on?sl:ws).querySelector('#graph');if(g&&!g.closest('[hidden]'))fitView()},40);
+}
+function maxOpen(){return!!ws.querySelector('.slot.max')}
 ws.addEventListener('click',e=>{
   const m=e.target.closest('.tmax');if(!m)return;
-  const sl=m.closest('.slot'),on=!sl.classList.contains('max');
-  ws.querySelectorAll('.slot.max').forEach(x=>x.classList.remove('max'));
-  sl.classList.toggle('max',on);setTimeout(()=>{fitStage();if(sl.querySelector('#graph'))fitView()},30);
+  const sl=m.closest('.slot');setMax(sl,!sl.classList.contains('max'));
 });
+/* 큰 화면 미리보기: 미리보기 칸을 큰 창으로 띄우고 바로 재생 */
+function openTheater(){
+  focusPanel('preview');setMax(ws.querySelector(`.slot[data-slot="${slotOf('preview')}"]`),true);
+  if(!cover.hidden||!engine.cur){const id=P.scenes[sel]?sel:P.start;playFrom(id);toast(`'${P.scenes[id].title}' 장면부터 큰 화면으로 재생해요 · Esc로 닫기`)}
+}
 /* 경계선 끌기 */
 let gutDrag=null;
 ws.addEventListener('pointerdown',e=>{
@@ -1325,7 +1429,7 @@ $('wsMenu').addEventListener('click',e=>{
   const b=e.target.closest('button[data-ws]');if(!b)return;closeMenu();
   if(b.dataset.ws==='reset'){const p=PRESETS[LY.preset]||PRESETS.edit;LY.L=p.L;LY.R=p.R;LY.T=p.T}
   else{LY=cloneLayout(b.dataset.ws);toast('작업 영역: '+{edit:'기본 편집',link:'장면 연결 집중',watch:'미리보기 집중'}[b.dataset.ws])}
-  ws.querySelectorAll('.slot.max').forEach(x=>x.classList.remove('max'));
+  setMax(null,false);
   applyLayout();setTimeout(()=>fitView(),30);
 });
 applyLayout();
@@ -1362,7 +1466,8 @@ function setIcons({paused,muted}){
 setIcons({paused:true,muted:false});
 engine.on('state',s=>setIcons(s));
 $('coverPlay').onclick=()=>playFrom(P.start);
-$('bPlayAll').onclick=()=>{playFrom(P.start);$('stage').scrollIntoView({behavior:'smooth',block:'center'})};
+$('bPlayAll').onclick=()=>{playFrom(P.start);if(!maxOpen())$('stage').scrollIntoView({behavior:'smooth',block:'center'})};
+$('bTheater').onclick=openTheater;
 $('tPlay').onclick=()=>{if(cover.hidden)engine.setPaused(!engine.paused);else playFrom(P.start)};
 $('tBack').onclick=()=>{if(!cover.hidden)return;engine.back()};
 $('tMute').onclick=()=>engine.setMuted(!engine.muted);
@@ -1515,6 +1620,7 @@ function renderGraph(){
   renderEdges();applyView();
 }
 function selectScene(id,choiceIdx){
+  if(placing&&placing!==id)stopPlacing();
   sel=id;G.selChoice=choiceIdx!=null?{s:id,i:+choiceIdx}:null;if(choiceIdx!=null)G.selEdge=null;
   renderGraph();renderInspector();
   if(choiceIdx!=null){
@@ -1708,6 +1814,7 @@ function renderInspector(){
       <h3><span class="sn">3</span>선택지 <small>${s.choices.length}개</small></h3>
       ${cards||'<p class="hint">아직 선택지가 없어요. 아래 버튼으로 추가하거나, 장면 지도에서 ＋ 점을 끌어 보세요.</p>'}
       <button class="addch" data-act="addch">＋ 선택지 추가</button>
+      ${cposPicker(s)}
     </section>
     <details class="adv" id="adv" ${advOpen?'open':''}>
       <summary>고급 설정 · 선택지 나오는 시점, 제한 시간</summary>
@@ -1861,6 +1968,13 @@ insp.addEventListener('click',e=>{
     if(md==='auto'&&!varNames().length)toast('자동 이동은 점수 변수가 필요해요. 점수 변수 패널에서 먼저 만들어 주세요.');
   }
   else if(b.dataset.goto){selectScene(b.dataset.goto);return}
+  else if(b.dataset.cpos!=null){
+    s.cpos=b.dataset.cpos;
+    if(s.cpos==='free'){const n=s.choices.length;s.choices.forEach((c,i)=>{if(!c.spot)c.spot=freeSpot(c,i,n)});save();startPlacing(s.id);return}
+    if(placing===s.id)stopPlacing();
+    const pv=s.cpos?CPOS.find(x=>x[0]===s.cpos)[1]:'기본';toast(`선택지가 화면 ${pv} 위치에 나와요 · 미리보기로 확인해 보세요`);
+  }
+  else if(b.dataset.act==='place'){startPlacing(s.id);return}
   else if(b.dataset.act==='addch'){
     const c={id:uid('c'),label:'',target:'',set:'',if:''};
     if(s.auto&&varNames().length&&s.choices.length===0)c.if=Logic.condStr([defaultRow('if')]);
@@ -1877,6 +1991,71 @@ insp.addEventListener('click',e=>{
     deleteScene(s.id);return;
   }else return;
   save();renderGraph();renderInspector();
+});
+
+/* --- 선택지 직접 배치 (미리보기 화면 위에서 끌기) --- */
+const CPOS=[['','기본'],['bottom','아래'],['top','위'],['center','가운데'],['left','왼쪽'],['right','오른쪽'],['free','직접 배치']];
+let placing=null,plDrag=null;
+function cposPicker(s){
+  const cur=s.cpos||'';
+  return`<div class="cpos">
+    <div class="bl">화면에서 선택지 위치<em>${cur===''?'선택지 모양(스킨)의 기본 위치':''}</em></div>
+    <div class="cpos-seg">${CPOS.map(([v,l])=>`<button data-cpos="${v}" class="${cur===v?'on':''}" title="${l}">
+      <i class="cp-ic cp-${v||'def'}"></i>${l}</button>`).join('')}</div>
+    ${cur==='free'?`<button class="btn sm primary" data-act="place">${placing===s.id?'배치 중 · 미리보기를 보세요':'미리보기에서 끌어서 배치하기'}</button>
+      <p class="hint">미리보기 화면 위에 선택지가 나타나요. 원하는 자리로 끌어다 놓으면 저장돼요.</p>`:''}
+  </div>`;
+}
+function startPlacing(id){
+  const s=P.scenes[id];if(!s)return;
+  if(!s.choices.length){toast('먼저 선택지를 추가하세요',true);return}
+  focusPanel('preview');placing=id;
+  cover.hidden=true;engine.start(id);
+  // 선택지가 나오기 바로 전 화면에서 멈춰서, 실제 영상 위에 배치하도록 합니다
+  setTimeout(()=>{
+    if(placing!==id)return;engine.setPaused(true);
+    const d=engine.cur?.adapter.duration||+s.media?.duration||1;
+    const at=s.choiceAt!==''&&s.choiceAt!=null?+s.choiceAt:d;
+    engine.seek(Math.max(0,at-0.1));
+  },350);
+  renderPlace();renderInspector();
+  $('stage').scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function stopPlacing(){if(!placing)return;placing=null;$('placeRoot').hidden=true;$('placeRoot').innerHTML='';renderInspector()}
+function renderPlace(){
+  const pr=$('placeRoot'),s=P.scenes[placing];if(!s){stopPlacing();return}
+  pr.hidden=false;
+  pr.innerHTML=`<div class="pl-bar"><span><b>${esc(s.title)}</b> · 선택지를 끌어서 위치를 정하세요</span>
+      <button class="btn sm" data-pl="row">가로로 정렬</button><button class="btn sm" data-pl="col">세로로 정렬</button>
+      <button class="btn sm primary" data-pl="done">완료</button></div>
+    ${s.choices.map((c,i)=>{const p=freeSpot(c,i,s.choices.length);
+      return`<div class="pl-chip" data-i="${i}" style="left:${p.x}%;top:${p.y}%"><kbd>${i+1}</kbd>${esc(c.label||'이름 없는 선택지')}</div>`}).join('')}
+    <i class="pl-gv" hidden></i><i class="pl-gh" hidden></i>`;
+}
+$('placeRoot').addEventListener('click',e=>{
+  const b=e.target.closest('[data-pl]');if(!b)return;const s=P.scenes[placing];if(!s)return;
+  const n=s.choices.length;
+  if(b.dataset.pl==='done'){stopPlacing();toast('선택지 위치를 저장했어요');return}
+  s.choices.forEach((c,i)=>{c.spot=b.dataset.pl==='row'?{x:Math.round((i+1)/(n+1)*100),y:freeSpot(c,i,n).y}:{x:freeSpot(c,i,n).x,y:Math.round(30+(n>1?i*50/(n-1):25))}});
+  save();renderPlace();
+});
+$('placeRoot').addEventListener('pointerdown',e=>{
+  const ch=e.target.closest('.pl-chip');if(!ch||e.button!==0)return;
+  e.preventDefault();ch.setPointerCapture(e.pointerId);ch.classList.add('drag');plDrag=ch;
+});
+$('placeRoot').addEventListener('pointermove',e=>{
+  if(!plDrag)return;const r=$('stage').getBoundingClientRect();
+  let x=(e.clientX-r.left)/r.width*100,y=(e.clientY-r.top)/r.height*100;
+  x=Math.max(4,Math.min(96,x));y=Math.max(8,Math.min(94,y));
+  const sx=Math.abs(x-50)<2,sy=Math.abs(y-50)<2;if(sx)x=50;if(sy)y=50;   // 가운데에 가까우면 딱 맞춤
+  $('placeRoot').querySelector('.pl-gv').hidden=!sx;$('placeRoot').querySelector('.pl-gh').hidden=!sy;
+  plDrag.style.left=x+'%';plDrag.style.top=y+'%';plDrag.dataset.x=Math.round(x);plDrag.dataset.y=Math.round(y);
+});
+$('placeRoot').addEventListener('pointerup',()=>{
+  if(!plDrag)return;const s=P.scenes[placing],i=+plDrag.dataset.i;
+  if(plDrag.dataset.x)s.choices[i].spot={x:+plDrag.dataset.x,y:+plDrag.dataset.y};
+  plDrag.classList.remove('drag');plDrag=null;
+  $('placeRoot').querySelectorAll('.pl-gv,.pl-gh').forEach(g=>g.hidden=true);save();
 });
 
 /* --- 점수 변수 패널 --- */
@@ -2206,6 +2385,7 @@ document.addEventListener('keydown',e=>{
   }
   if(e.key==='Escape'){
     document.querySelectorAll('.modal').forEach(m=>m.hidden=true);closeMenu();$('kbHelp').hidden=true;
+    if(placing)stopPlacing();else if(maxOpen())setMax(null,false);
     if(G.selEdge||G.selChoice){G.selEdge=null;G.selChoice=null;renderGraph()}return;
   }
   if(e.target.closest('input,textarea,select,[contenteditable]'))return;
