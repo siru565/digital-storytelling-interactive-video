@@ -85,8 +85,8 @@
 }
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html,body{margin:0;height:100%;background:var(--bg);color:var(--fg)}
-body{font:15px/1.55 var(--f-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0;display:flex;flex-direction:column;overflow:hidden}
+html,body{margin:0;background:var(--bg);color:var(--fg)}
+body{font:15px/1.55 var(--f-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
 button,input,select,textarea{font:inherit;color:inherit}
 button,label.btn,select{cursor:pointer}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -107,7 +107,8 @@ button,label.btn,select{cursor:pointer}
 .ib svg{width:18px;height:18px;fill:currentColor}
 
 /* 상단 바 */
-.top{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;padding-block:10px 8px;flex:none}
+.top{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:flex-end;padding-block:10px 8px;position:sticky;top:env(safe-area-inset-top,0px);z-index:25;background:var(--bg)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:26;background:var(--bg)}
 .brand{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin-right:auto;min-width:0;max-width:100%}
 .brand b{font:600 12.5px var(--f-ui);color:var(--mute);letter-spacing:.01em}
 .brand b i{font-style:normal;color:var(--accent)}
@@ -128,7 +129,7 @@ button,label.btn,select{cursor:pointer}
 .menu .menu-tip{padding:6px 12px 4px;line-height:1.5}
 
 /* 작업 영역: 프리미어처럼 칸(슬롯) 4개 + 크기 조절 경계선 */
-.ws{flex:1;min-height:0;display:grid;position:relative;
+.ws{height:var(--wsH,900px);display:grid;position:relative;
   grid-template-columns:minmax(0,40fr) 6px minmax(0,33fr) 6px minmax(0,27fr);
   grid-template-rows:minmax(0,60fr) 6px minmax(0,40fr);
   grid-template-areas:"A g1 C g2 D" "g3 g1 C g2 D" "B g1 C g2 D"}
@@ -160,7 +161,11 @@ button,label.btn,select{cursor:pointer}
 .dragghost{position:fixed;pointer-events:none;z-index:70;background:var(--accent);color:#1d1406;font-size:12px;font-weight:600;padding:4px 10px;border-radius:6px}
 
 /* 하단 상태 막대 */
-.statusbar{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding-block:7px 8px;font-size:12.5px;color:var(--mute);flex:none}
+.statusbar{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center;padding-block:7px 24px;font-size:12.5px;color:var(--mute)}
+.wsgrip{height:22px;margin-top:4px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:row-resize;touch-action:none;color:var(--dim);font-size:12px;border-radius:6px;user-select:none}
+.wsgrip::before,.wsgrip::after{content:"";height:2px;width:40px;background:var(--line2);border-radius:2px}
+.wsgrip:hover,.wsgrip.on{color:var(--accent);background:#17150f}
+.wsgrip:hover::before,.wsgrip:hover::after,.wsgrip.on::before,.wsgrip.on::after{background:var(--accent)}
 .sb{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;color:inherit;font-size:inherit}
 .sb b{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font:600 10.5px var(--f-mono);background:var(--panel2);border:1px solid var(--line2);color:var(--mute)}
 .sb.ok b{background:var(--ok);border-color:var(--ok);color:#0f1a13}
@@ -242,7 +247,8 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 @media (max-width:900px){
   html,body{height:auto!important;overflow:visible!important}
   .ws{display:flex!important;flex-direction:column;gap:12px}
-  .gut,.tmax{display:none}
+  .gut,.tmax,.wsgrip{display:none}
+  .ws{height:auto!important}
   .slot{min-height:0}
   .slot-body{flex:none}
   .panel{flex:none}
@@ -424,7 +430,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .lib-row .use{font-size:12px;color:var(--mute)}
 .lib-row .use.none{color:var(--danger)}
 .lib-row .sz{font:12px var(--f-mono);color:var(--mute);white-space:nowrap}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line2);border-left:3px solid var(--branch);color:var(--fg);padding:9px 16px;border-radius:8px;font-size:14px;z-index:60;max-width:calc(100% - 32px)}
+.toast{pointer-events:none;position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--panel2);border:1px solid var(--line2);border-left:3px solid var(--branch);color:var(--fg);padding:9px 16px;border-radius:8px;font-size:14px;z-index:60;max-width:calc(100% - 32px)}
 .toast.bad{border-left-color:var(--danger)}
 @media (max-width:560px){.seg2,.row2,.ch-grid{grid-template-columns:1fr}.ch-row2,.ch details{padding-left:0}}
 </style>
@@ -448,6 +454,10 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
         <button data-ws="watch">미리보기 집중<small>영상 화면을 크게</small></button>
         <hr>
         <button data-ws="reset">지금 배치 크기 초기화</button>
+        <hr>
+        <button data-wsh="fit">높이: 화면에 맞추기</button>
+        <button data-wsh="1.5">높이: 화면의 1.5배<small>아래로 스크롤해서 넓게 작업</small></button>
+        <button data-wsh="2">높이: 화면의 2배</button>
         <small class="menu-tip">패널 이름 탭을 끌어서 다른 칸으로 옮길 수 있어요. 칸 사이 경계선을 끌면 크기가 바뀌고, 탭 오른쪽 ⤢ 버튼은 그 칸을 크게 보여 줘요.</small>
       </div>
     </div>
@@ -475,6 +485,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
   <div class="gut" data-g="R" title="끌어서 크기 조절 · 더블클릭하면 원래대로"></div>
   <div class="slot" data-slot="D"><div class="tabs"></div><div class="slot-body"></div></div>
 </main>
+<div class="wsgrip" id="wsGrip" role="separator" aria-label="작업 영역 높이 조절" title="끌어서 작업 영역 높이 조절 · 더블클릭하면 화면 높이에 맞춤">끌어서 작업 영역 높이 조절 <span id="wsHLabel"></span></div>
 <footer class="statusbar" id="guide"></footer>
 
 <!-- 패널 원본: 스크립트가 작업 영역 칸으로 옮겨 넣습니다 -->
@@ -498,7 +509,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
       <span>장면 위쪽 끌기 = 이동</span>
       <span>선 클릭 = 연결 끊기</span>
       <span>점선 = 조건이 있는 길</span>
-      <span>빈 곳 끌기 = 화면 이동 · Ctrl+휠 = 확대</span>
+      <span>빈 곳 끌기 = 지도 이동 · Ctrl+휠 = 확대 · Shift+휠 = 옆으로</span>
     </div>
   </section>
 
@@ -1138,7 +1149,7 @@ const PRESETS={
   watch:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:25,R:25,T:42}
 };
 const LKEY='dsiv-layout-v1',ws=$('ws');
-function cloneLayout(k){const p=PRESETS[k];return{slots:JSON.parse(JSON.stringify(p.slots)),L:p.L,R:p.R,T:p.T,active:{},preset:k}}
+function cloneLayout(k){const p=PRESETS[k];return{slots:JSON.parse(JSON.stringify(p.slots)),L:p.L,R:p.R,T:p.T,H:LY?.H,active:{},preset:k}}
 function validLayout(l){
   if(!l||!l.slots)return false;
   const all=Object.values(l.slots).flat(),ids=Object.keys(PANELS);
@@ -1146,6 +1157,9 @@ function validLayout(l){
 }
 let LY;try{LY=JSON.parse(localStorage.getItem(LKEY))}catch(e){}
 if(!validLayout(LY))LY=cloneLayout('edit');
+/* 작업 영역 높이(px). 기본은 화면보다 크게 잡고, 페이지를 스크롤해서 씁니다 */
+function screenFitH(){const top=document.querySelector('.top')?.offsetHeight||70;return Math.max(480,innerHeight-top-70)}
+if(!LY.H)LY.H=Math.round(Math.max(820,screenFitH()*1.35));
 LY.active??={};
 function saveLayout(){try{localStorage.setItem(LKEY,JSON.stringify(LY))}catch(e){}}
 function fitStage(){
@@ -1160,6 +1174,8 @@ function applySizes(){
   const c=Math.max(18,100-LY.L-LY.R);
   ws.style.gridTemplateColumns=`minmax(0,${LY.L}fr) 6px minmax(0,${c}fr) 6px minmax(0,${LY.R}fr)`;
   ws.style.gridTemplateRows=`minmax(0,${LY.T}fr) 6px minmax(0,${100-LY.T}fr)`;
+  ws.style.setProperty('--wsH',LY.H+'px');
+  const lb=$('wsHLabel');if(lb)lb.textContent=`(${LY.H}px)`;
   fitStage();
 }
 function applyLayout(){
@@ -1238,6 +1254,8 @@ ws.addEventListener('dblclick',e=>{
 /* 작업 영역 메뉴 */
 $('bWs').onclick=e=>{e.stopPropagation();const h=!$('wsMenu').hidden;closeMenu();$('wsMenu').hidden=h;$('bWs').setAttribute('aria-expanded',String(!h))};
 $('wsMenu').addEventListener('click',e=>{
+  const h=e.target.closest('button[data-wsh]');
+  if(h){closeMenu();const f=screenFitH();LY.H=Math.round(h.dataset.wsh==='fit'?f:f*+h.dataset.wsh);applySizes();saveLayout();setTimeout(()=>fitView(),30);toast(`작업 영역 높이 ${LY.H}px`);return}
   const b=e.target.closest('button[data-ws]');if(!b)return;closeMenu();
   if(b.dataset.ws==='reset'){const p=PRESETS[LY.preset]||PRESETS.edit;LY.L=p.L;LY.R=p.R;LY.T=p.T}
   else{LY=cloneLayout(b.dataset.ws);toast('작업 영역: '+{edit:'기본 편집',link:'장면 연결 집중',watch:'미리보기 집중'}[b.dataset.ws])}
@@ -1245,6 +1263,13 @@ $('wsMenu').addEventListener('click',e=>{
   applyLayout();setTimeout(()=>fitView(),30);
 });
 applyLayout();
+{
+  const grip=$('wsGrip');let gd=null;
+  grip.addEventListener('pointerdown',e=>{e.preventDefault();grip.setPointerCapture(e.pointerId);grip.classList.add('on');gd={y:e.clientY,h:LY.H}});
+  grip.addEventListener('pointermove',e=>{if(!gd)return;LY.H=Math.round(Math.max(420,Math.min(4000,gd.h+e.clientY-gd.y)));applySizes()});
+  grip.addEventListener('pointerup',()=>{if(!gd)return;gd=null;grip.classList.remove('on');saveLayout();fitView()});
+  grip.addEventListener('dblclick',()=>{LY.H=screenFitH();applySizes();saveLayout();fitView()});
+}
 
 /* --- 엔진 + 스킨 --- */
 const engine=new IVEngine($('layers'),Media);
@@ -1485,9 +1510,8 @@ canvas.addEventListener('pointerup',endDrag);
 canvas.addEventListener('pointercancel',()=>{G.drag=null;canvas.classList.remove('panning');clearDrop();renderGraph()});
 canvas.addEventListener('dblclick',e=>{const n=e.target.closest('.nh');if(n)playFrom(n.parentElement.dataset.id)});
 canvas.addEventListener('wheel',e=>{
-  e.preventDefault();
-  if(e.ctrlKey||e.metaKey)zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0018));
-  else{G.px-=e.deltaX;G.py-=e.deltaY;applyView()}
+  if(e.ctrlKey||e.metaKey){e.preventDefault();zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0018))}
+  else if(e.shiftKey){e.preventDefault();G.px-=e.deltaX||e.deltaY;G.py-=e.deltaX?e.deltaY:0;applyView()}
 },{passive:false});
 function cutEdge(del){
   const se=G.selEdge;if(!se)return;const s=P.scenes[se.s];if(!s)return;
