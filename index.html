@@ -96,12 +96,16 @@ button,label.btn,select{cursor:pointer}
 .ib svg{width:18px;height:18px;fill:currentColor}
 
 /* 상단 바 */
-.top{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center;padding-block:14px}
-.brand{display:flex;align-items:baseline;gap:10px;margin-right:auto;min-width:0}
-.brand b{font:700 17px var(--f-ui);white-space:nowrap}
+.top{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;padding-block:16px}
+.brand{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-right:auto;min-width:0;max-width:100%}
+.brand b{font:700 17px var(--f-ui)}
 .brand b i{font-style:normal;color:var(--accent)}
-.brand input{background:transparent;border:1px solid transparent;border-radius:6px;padding:4px 8px;font-size:15px;font-weight:600;min-width:0;width:240px;max-width:52vw}
-.brand input:hover,.brand input:focus{border-color:var(--line);background:var(--panel)}
+.proj{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:6px 10px 6px 12px;max-width:100%;cursor:text}
+.proj:hover{border-color:#55606f}
+.proj:focus-within{border-color:var(--accent)}
+.proj span{font-size:12px;font-weight:600;color:var(--accent);white-space:nowrap;letter-spacing:.02em}
+.proj input{background:transparent;border:0;outline:none;padding:2px 0;font-size:18px;font-weight:700;min-width:0;width:300px;max-width:58vw}
+.proj svg{width:16px;height:16px;color:var(--mute);flex:none}
 .more{position:relative}
 .menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:6px;min-width:230px;z-index:40;display:flex;flex-direction:column;box-shadow:0 12px 30px rgba(0,0,0,.45)}
 .menu button,.menu label{text-align:left;background:none;border:0;padding:9px 12px;border-radius:6px;font-size:14px;display:block}
@@ -275,7 +279,14 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <header class="top">
-  <div class="brand"><b>디지털스토리텔링 <i>인터랙티브 비디오</i> 제작용</b><input id="pTitle" aria-label="프로젝트 이름" placeholder="프로젝트 이름"></div>
+  <div class="brand">
+    <b>디지털스토리텔링 <i>인터랙티브 비디오</i> 제작용</b>
+    <label class="proj" for="pTitle" title="클릭해서 프로젝트 이름 바꾸기">
+      <span>프로젝트 이름</span>
+      <input id="pTitle" placeholder="예: 자정의 골목길">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+    </label>
+  </div>
   <button class="btn" id="bPlayAll">▶ 처음부터 플레이</button>
   <button class="btn primary" id="bExport">내보내기</button>
   <div class="more">
