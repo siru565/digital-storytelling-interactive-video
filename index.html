@@ -2158,8 +2158,8 @@ function renderVarsPanel(){
       <div class="vuse"><span>${u?`선택지·장면 ${u}곳에서 사용 중`:'아직 아무 데서도 안 쓰는 중'}</span><span class="vnow" data-now="${esc(n)}"></span></div>
     </div>`;}).join('');
   $('varsPanel').innerHTML=`
-    <button class="vp-help" data-vhelp aria-haspopup="dialog">
-      <span class="q">?</span><span><b>점수 변수란?</b> 플레이어가 고른 것을 기억해 두는 값이에요.</span><span class="more-t">사용법 크게 보기 ›</span>
+    <button class="vp-help" data-vhelp aria-haspopup="dialog" title="눌러서 자세한 설명과 예시 보기">
+      <span class="q">?</span><span><b>점수 변수란?</b> 플레이어가 고른 것을 기억해 두는 값이에요.</span>
     </button>
     <div class="vp-add">
       <button class="btn sm primary" data-vadd="num">＋ 숫자 점수</button>
@@ -2168,7 +2168,7 @@ function renderVarsPanel(){
     <div class="vp-ex"><span class="hint">예시로 바로 추가</span>
       ${VAR_EX.map((x,i)=>`<button class="chipbtn" data-vex="${i}" title="${esc(x[3])}">${esc(x[0])}<small>${x[1]==='flag'?'스위치':'점수'}</small></button>`).join('')}</div>
     <div class="vp-list">${rows||'<p class="hint">아직 변수가 없어요. 위 버튼으로 하나 만들어 보세요.</p>'}</div>
-    <p class="hint">예시 4가지와 자세한 사용법은 위 <b>사용법 크게 보기</b>에서 볼 수 있어요. 지금 값은 각 변수 옆과 미리보기 아래에 실시간으로 나와요.</p>`;
+    <p class="hint">위 <b>점수 변수란?</b>을 누르면 자세한 사용법과 예시를 크게 볼 수 있어요. 지금 값은 각 변수 옆과 미리보기 아래에 실시간으로 나와요.</p>`;
   updateVarNow();
 }
 function updateVarNow(){
