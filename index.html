@@ -168,6 +168,21 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .proj span{font-size:11.5px;font-weight:600;color:var(--accent-ink);white-space:nowrap}
 .proj input{background:transparent;border:0;outline:none;padding:2px 0;font-size:16px;font-weight:700;min-width:0;width:280px;max-width:52vw}
 .proj svg{width:15px;height:15px;color:var(--mute);flex:none}
+.brand{flex-wrap:wrap}
+.savechip{background:none;border:0;padding:2px 2px;font-size:12px;color:var(--mute);cursor:default}
+.savechip.dirty{color:var(--accent-ink);cursor:pointer;font-weight:600}
+.savechip.dirty:hover{text-decoration:underline}
+.menu kbd{float:right;font:11px var(--f-mono);color:var(--dim);margin-left:14px;padding-top:2px}
+.op-list{display:flex;flex-direction:column;gap:6px;max-height:52vh;overflow:auto}
+.op-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.op-row.cur{border-color:var(--accent-ink)}
+.op-info{display:flex;flex-direction:column;min-width:0}
+.op-info b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.op-info span{font-size:12.5px;color:var(--mute)}
+.op-row .x{width:30px;height:30px;border-radius:6px;background:none;border:1px solid transparent;color:var(--mute);font-size:17px}
+.op-row .x:hover{border-color:var(--line2);color:var(--danger)}
+.op-row .x.armed,.op-row .btn.armed{background:var(--danger);color:#fff;border-color:var(--danger);width:auto;padding:0 10px;font-size:12px}
+.sa-in{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:10px 12px;font-size:16px;font-weight:600}
 .top-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .more{position:relative}
 .menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:6px;min-width:240px;z-index:40;display:flex;flex-direction:column;box-shadow:0 12px 30px rgba(0,0,0,.45)}
@@ -542,6 +557,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .tplplay{position:absolute;right:12px;top:14px;font-size:12px;color:var(--accent-ink);text-decoration:none}
 .tplplay:hover{text-decoration:underline}
 .tpl-import{border-style:dashed!important}
+.tpl-open{border-color:rgba(94,196,212,.45)!important}
 .wl b{font-size:16px}
 .wl span{font-size:13px;color:var(--mute)}
 .wl .main button{border-color:rgba(240,168,58,.6)}
@@ -579,6 +595,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
       <input id="pTitle" placeholder="예: 자정의 골목길">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
     </label>
+    <button class="savechip" id="saveChip"></button>
   </div>
   <div class="top-actions">
     <button class="btn ghost" id="bTheme" title="화면 테마 바꾸기 (자동 → 라이트 → 다크)"></button>
@@ -601,8 +618,12 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
     <button class="btn" id="bTheater" title="미리보기를 화면 위 큰 창으로 띄워서 지금 선택한 장면부터 플레이">⛶ 큰 화면 미리보기</button>
     <button class="btn primary" id="bExport">내보내기</button>
     <div class="more">
-      <button class="btn ghost" id="bMore" aria-haspopup="true" aria-expanded="false">더보기 ▾</button>
+      <button class="btn ghost" id="bMore" aria-haspopup="true" aria-expanded="false">파일 ▾</button>
       <div class="menu" id="menu" hidden>
+        <button data-m="save">저장<kbd>Ctrl+S</kbd><small>지금 프로젝트를 이름 그대로 저장</small></button>
+        <button data-m="saveas">다른 이름으로 저장…<kbd>Ctrl+Shift+S</kbd><small>새 이름으로 따로 저장 (원본은 그대로)</small></button>
+        <button data-m="open">열기…<kbd>Ctrl+O</kbd><small>저장해 둔 프로젝트 고르기</small></button>
+        <hr>
         <label>내보낸 zip / JSON 불러오기<small>다른 PC에서 만든 프로젝트 이어서 편집</small><input type="file" id="importIn" accept=".zip,.json" hidden></label>
         <button data-m="json">프로젝트 JSON 보기</button>
         <hr>
@@ -761,6 +782,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
     <p class="hint">빈 프로젝트나 템플릿을 골라 시작하세요. 템플릿은 영상 대신 글자 화면으로 되어 있어서, 흐름을 확인한 뒤 장면마다 영상만 넣으면 돼요. 만든 내용은 이 브라우저에 자동으로 저장돼요.</p>
     <div class="wl">
       <div id="tplCards" style="display:contents"></div>
+      <button class="tpl-open" data-wopen><b>저장한 프로젝트 열기</b><span>저장(Ctrl+S)해 둔 프로젝트를 골라서 이어서 작업해요</span></button>
       <label class="tpl-import"><b>zip 불러오기</b><span>내보낸 zip이나 팀원이 보낸 파일로 이어서 편집해요</span><input type="file" id="wImport" accept=".zip,.json" hidden></label>
     </div>
     <div class="actions"><button class="btn" id="wClose">닫기</button></div>
@@ -789,6 +811,23 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
     </div>
     <p class="hint">템플릿의 <b>첫 만남</b>(호감도), <b>열쇠와 문</b>(스위치), <b>추격전</b>(실수 카운트)을 열어 보면 실제로 어떻게 쓰는지 볼 수 있어요.</p>
     <div class="actions"><button class="btn primary" id="vhClose">닫기</button></div>
+  </div>
+</div>
+<div class="modal" id="saveAsModal" hidden>
+  <div class="modal-box" role="dialog" aria-labelledby="saH" style="width:min(480px,100%)">
+    <h2 id="saH">다른 이름으로 저장</h2>
+    <p class="hint">새 이름으로 따로 저장해요. 지금까지 저장된 원본은 그대로 남아 있어요.</p>
+    <input class="sa-in" id="saName" aria-label="새 프로젝트 이름" placeholder="프로젝트 이름">
+    <div class="actions"><button class="btn primary" id="saOk">저장</button><button class="btn" id="saCancel">취소</button><span class="msg bad" id="saMsg"></span></div>
+  </div>
+</div>
+<div class="modal" id="openModal" hidden>
+  <div class="modal-box" role="dialog" aria-labelledby="opH" style="width:min(600px,100%)">
+    <h2 id="opH">프로젝트 열기</h2>
+    <p class="hint">이 브라우저에 저장해 둔 프로젝트예요. 영상은 모든 프로젝트가 영상 보관함을 함께 써요.</p>
+    <div class="op-list" id="opList"></div>
+    <p class="msg" id="opMsg"></p>
+    <div class="actions"><button class="btn" id="opClose">닫기</button></div>
   </div>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -1214,10 +1253,11 @@ const Store={
   db:null,ok:false,
   open(){return new Promise(res=>{
     try{
-      const r=indexedDB.open('forkreel',1);
+      const r=indexedDB.open('forkreel',2);
       r.onupgradeneeded=()=>{const d=r.result;
         if(!d.objectStoreNames.contains('files'))d.createObjectStore('files');
-        if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv')};
+        if(!d.objectStoreNames.contains('kv'))d.createObjectStore('kv');
+        if(!d.objectStoreNames.contains('projects'))d.createObjectStore('projects')};
       r.onsuccess=()=>{this.db=r.result;this.ok=true;res(true)};
       r.onerror=()=>res(false);r.onblocked=()=>res(false);
     }catch(e){res(false)}
@@ -1234,7 +1274,12 @@ const Store={
   getAllFiles(){return this._tx('files','readonly',s=>s.getAll())},
   deleteFile(name){return this._tx('files','readwrite',s=>s.delete(name))},
   saveProject(p){return this._tx('kv','readwrite',s=>s.put(p,'project'))},
-  loadProject(){return this._tx('kv','readonly',s=>s.get('project'))}
+  loadProject(){return this._tx('kv','readonly',s=>s.get('project'))},
+  /* 이름 붙여 저장한 프로젝트들 */
+  putProject(rec){return this._tx('projects','readwrite',s=>s.put(rec,rec.id))},
+  getProject(id){return this._tx('projects','readonly',s=>s.get(id))},
+  listProjects(){return this._tx('projects','readonly',s=>s.getAll())},
+  deleteProject(id){return this._tx('projects','readwrite',s=>s.delete(id))}
 };
 
 /* --- 영상 보관함 (메모리 + IndexedDB) --- */
@@ -1392,7 +1437,7 @@ function save(){
   try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{Store.saveProject(JSON.parse(JSON.stringify(P))).catch(()=>{})},300);
-  renderGuide();renderLib();renderVarsPanel();recordUndo();
+  renderGuide();renderLib();renderVarsPanel();recordUndo();updSaveChip();
 }
 function hasVideo(s){return s.media?.type==='file'&&s.media.name&&Library.has(s.media.name)}
 function openChoices(s){return s.ending?[]:s.choices.filter(c=>!P.scenes[c.target])}
@@ -1658,7 +1703,7 @@ function renderGuide(){
     <span class="sb ${vid===n?'ok':''}"><b>2</b>영상 ${vid}/${n}개 연결${vid<n?' · 나머지는 글자 화면':''}</span>
     <span class="sb ${open?'warn':'ok'}"><b>3</b>${open?`연결 안 된 선택지 ${open}개`:'선택지 모두 연결됨'}</span>
     <button class="sb go" id="gExport"><b>4</b>내보내기</button>
-    <span class="sp"></span><span>자동 저장됨 · 변수 ${varNames().length}개</span>`;
+    <span class="sp"></span><span>작업 중인 내용은 자동 보관돼요 · 이름 붙여 저장은 Ctrl+S</span>`;
   $('gExport').onclick=openExport;
 }
 
@@ -2317,6 +2362,9 @@ let newArmed=false;
 $('menu').addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;const m=b.dataset.m;
   if(m==='lib'){closeMenu();openLib()}
+  else if(m==='save'){closeMenu();saveProject(false)}
+  else if(m==='saveas'){closeMenu();openSaveAs()}
+  else if(m==='open'){closeMenu();openOpen()}
   else if(m==='json'){closeMenu();$('jsonTa').value=JSON.stringify(P,null,2);$('jMsg').textContent='';$('jsonModal').hidden=false}
   else if(m==='welcome'){closeMenu();$('welcome').hidden=false}
   else if(m==='sample'){closeMenu();replaceProject(sampleProject());toast('예제 프로젝트를 열었어요')}
@@ -2327,12 +2375,85 @@ $('menu').addEventListener('click',e=>{
   }
 });
 function replaceProject(np){
-  P=migrate(np);engine.load(P);sel=P.start;save();
+  P=migrate(np);if(!np.pid){delete P.pid;lastSavedSnap=null}engine.load(P);sel=P.start;save();
   $('pTitle').value=P.title||'';
   $('skinSel').value=Skins.get(P.skin).id;useSkin($('skinSel').value);
   cover.hidden=false;G.selEdge=null;renderGraph();renderInspector();fitView();
 }
 $('pTitle').addEventListener('input',()=>{P.title=$('pTitle').value;save()});
+
+/* --- 저장 · 다른 이름으로 저장 · 열기 ------------------------------------
+   · 작업 중인 내용은 지금처럼 자동 보관되고(새로고침해도 유지),
+     [저장]을 누르면 이름이 붙은 프로젝트로 보관함(IndexedDB)에 따로 저장됩니다.
+   · 여러 프로젝트를 저장해 두고 [열기]로 골라서 이어서 작업할 수 있어요.
+   -------------------------------------------------------------------- */
+var lastSavedSnap=null,lastSavedAt=null;
+function canon(v){return Array.isArray(v)?'['+v.map(canon).join(',')+']':v&&typeof v==='object'?'{'+Object.keys(v).sort().map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}':JSON.stringify(v)}
+function snapC(){const o={...P};delete o.savedAt;return canon(o)}
+function isDirty(){return!P.pid||snapC()!==lastSavedSnap}
+function fmtWhen(t){
+  if(!t)return'';const d=new Date(t),n=new Date();
+  const hm=`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+  return d.toDateString()===n.toDateString()?`오늘 ${hm}`:`${d.getMonth()+1}월 ${d.getDate()}일 ${hm}`;
+}
+function updSaveChip(){
+  const c=$('saveChip');if(!c||typeof P==='undefined')return;
+  if(!P.pid){c.textContent='저장 안 된 새 프로젝트';c.className='savechip dirty'}
+  else if(isDirty()){c.textContent='● 저장 안 된 변경';c.className='savechip dirty'}
+  else{c.textContent='저장됨 · '+fmtWhen(lastSavedAt);c.className='savechip'}
+  c.title=isDirty()?'눌러서 저장 (Ctrl+S)':'저장된 상태예요';
+}
+async function saveProject(asNew,name){
+  if(!Store.ok){toast('이 환경에서는 저장할 수 없어요. 내보내기(zip)를 써 주세요',true);return}
+  if(asNew||!P.pid)P.pid=uid('p');
+  if(name!=null){P.title=name;$('pTitle').value=name}
+  save();
+  const data=JSON.parse(snapP()),now=Date.now();
+  try{
+    await Store.putProject({id:P.pid,title:P.title||'이름 없는 프로젝트',savedAt:now,scenes:Object.keys(P.scenes).length,data});
+    lastSavedSnap=snapC();lastSavedAt=now;updSaveChip();
+    toast(asNew?`'${P.title}'(으)로 새로 저장했어요`:`'${P.title}' 저장했어요`);
+  }catch(e){toast('저장하지 못했어요. 저장 공간을 확인해 주세요',true)}
+}
+function openSaveAs(){
+  $('saName').value=P.pid?`${P.title||'프로젝트'} 사본`:(P.title||'');
+  $('saMsg').textContent='';$('saveAsModal').hidden=false;setTimeout(()=>{$('saName').focus();$('saName').select()},30);
+}
+$('saOk').onclick=()=>{
+  const n=$('saName').value.trim();
+  if(!n){$('saMsg').textContent='이름을 입력해 주세요';return}
+  $('saveAsModal').hidden=true;saveProject(true,n);
+};
+$('saName').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('saOk').click()}});
+$('saCancel').onclick=()=>{$('saveAsModal').hidden=true};
+async function openOpen(){
+  $('openModal').hidden=false;$('opMsg').textContent='';
+  const list=(await Store.listProjects()||[]).sort((a,b)=>b.savedAt-a.savedAt);
+  $('opList').innerHTML=list.length?list.map(p=>`<div class="op-row ${p.id===P.pid?'cur':''}" data-id="${p.id}">
+      <div class="op-info"><b>${esc(p.title)}</b><span>장면 ${p.scenes}개 · ${fmtWhen(p.savedAt)} 저장${p.id===P.pid?' · 지금 작업 중':''}</span></div>
+      <button class="btn sm primary" data-open>열기</button><button class="x" data-pdel title="삭제" aria-label="${esc(p.title)} 삭제">×</button>
+    </div>`).join(''):'<p class="empty">아직 저장한 프로젝트가 없어요. 작업 중에 <b>저장</b>(Ctrl+S)을 누르면 여기에 생겨요.</p>';
+}
+$('opList').addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;const id=b.closest('.op-row').dataset.id;
+  if(b.hasAttribute('data-open')){
+    if(id!==P.pid&&isDirty()&&!b.classList.contains('armed')){
+      b.classList.add('armed');b.textContent='저장 안 된 변경이 있어요 · 그래도 열기';
+      $('opMsg').textContent='지금 작업은 자동 보관돼 있지만, 다른 프로젝트를 열면 덮어써져요. 먼저 저장하려면 닫고 Ctrl+S를 누르세요.';return;
+    }
+    const rec=await Store.getProject(id);if(!rec){toast('프로젝트를 찾지 못했어요',true);return}
+    $('openModal').hidden=true;
+    replaceProject({...rec.data,pid:rec.id});lastSavedSnap=snapC();lastSavedAt=rec.savedAt;updSaveChip();
+    toast(`'${rec.title}'을 열었어요`);
+  }else if(b.hasAttribute('data-pdel')){
+    if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='삭제?';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='×'}},2500);return}
+    await Store.deleteProject(id);
+    if(id===P.pid){delete P.pid;lastSavedSnap=null;save();updSaveChip()}
+    openOpen();toast('저장된 프로젝트를 삭제했어요');
+  }
+});
+$('opClose').onclick=()=>{$('openModal').hidden=true};
+$('saveChip').onclick=()=>{if(isDirty())saveProject(false)};
 
 /* --- JSON --- */
 $('jClose').onclick=()=>{$('jsonModal').hidden=true};
@@ -2569,6 +2690,7 @@ $('welcome').addEventListener('click',e=>{
   else toast(`'${t.name}' 템플릿을 열었어요. 장면마다 영상을 넣어 바꿔 보세요.`);
 });
 $('wClose').onclick=()=>{$('welcome').hidden=true};
+$('welcome').addEventListener('click',e=>{if(e.target.closest('[data-wopen]')){$('welcome').hidden=true;openOpen()}});
 renderTemplates();
 
 /* --- 단축키 · 확대 막기 -----------------------------------------------
@@ -2611,6 +2733,8 @@ function pasteScene(){
 }
 document.addEventListener('keydown',e=>{
   const mod=e.ctrlKey||e.metaKey,k=e.key.toLowerCase();
+  if(mod&&!e.altKey&&(e.key==='s'||e.key==='S')){e.preventDefault();e.shiftKey?openSaveAs():saveProject(false);return}
+  if(mod&&!e.altKey&&(e.key==='o'||e.key==='O')){e.preventDefault();openOpen();return}
   if(mod&&['=','+','-','_','0'].includes(e.key)){
     e.preventDefault();const[cx,cy]=graphCenter();
     zoomAt(cx,cy,e.key==='0'?1/G.z:(e.key==='-'||e.key==='_')?1/1.2:1.2);return;
@@ -2661,10 +2785,11 @@ renderGuide();renderGraph();renderInspector();renderLib();renderVarsPanel();
       }else Store.saveProject(JSON.parse(JSON.stringify(P))).catch(()=>{});
     }catch(e){}
     try{const n=await Library.restore();if(n)toast(`보관함에서 영상 ${n}개를 불러왔어요`)}catch(e){}
+    try{if(P.pid){const rec=await Store.getProject(P.pid);if(rec){lastSavedSnap=canon(rec.data);lastSavedAt=rec.savedAt}else delete P.pid}}catch(e){}
     if(!Store.ok)$('libMsg').textContent='이 환경에서는 새로고침하면 영상이 사라져요';
   }
   if(firstVisit&&!(P.savedAt))$('welcome').hidden=false;
-  renderGuide();renderGraph();renderInspector();renderLib();renderVarsPanel();fitView();
+  renderGuide();renderGraph();renderInspector();renderLib();renderVarsPanel();fitView();updSaveChip();
 })();
 </script>
 
