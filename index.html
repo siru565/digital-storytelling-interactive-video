@@ -157,10 +157,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .ws{height:var(--wsH,900px);display:grid;position:relative;
   grid-template-columns:minmax(0,40fr) 6px minmax(0,33fr) 6px minmax(0,27fr);
   grid-template-rows:minmax(0,60fr) 6px minmax(0,40fr);
-  grid-template-areas:"A g1 C g2 D" "g3 g1 C g2 D" "B g1 C g2 D"}
+  grid-template-areas:"A g1 C g2 D" "g3 g3 g3 g2 D" "B B B g2 D"}
 .slot{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .slot[data-slot=A]{grid-area:A}.slot[data-slot=B]{grid-area:B}.slot[data-slot=C]{grid-area:C}.slot[data-slot=D]{grid-area:D}
-.slot.dropt{outline:2px solid var(--branch);outline-offset:-2px}
+.slot.dropt{outline:2px solid var(--branch);outline-offset:-2px;position:relative}
+.slot.dropt::after{content:attr(data-drop);position:absolute;inset:34px 0 0;display:grid;place-items:center;background:rgba(94,196,212,.14);color:var(--branch);font-weight:700;font-size:15px;pointer-events:none;z-index:8}
+.slot.dropt.tabzone::after{inset:0 0 auto;height:34px;font-size:12.5px;background:rgba(94,196,212,.25)}
+.slot.dropt.self::after{background:rgba(255,255,255,.04);color:var(--mute)}
+.tab .grip{color:var(--dim);margin-right:5px;font-size:11px;letter-spacing:-1px}
+.tab:hover .grip{color:var(--accent)}
 .slot.flash{animation:flash .8s}
 @keyframes flash{0%{box-shadow:inset 0 0 0 2px var(--accent)}100%{box-shadow:inset 0 0 0 2px transparent}}
 .slot.max{position:fixed;inset:max(3vh,16px) max(3vw,16px);z-index:45;border-color:var(--line2);box-shadow:0 30px 80px rgba(0,0,0,.65)}
@@ -276,6 +281,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
   html,body{height:auto!important;overflow:visible!important}
   .ws{display:flex!important;flex-direction:column;gap:12px}
   .gut,.tmax,.wsgrip{display:none}
+  .slot[data-slot=A]{order:1}.slot[data-slot=C]{order:2}.slot[data-slot=B]{order:3}.slot[data-slot=D]{order:4}
   .ws{height:auto!important}
   .slot{min-height:0}
   .slot-body{flex:none}
@@ -527,7 +533,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
         <button data-wsh="fit">높이: 화면에 맞추기</button>
         <button data-wsh="1.5">높이: 화면의 1.5배<small>아래로 스크롤해서 넓게 작업</small></button>
         <button data-wsh="2">높이: 화면의 2배</button>
-        <small class="menu-tip">패널 이름 탭을 끌어서 다른 칸으로 옮길 수 있어요. 칸 사이 경계선을 끌면 크기가 바뀌고, 탭 오른쪽 ⤢ 버튼은 그 칸을 크게 보여 줘요.</small>
+        <small class="menu-tip">패널 이름 탭(⠿)을 끌어서 다른 칸 가운데에 놓으면 <b>자리 바꾸기</b>, 다른 칸의 탭 줄에 놓으면 <b>탭으로 합치기</b>예요. 칸 사이 경계선을 끌면 크기가 바뀌고, ⤢ 버튼은 그 칸을 큰 창으로 띄워요.</small>
       </div>
     </div>
     <button class="btn" id="bPlayAll">▶ 처음부터 플레이</button>
@@ -1299,11 +1305,11 @@ function usedVideos(){return[...new Set(Object.values(P.scenes).filter(s=>s.medi
 const PANELS={};
 document.querySelectorAll('#panelStore [data-panel]').forEach(p=>PANELS[p.dataset.panel]=p);
 const PRESETS={
-  edit:{slots:{A:['graph'],B:['vars','library'],C:['preview'],D:['inspector']},L:40,R:27,T:60},
-  link:{slots:{A:['graph'],B:['vars'],C:['preview'],D:['inspector','library']},L:56,R:25,T:70},
-  watch:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:25,R:25,T:42}
+  edit:{slots:{A:['graph'],B:['vars','library'],C:['preview'],D:['inspector']},L:40,R:27,T:58},
+  link:{slots:{A:['graph'],B:['vars','library'],C:['preview'],D:['inspector']},L:56,R:24,T:68},
+  watch:{slots:{A:['graph'],B:['vars','library'],C:['preview'],D:['inspector']},L:26,R:24,T:64}
 };
-const LKEY='dsiv-layout-v1',ws=$('ws');
+const LKEY='dsiv-layout-v2',ws=$('ws');
 function cloneLayout(k){const p=PRESETS[k];return{slots:JSON.parse(JSON.stringify(p.slots)),L:p.L,R:p.R,T:p.T,H:LY?.H,active:{},preset:k}}
 function validLayout(l){
   if(!l||!l.slots)return false;
@@ -1338,7 +1344,7 @@ function applyLayout(){
     const id=sl.dataset.slot,list=LY.slots[id]||(LY.slots[id]=[]);
     if(!list.includes(LY.active[id]))LY.active[id]=list[0];
     const tabs=sl.querySelector('.tabs'),body=sl.querySelector('.slot-body');
-    tabs.innerHTML=list.map(p=>`<button class="tab ${p===LY.active[id]?'on':''}" data-tab="${p}" title="클릭: 보기 · 끌기: 다른 칸으로 옮기기">${PANELS[p].dataset.title}</button>`).join('')+
+    tabs.innerHTML=list.map(p=>`<button class="tab ${p===LY.active[id]?'on':''}" data-tab="${p}" title="클릭: 보기 · 끌어서 다른 칸에 놓기: 자리 바꾸기 · 탭 줄에 놓기: 탭으로 합치기"><span class="grip" aria-hidden="true">⠿</span>${PANELS[p].dataset.title}</button>`).join('')+
       `<span class="sp"></span><button class="tmax" title="이 칸을 큰 창으로 보기" aria-label="이 칸을 큰 창으로 보기">⤢</button>`;
     list.forEach(p=>{const el=PANELS[p];if(el.parentElement!==body)body.appendChild(el);el.hidden=p!==LY.active[id]});
     if(sl.classList.contains('max')){const b=tabs.querySelector('.tmax');b.textContent='✕ 닫기';b.title='큰 창 닫기 (Esc)'}
@@ -1372,16 +1378,29 @@ document.addEventListener('pointermove',e=>{
   if(!tabDrag.moving){if(Math.hypot(e.clientX-tabDrag.sx,e.clientY-tabDrag.sy)<6)return;
     tabDrag.moving=true;ghost=document.createElement('div');ghost.className='dragghost';ghost.textContent=PANELS[tabDrag.id].dataset.title+' 옮기는 중';document.body.appendChild(ghost)}
   ghost.style.left=(e.clientX+12)+'px';ghost.style.top=(e.clientY+12)+'px';
-  ws.querySelectorAll('.slot.dropt').forEach(s=>s.classList.remove('dropt'));
-  document.elementFromPoint(e.clientX,e.clientY)?.closest('.slot')?.classList.add('dropt');
+  clearDropt();
+  const el=document.elementFromPoint(e.clientX,e.clientY),sl=el?.closest('.slot');if(!sl)return;
+  const self=sl.dataset.slot===slotOf(tabDrag.id),tabz=!!el.closest('.tabs')||!LY.slots[sl.dataset.slot].length;
+  sl.classList.add('dropt');sl.classList.toggle('tabzone',tabz&&!self);sl.classList.toggle('self',self);
+  sl.dataset.drop=self?'같은 칸이에요':tabz?'여기에 놓으면 탭으로 합치기':`여기에 놓으면 '${PANELS[LY.active[sl.dataset.slot]].dataset.title}'와 자리 바꾸기 ⇄`;
 });
+function clearDropt(){ws.querySelectorAll('.slot.dropt').forEach(s=>s.classList.remove('dropt','tabzone','self'))}
+function swapPanel(panel,to){
+  const from=slotOf(panel),other=LY.active[to];
+  if(!other){movePanel(panel,to);return}
+  LY.slots[from]=LY.slots[from].map(p=>p===panel?other:p);
+  LY.slots[to]=LY.slots[to].map(p=>p===other?panel:p);
+  LY.active[from]=other;LY.active[to]=panel;applyLayout();setTimeout(()=>fitView(),40);
+}
 document.addEventListener('pointerup',e=>{
   if(!tabDrag)return;const d=tabDrag;tabDrag=null;
   if(!d.moving){const k=slotOf(d.id);LY.active[k]=d.id;applyLayout();if(d.id==='graph')setTimeout(()=>fitView(),30);return}
   ghost?.remove();ghost=null;
-  const sl=document.elementFromPoint(e.clientX,e.clientY)?.closest('.slot');
-  ws.querySelectorAll('.slot.dropt').forEach(s=>s.classList.remove('dropt'));
-  if(sl&&sl.dataset.slot!==slotOf(d.id)){movePanel(d.id,sl.dataset.slot);toast(`'${PANELS[d.id].dataset.title}' 패널을 옮겼어요`)}
+  const el=document.elementFromPoint(e.clientX,e.clientY),sl=el?.closest('.slot');clearDropt();
+  if(!sl||sl.dataset.slot===slotOf(d.id))return;
+  const to=sl.dataset.slot,name=PANELS[d.id].dataset.title;
+  if(el.closest('.tabs')||!LY.slots[to].length){movePanel(d.id,to);toast(`'${name}'을 탭으로 합쳤어요`)}
+  else{const other=PANELS[LY.active[to]].dataset.title;swapPanel(d.id,to);toast(`'${name}'과 '${other}'의 자리를 바꿨어요 · 다시 끌어서 놓으면 되돌릴 수 있어요`)}
 });
 /* 칸을 화면 위에 뜨는 큰 창으로 보기 (⤢ 버튼 · Esc · 바깥 클릭으로 닫기) */
 function setMax(sl,on){
