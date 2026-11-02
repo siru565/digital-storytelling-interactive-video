@@ -299,6 +299,16 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .zoom{display:flex;gap:4px;align-items:center}
 .ib.sm{width:30px;height:30px;font-size:16px}
 .zlabel{background:none;border:0;font:12px var(--f-mono);color:var(--mute);width:46px}
+.panel[data-panel=graph]{position:relative}
+.ib:disabled{opacity:.35;cursor:default}
+.kbhelp{position:absolute;right:10px;top:50px;z-index:12;width:min(330px,calc(100% - 20px));background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.5);font-size:12.5px}
+.kbhelp b{font-size:13.5px}
+.kbhelp dl{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:10px 0 8px}
+.kbhelp dt{font:600 11.5px var(--f-mono);color:var(--accent);white-space:nowrap}
+.kbhelp dd{margin:0;color:var(--mute)}
+.kbhelp p{margin:0;color:var(--dim);font-size:12px}
+.nrow.rsel{background:rgba(240,168,58,.16);box-shadow:inset 3px 0 0 var(--accent)}
+.ch.hl{border-color:var(--accent)}
 .legend .lg-dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid var(--branch);margin-right:5px;vertical-align:-1px}
 @media (max-width:640px){.zoom .zlabel{display:none}}
 
@@ -380,10 +390,18 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .check{display:flex;gap:8px;align-items:flex-start;font-size:14px}
 .check input{margin-top:4px}
-.minitl{position:relative;height:24px;background:var(--panel2);border-radius:5px;overflow:hidden}
+.mt-wrap{display:flex;flex-direction:column;gap:6px}
+.minitl{position:relative;height:30px;margin-top:18px;background:var(--panel2);border-radius:5px;cursor:ew-resize;touch-action:none;user-select:none}
+.minitl .play,.minitl .wait{border-radius:5px}
+.mt-l1{left:8px}
+.mt-h{position:absolute;top:-6px;bottom:-6px;width:14px;transform:translateX(-50%);cursor:ew-resize;display:flex;justify-content:center}
+.mt-h::before{content:"";width:4px;height:100%;background:var(--accent);border-radius:2px;box-shadow:0 0 0 3px rgba(240,168,58,.25)}
+.mt-h:focus-visible::before{box-shadow:0 0 0 4px rgba(240,168,58,.6)}
+.mt-h b{position:absolute;bottom:calc(100% + 2px);font:600 11px var(--f-mono);color:#1d1406;background:var(--accent);padding:1px 6px;border-radius:4px;white-space:nowrap}
+.minitl.drag .mt-h::before{box-shadow:0 0 0 5px rgba(240,168,58,.35)}
 .minitl .play{position:absolute;top:0;bottom:0;left:0;background:#343b48}
 .minitl .wait{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,rgba(240,168,58,.4) 0 4px,rgba(240,168,58,.12) 4px 8px)}
-.minitl span{position:absolute;top:4px;font-size:11px;color:var(--fg);white-space:nowrap}
+.minitl span{position:absolute;top:7px;font-size:11px;color:var(--fg);white-space:nowrap;pointer-events:none}
 .minitl-legend{display:flex;justify-content:space-between;font:11px var(--f-mono);color:var(--mute)}
 .ed-foot{display:flex;flex-wrap:wrap;gap:8px;border-top:1px solid var(--line);padding-top:14px}
 .ed-foot .btn.primary{flex:1}
@@ -500,7 +518,28 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
       <button class="btn sm" id="zFit">전체 보기</button>
       <button class="btn sm" id="zAuto" title="흐름 순서대로 다시 배치">자동 정렬</button>
       <span class="grow"></span>
+      <button class="ib sm" id="bUndo" title="되돌리기 (Ctrl+Z)" aria-label="되돌리기">↶</button>
+      <button class="ib sm" id="bRedo" title="다시 실행 (Ctrl+Shift+Z)" aria-label="다시 실행">↷</button>
+      <button class="btn sm" id="bKeys" aria-expanded="false">단축키</button>
       <button class="btn sm primary" id="bAddScene">+ 새 장면</button>
+    </div>
+    <div class="kbhelp" id="kbHelp" hidden>
+      <b>장면 지도 단축키</b>
+      <dl>
+        <dt>클릭</dt><dd>장면 · 선택지 줄 · 연결선 선택</dd>
+        <dt>Delete</dt><dd>선택한 선택지(연결선) 또는 장면 삭제</dd>
+        <dt>Ctrl+Z</dt><dd>되돌리기</dd>
+        <dt>Ctrl+Shift+Z · Ctrl+Y</dt><dd>다시 실행</dd>
+        <dt>Ctrl+D</dt><dd>장면 복제</dd>
+        <dt>Ctrl+C · Ctrl+V</dt><dd>장면 복사 · 붙여넣기</dd>
+        <dt>방향키</dt><dd>장면 옮기기 (Shift: 크게)</dd>
+        <dt>Ctrl+휠 · Ctrl + / −</dt><dd>지도 확대 · 축소</dd>
+        <dt>Ctrl+0</dt><dd>100%로</dd>
+        <dt>F</dt><dd>전체 보기</dd>
+        <dt>N</dt><dd>새 장면</dd>
+        <dt>Esc</dt><dd>선택 해제</dd>
+      </dl>
+      <p>되돌리기는 장면 지도 밖(편집 칸, 점수 변수)의 변경에도 똑같이 써요.</p>
     </div>
     <div class="canvas" id="graph"><div class="world" id="world"></div></div>
     <div class="legend">
@@ -1126,12 +1165,39 @@ function migrate(p){p.vars??={};p.varMeta??={};for(const k in p.vars)p.varMeta[k
 if(!P||!P.scenes)P=sampleProject();
 migrate(P);
 let sel=P.start,advOpen=false,saveTimer=null;
+/* --- 되돌리기 / 다시 실행 ------------------------------------------------
+   저장할 때마다 프로젝트 상태를 쌓아 둡니다. 0.5초 안에 이어진 변경(글자 입력 등)은 한 번으로 묶습니다. */
+const UNDO={stack:[],redo:[],last:0,restoring:false};
+function snapP(){const o={...P};delete o.savedAt;return JSON.stringify(o)}
+function resetUndo(){UNDO.stack=[snapP()];UNDO.redo=[];updUndoBtns()}
+function recordUndo(){
+  if(UNDO.restoring)return;
+  const cur=snapP(),top=UNDO.stack[UNDO.stack.length-1];if(cur===top)return;
+  const now=Date.now();
+  if(UNDO.stack.length>1&&now-UNDO.last<500)UNDO.stack[UNDO.stack.length-1]=cur;else UNDO.stack.push(cur);
+  if(UNDO.stack.length>120)UNDO.stack.shift();
+  UNDO.last=now;UNDO.redo=[];updUndoBtns();
+}
+function restoreSnap(json){
+  UNDO.restoring=true;
+  const keep=P.savedAt;P=migrate(JSON.parse(json));P.savedAt=keep;engine.load(P);
+  if(!P.scenes[sel])sel=P.start;
+  G.selEdge=null;G.selChoice=null;
+  $('pTitle').value=P.title||'';
+  if($('skinSel').value!==Skins.get(P.skin).id){$('skinSel').value=Skins.get(P.skin).id;useSkin($('skinSel').value)}
+  save();renderGraph();renderInspector();
+  UNDO.restoring=false;UNDO.last=0;updUndoBtns();
+}
+function undo(){if(UNDO.stack.length<2){toast('되돌릴 작업이 없어요');return}UNDO.redo.push(UNDO.stack.pop());restoreSnap(UNDO.stack[UNDO.stack.length-1]);toast('되돌렸어요 · 다시 실행은 Ctrl+Shift+Z')}
+function redo(){if(!UNDO.redo.length){toast('다시 실행할 작업이 없어요');return}const s=UNDO.redo.pop();UNDO.stack.push(s);restoreSnap(s);toast('다시 실행했어요')}
+function updUndoBtns(){const u=$('bUndo'),r=$('bRedo');if(u)u.disabled=UNDO.stack.length<2;if(r)r.disabled=!UNDO.redo.length}
+
 function save(){
   P.savedAt=Date.now();
   try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}
   clearTimeout(saveTimer);
   saveTimer=setTimeout(()=>{Store.saveProject(JSON.parse(JSON.stringify(P))).catch(()=>{})},300);
-  renderGuide();renderLib();renderVarsPanel();
+  renderGuide();renderLib();renderVarsPanel();recordUndo();
 }
 function hasVideo(s){return s.media?.type==='file'&&s.media.name&&Library.has(s.media.name)}
 function openChoices(s){return s.ending?[]:s.choices.filter(c=>!P.scenes[c.target])}
@@ -1345,7 +1411,7 @@ function renderGuide(){
    · 빈 곳 끌기 = 화면 이동, Ctrl+휠 = 확대/축소, 선 클릭 = 연결 끊기
    -------------------------------------------------------------------- */
 const NW=210,HH=52,RH=30;
-const G={z:1,px:24,py:24,selEdge:null,drag:null};
+const G={z:1,px:24,py:24,selEdge:null,selChoice:null,drag:null};
 const canvas=$('graph'),world=$('world');
 function nodeH(s){return HH+(s.ending?0:(s.choices.length+1)*RH)+3}
 function outPt(s,i){return{x:s.pos.x+NW+1,y:s.pos.y+1.5+HH+i*RH+15}}
@@ -1436,7 +1502,7 @@ function renderGraph(){
     const rows=s.ending?'':s.choices.map((c,i)=>{
       const txt=s.auto?(c.if?condText(c.if):'그 밖의 경우'):(c.label||'이름 없는 선택지');
       const bd=(!s.auto&&c.if?'<i class="bd c" title="조건이 있어요">조건</i>':'')+(c.set?'<i class="bd s" title="점수가 바뀌어요">점수</i>':'');
-      return`<div class="nrow ${P.scenes[c.target]?'':'open'} ${!s.auto&&!c.label?'empty':''}" data-i="${i}" title="${esc(txt)}">
+      return`<div class="nrow ${P.scenes[c.target]?'':'open'} ${!s.auto&&!c.label?'empty':''} ${G.selChoice&&G.selChoice.s===s.id&&G.selChoice.i===i?'rsel':''}" data-i="${i}" title="${esc(txt)}">
         <span class="k">${i+1}</span><span class="l">${esc(txt)}</span>${bd}<span class="port" data-port="${i}" title="끌어서 다른 장면에 연결"></span></div>`}).join('')+
       `<div class="nrow add"><span class="k">＋</span><span class="l">${s.auto?'끌어서 새 규칙':'끌어서 새 갈래'}</span><span class="port" data-port="add" title="끌어서 새로 만들기"></span></div>`;
     nodes+=`<div class="node ${s.id===sel?'sel':''} ${s.id===liveId?'live':''} ${s.auto?'auto':''}" data-id="${s.id}" style="left:${s.pos.x}px;top:${s.pos.y}px">
@@ -1445,14 +1511,16 @@ function renderGraph(){
         <div class="t">${esc(s.title||'제목 없음')}</div><div class="s ${bad?'bad':''}">${esc(sub)}</div></div>${rows}</div>`;
   }
   world.innerHTML=`<svg class="edges" id="edges"></svg>${nodes}
-    <div class="etools" id="etools" hidden><span></span><button class="btn sm" data-et="cut">연결 끊기</button><button class="btn sm danger" data-et="del">선택지 삭제</button></div>`;
+    <div class="etools" id="etools" hidden><span></span><button class="btn sm" data-et="cut">연결 끊기</button><button class="btn sm danger" data-et="del" title="Delete 키">선택지 삭제</button></div>`;
   renderEdges();applyView();
 }
 function selectScene(id,choiceIdx){
-  sel=id;renderGraph();renderInspector();
+  sel=id;G.selChoice=choiceIdx!=null?{s:id,i:+choiceIdx}:null;if(choiceIdx!=null)G.selEdge=null;
+  renderGraph();renderInspector();
   if(choiceIdx!=null){
-    const inp=insp.querySelector(`.ch[data-i="${choiceIdx}"] input[data-k="label"]`);
-    if(inp){inp.scrollIntoView({block:'center',behavior:'smooth'});inp.focus({preventScroll:true})}
+    const card=insp.querySelector(`.ch[data-i="${choiceIdx}"]`);
+    if(card){card.classList.add('hl');card.scrollIntoView({block:'nearest',behavior:'smooth'});
+      const inp=card.querySelector('input[data-k="label"]');if(inp&&!inp.value)inp.focus({preventScroll:true})}
   }
 }
 function clearDrop(){world.querySelectorAll('.node.drop').forEach(n=>n.classList.remove('drop'))}
@@ -1461,7 +1529,7 @@ canvas.addEventListener('pointerdown',e=>{
   if(e.button!==0||e.target.closest('.etools'))return;
   const port=e.target.closest('.port'),node=e.target.closest('.node'),hit=e.target.closest('path.hit');
   const w=toWorld(e);
-  if(hit){G.selEdge={s:hit.dataset.s,i:+hit.dataset.i};renderEdges();return}
+  if(hit){G.selEdge={s:hit.dataset.s,i:+hit.dataset.i};if(G.selChoice){G.selChoice=null;renderGraph()}else renderEdges();return}
   canvas.setPointerCapture(e.pointerId);
   if(port){G.drag={type:'link',from:node.dataset.id,port:port.dataset.port,start:w,cur:w};port.classList.add('on')}
   else if(node){const s=P.scenes[node.dataset.id];G.drag={type:'node',id:s.id,ox:w.x-s.pos.x,oy:w.y-s.pos.y,sx:e.clientX,sy:e.clientY,moved:false,row:e.target.closest('.nrow:not(.add)')?.dataset.i}}
@@ -1485,7 +1553,7 @@ canvas.addEventListener('pointermove',e=>{
 });
 function endDrag(e){
   const d=G.drag;if(!d)return;G.drag=null;canvas.classList.remove('panning');clearDrop();
-  if(d.type==='pan'){if(!d.moved&&G.selEdge){G.selEdge=null;renderEdges()}return}
+  if(d.type==='pan'){if(!d.moved&&(G.selEdge||G.selChoice)){G.selEdge=null;G.selChoice=null;renderGraph()}return}
   if(d.type==='node'){if(d.moved){save();renderGraph()}else selectScene(d.id,d.row);return}
   // 연결 만들기
   const s=P.scenes[d.from],n=e&&nodeAt(e);
@@ -1524,6 +1592,8 @@ $('zIn').onclick=()=>{const r=canvas.getBoundingClientRect();zoomAt(r.left+r.wid
 $('zOut').onclick=()=>{const r=canvas.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1/1.2)};
 $('zPct').onclick=()=>{const r=canvas.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1/G.z)};
 $('zFit').onclick=fitView;
+$('bUndo').onclick=undo;$('bRedo').onclick=redo;
+$('bKeys').onclick=()=>{const h=!$('kbHelp').hidden;$('kbHelp').hidden=h;$('bKeys').setAttribute('aria-expanded',String(!h))};
 $('zAuto').onclick=()=>{autoLayout(true);save();renderGraph();fitView();toast('장면을 흐름 순서대로 정렬했어요')};
 $('bAddScene').onclick=()=>{
   const W=canvas.clientWidth,H=canvas.clientHeight;
@@ -1642,9 +1712,11 @@ function renderInspector(){
     <details class="adv" id="adv" ${advOpen?'open':''}>
       <summary>고급 설정 · 선택지 나오는 시점, 제한 시간</summary>
       <div class="adv-body">
-        ${d?`<div><div class="minitl"><div class="play" style="width:${at/d*100}%"></div><div class="wait" style="left:${at/d*100}%;width:${(d-at)/d*100}%"></div>
-          <span style="left:6px">재생</span>${d-at>0.4?`<span style="left:calc(${at/d*100}% + 6px)">${s.loop?'선택 대기 (반복)':'선택 대기'}</span>`:''}</div>
-          <div class="minitl-legend"><span>0:00</span><span>${ca==null?'영상이 끝나면 선택지':'선택지 '+fmt(ca)}</span><span>${fmt(d)}</span></div></div>`:''}
+        ${d?`<div class="mt-wrap"><p class="hint">주황 손잡이를 좌우로 끌어서 선택지가 나올 시점을 정하세요. 맨 끝으로 끌거나 더블클릭하면 "영상이 끝날 때"가 돼요.</p>
+          <div class="minitl" id="mtl" data-d="${d}"><div class="play" style="width:${at/d*100}%"></div><div class="wait" style="left:${at/d*100}%;width:${(d-at)/d*100}%"></div>
+            <span class="mt-l1">재생</span><span class="mt-l2" style="left:calc(${at/d*100}% + 10px)" ${d-at<d*.18?'hidden':''}>${s.loop?'선택 대기 (반복)':'선택 대기'}</span>
+            <div class="mt-h" style="left:${at/d*100}%" role="slider" tabindex="0" aria-label="선택지 나오는 시점" aria-valuemin="0" aria-valuemax="${d}" aria-valuenow="${at}"><b>${ca==null?'끝':fmt(at)}</b></div></div>
+          <div class="minitl-legend"><span>0:00</span><span id="mtTxt">${ca==null?'영상이 끝나면 선택지':'선택지 '+fmt(ca)}</span><span>${fmt(d)}</span></div></div>`:''}
         <div class="row2">
           <label class="field"><span>선택지 나오는 시점 (초)</span><input type="number" id="f-at" min="0" step="0.5" value="${s.choiceAt??''}" placeholder="비우면 영상 끝"><em>영상이 몇 초일 때 버튼을 띄울지</em></label>
           <label class="field"><span>제한 시간 (초)</span><input type="number" id="f-lim" min="0" step="1" value="${+s.timeLimit||0}"><em>0이면 무제한</em></label>
@@ -1746,7 +1818,32 @@ insp.addEventListener('change',async e=>{
 insp.addEventListener('dragover',e=>{const d=e.target.closest('.drop');if(d){e.preventDefault();d.classList.add('over')}});
 insp.addEventListener('dragleave',e=>{const d=e.target.closest('.drop');if(d)d.classList.remove('over')});
 insp.addEventListener('drop',e=>{const d=e.target.closest('.drop');if(!d)return;e.preventDefault();d.classList.remove('over');attachVideo(P.scenes[sel],e.dataTransfer.files[0])});
-let armTimer=null;
+let armTimer=null,mtDrag=null;
+function mtApply(t){
+  const s=P.scenes[sel],bar=$('mtl');if(!s||!bar)return;const d=+bar.dataset.d;
+  t=Math.round(Math.max(0,Math.min(d,t))*10)/10;const end=t>=d-0.15;
+  s.choiceAt=end?'':t;const at=end?d:t,p=at/d*100;
+  bar.querySelector('.play').style.width=p+'%';
+  const w=bar.querySelector('.wait');w.style.left=p+'%';w.style.width=(100-p)+'%';
+  const l2=bar.querySelector('.mt-l2');l2.style.left=`calc(${p}% + 10px)`;l2.hidden=100-p<18;
+  const h=bar.querySelector('.mt-h');h.style.left=p+'%';h.querySelector('b').textContent=end?'끝':fmt(at);h.setAttribute('aria-valuenow',at);
+  $('mtTxt').textContent=end?'영상이 끝나면 선택지':'선택지 '+fmt(t);
+  const f=$('f-at');if(f)f.value=end?'':t;
+}
+insp.addEventListener('pointerdown',e=>{
+  const bar=e.target.closest('#mtl');if(!bar||e.button!==0)return;
+  e.preventDefault();bar.setPointerCapture(e.pointerId);bar.classList.add('drag');mtDrag=bar;
+  const r=bar.getBoundingClientRect();mtApply((e.clientX-r.left)/r.width*+bar.dataset.d);
+});
+insp.addEventListener('pointermove',e=>{if(!mtDrag)return;const r=mtDrag.getBoundingClientRect();mtApply((e.clientX-r.left)/r.width*+mtDrag.dataset.d)});
+insp.addEventListener('pointerup',()=>{if(!mtDrag)return;mtDrag=null;save();renderGraph();renderInspector()});
+insp.addEventListener('dblclick',e=>{if(!e.target.closest('#mtl'))return;const s=P.scenes[sel];s.choiceAt='';save();renderInspector();toast('영상이 끝날 때 선택지가 나와요')});
+insp.addEventListener('keydown',e=>{
+  if(!e.target.classList.contains('mt-h'))return;
+  if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;e.preventDefault();
+  const s=P.scenes[sel],d=+$('mtl').dataset.d,cur=s.choiceAt===''||s.choiceAt==null?d:+s.choiceAt;
+  mtApply(cur+(e.key==='ArrowRight'?1:-1)*(e.shiftKey?1:0.1));save();renderInspector();insp.querySelector('.mt-h')?.focus();
+});
 insp.addEventListener('click',e=>{
   const s=P.scenes[sel];const b=e.target.closest('button');if(!s||!b)return;
   if(b.hasAttribute('data-openvars')){focusPanel('vars');return}
@@ -1777,10 +1874,7 @@ insp.addEventListener('click',e=>{
   else if(b.dataset.act==='delscene'){
     if(Object.keys(P.scenes).length<=1){toast('장면이 하나뿐이라 지울 수 없어요',true);return}
     if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='정말 삭제?';clearTimeout(armTimer);armTimer=setTimeout(()=>renderInspector(),2500);return}
-    delete P.scenes[s.id];
-    Object.values(P.scenes).forEach(x=>x.choices.forEach(c=>{if(c.target===s.id)c.target=''}));
-    if(P.start===s.id)P.start=Object.keys(P.scenes)[0];
-    sel=P.start;
+    deleteScene(s.id);return;
   }else return;
   save();renderGraph();renderInspector();
 });
@@ -2066,18 +2160,82 @@ $('welcome').addEventListener('click',e=>{
 $('wClose').onclick=()=>{$('welcome').hidden=true};
 renderTemplates();
 
-/* --- 키보드 --- */
+/* --- 단축키 · 확대 막기 -----------------------------------------------
+   · Ctrl+휠 / Ctrl + −/=/0 : 장면 지도만 확대·축소 (브라우저 화면 확대는 막음)
+   · Ctrl+Z 되돌리기, Ctrl+Shift+Z·Ctrl+Y 다시 실행, Ctrl+D 장면 복제, Ctrl+C/V 장면 복사·붙여넣기
+   · Delete 선택한 선택지/장면 삭제, 방향키 장면 이동, F 전체 보기, N 새 장면, Esc 선택 해제
+   -------------------------------------------------------------------- */
+let graphActive=false,sceneClip=null;
+document.addEventListener('pointerdown',e=>{graphActive=!!e.target.closest('#graph')},true);
+document.addEventListener('wheel',e=>{if((e.ctrlKey||e.metaKey)&&!e.target.closest('#graph'))e.preventDefault()},{passive:false});
+document.addEventListener('gesturestart',e=>e.preventDefault());
+function graphCenter(){const r=canvas.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2]}
+function deleteChoice(sid,i){
+  const s=P.scenes[sid];if(!s||!s.choices[i])return;
+  const[c]=s.choices.splice(i,1);if(s.defaultChoice===c.id)s.defaultChoice=s.choices[0]?.id||'';
+  G.selEdge=null;G.selChoice=null;save();renderGraph();if(sel===sid)renderInspector();
+  toast(`${s.auto?'규칙':'선택지'} '${c.label||(c.if?condText(c.if):'그 밖의 경우')}'을 삭제했어요 · Ctrl+Z로 되돌리기`);
+}
+function deleteScene(id){
+  if(Object.keys(P.scenes).length<=1){toast('장면이 하나뿐이라 지울 수 없어요',true);return}
+  const t=P.scenes[id].title;delete P.scenes[id];
+  Object.values(P.scenes).forEach(x=>x.choices.forEach(c=>{if(c.target===id)c.target=''}));
+  if(P.start===id)P.start=Object.keys(P.scenes)[0];
+  sel=P.start;G.selEdge=null;G.selChoice=null;save();renderGraph();renderInspector();
+  toast(`'${t}' 장면을 삭제했어요 · Ctrl+Z로 되돌리기`);
+}
+function cloneScene(src,pos,title){
+  const c=JSON.parse(JSON.stringify(src)),map={};
+  c.id=uid('s');c.title=title;c.pos=pos;
+  c.choices.forEach(ch=>{const n=uid('c');map[ch.id]=n;ch.id=n});
+  c.defaultChoice=map[c.defaultChoice]||'';
+  P.scenes[c.id]=c;save();selectScene(c.id);return c;
+}
+function duplicateScene(id){const s=P.scenes[id];cloneScene(s,{x:(s.pos?.x||0)+40,y:(s.pos?.y||0)+40},s.title+' 복사본');toast('장면을 복제했어요 · 선택지 연결도 그대로 복사돼요')}
+function pasteScene(){
+  const s=JSON.parse(sceneClip);
+  const[cx,cy]=graphCenter(),r=canvas.getBoundingClientRect();
+  cloneScene(s,{x:Math.round(((cx-r.left-G.px)/G.z-NW/2)/8)*8,y:Math.round(((cy-r.top-G.py)/G.z-40)/8)*8},s.title+' 복사본');
+  toast('장면을 붙여 넣었어요');
+}
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){document.querySelectorAll('.modal').forEach(m=>m.hidden=true);closeMenu();return}
-  if(e.target.closest('input,textarea,select'))return;
+  const mod=e.ctrlKey||e.metaKey,k=e.key.toLowerCase();
+  if(mod&&['=','+','-','_','0'].includes(e.key)){
+    e.preventDefault();const[cx,cy]=graphCenter();
+    zoomAt(cx,cy,e.key==='0'?1/G.z:(e.key==='-'||e.key==='_')?1/1.2:1.2);return;
+  }
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal').forEach(m=>m.hidden=true);closeMenu();$('kbHelp').hidden=true;
+    if(G.selEdge||G.selChoice){G.selEdge=null;G.selChoice=null;renderGraph()}return;
+  }
+  if(e.target.closest('input,textarea,select,[contenteditable]'))return;
+  if(mod&&k==='z'){e.preventDefault();e.shiftKey?redo():undo();return}
+  if(mod&&k==='y'){e.preventDefault();redo();return}
+  if(mod&&k==='d'){e.preventDefault();if(P.scenes[sel])duplicateScene(sel);return}
+  if(mod&&k==='c'&&graphActive&&P.scenes[sel]){sceneClip=JSON.stringify(P.scenes[sel]);toast(`'${P.scenes[sel].title}' 장면을 복사했어요 · Ctrl+V로 붙여넣기`);return}
+  if(mod&&k==='v'&&graphActive&&sceneClip){e.preventDefault();pasteScene();return}
+  if(mod)return;
+  if(e.key==='Delete'||e.key==='Backspace'){
+    if(G.selEdge){e.preventDefault();deleteChoice(G.selEdge.s,G.selEdge.i);return}
+    if(G.selChoice){e.preventDefault();deleteChoice(G.selChoice.s,G.selChoice.i);return}
+    if(graphActive&&P.scenes[sel]){e.preventDefault();deleteScene(sel);return}
+    return;
+  }
+  if(graphActive&&e.key.startsWith('Arrow')&&P.scenes[sel]?.pos){
+    e.preventDefault();const st=e.shiftKey?40:8,p=P.scenes[sel].pos;
+    if(e.key==='ArrowLeft')p.x-=st;else if(e.key==='ArrowRight')p.x+=st;else if(e.key==='ArrowUp')p.y-=st;else p.y+=st;
+    save();renderGraph();return;
+  }
+  if(graphActive&&k==='f'){fitView();return}
+  if(graphActive&&k==='n'){$('bAddScene').click();return}
   if(/^[1-9]$/.test(e.key))engine.chooseIndex(+e.key-1);
   else if(e.key===' '&&!e.target.closest('button')){e.preventDefault();$('tPlay').click()}
-  else if(e.key==='b'||e.key==='B')$('tBack').click();
-  else if((e.key==='Delete'||e.key==='Backspace')&&G.selEdge){e.preventDefault();cutEdge(false)}
+  else if(k==='b')$('tBack').click();
 });
 
 /* --- 시작 --- */
 $('pTitle').value=P.title||'';
+resetUndo();
 renderGuide();renderGraph();renderInspector();renderLib();renderVarsPanel();
 (async()=>{
   if(await Store.open()){
@@ -2085,7 +2243,7 @@ renderGuide();renderGraph();renderInspector();renderLib();renderVarsPanel();
     try{
       const sp=await Store.loadProject();
       if(sp&&sp.scenes&&sp.start&&(sp.savedAt||0)>=(P.savedAt||0)){
-        P=migrate(sp);engine.load(P);sel=P.start;
+        P=migrate(sp);engine.load(P);sel=P.start;resetUndo();
         $('pTitle').value=P.title||'';
         $('skinSel').value=Skins.get(P.skin).id;useSkin($('skinSel').value);
       }else Store.saveProject(JSON.parse(JSON.stringify(P))).catch(()=>{});
