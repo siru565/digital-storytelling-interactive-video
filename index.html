@@ -234,6 +234,26 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 
 /* 점수 변수 패널 */
 .vp{display:flex;flex-direction:column;gap:14px}
+.vp-help{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#1b1e24;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--mute)}
+.vp-help:hover{border-color:var(--accent);color:var(--fg)}
+.vp-help b{color:var(--fg);margin-right:4px}
+.vp-help .q{flex:none;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#1d1406;font-weight:700;font-size:13px}
+.vp-help>span:nth-child(2){flex:1;min-width:0}
+.vp-help .more-t{flex:none;color:var(--accent);font-size:12.5px;font-weight:600;white-space:nowrap}
+.vhelp{width:min(760px,100%);gap:16px;font-size:15px;line-height:1.7}
+.vhelp h2{font-size:22px}
+.vhelp h3{margin:4px 0 0;font-size:15px;color:var(--accent)}
+.vhelp .lead{margin:0;font-size:16px}
+.vh-kinds{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.vh-kinds>div{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.vh-kinds b{display:block;margin-top:6px}
+.vh-kinds p{margin:2px 0 0;color:var(--mute);font-size:14px}
+.vh-steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.vh-steps b{display:block}
+.vh-steps span{color:var(--mute);font-size:14px}
+.vh-steps i,.vhelp .lead i{font-style:normal;color:var(--fg);background:var(--bg);padding:0 5px;border-radius:4px}
+.vh-recipes .recipe{font-size:14px}
+.vh-recipes .recipe b{font-size:14.5px}
 .vp-intro{background:#1b1e24;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.6}
 .vp-intro p{margin:4px 0 8px;color:var(--mute)}
 .vp-steps{margin:0;padding-left:20px;color:var(--mute)}
@@ -696,6 +716,31 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
       <label class="tpl-import"><b>zip 불러오기</b><span>내보낸 zip이나 팀원이 보낸 파일로 이어서 편집해요</span><input type="file" id="wImport" accept=".zip,.json" hidden></label>
     </div>
     <div class="actions"><button class="btn" id="wClose">닫기</button></div>
+  </div>
+</div>
+<div class="modal" id="varHelp" hidden>
+  <div class="modal-box vhelp" role="dialog" aria-labelledby="vhH">
+    <h2 id="vhH">점수 변수란?</h2>
+    <p class="lead">플레이어가 고른 것을 <b>기억해 두는 값</b>이에요. 친절한 선택을 할 때마다 <span class="mono">호감</span>을 1씩 올리고, 마지막에 호감이 3 이상이면 다른 엔딩으로 보낼 수 있어요.</p>
+    <div class="vh-kinds">
+      <div><span class="vtype num">점수</span><b>숫자 점수</b><p>호감, 용기, 실수처럼 더하고 빼는 값. "3 이상일 때" 같은 조건에 써요.</p></div>
+      <div><span class="vtype flag">스위치</span><b>켬/끔 스위치</b><p>열쇠를 얻었는지, 비밀을 알았는지처럼 예/아니오로 기억하는 값이에요.</p></div>
+    </div>
+    <h3>3단계로 쓰기</h3>
+    <ol class="vh-steps">
+      <li><b>만들기</b><span>점수 변수 패널에서 <i>＋ 숫자 점수</i>나 <i>＋ 켬/끔 스위치</i>, 또는 예시 버튼으로 추가해요.</span></li>
+      <li><b>바꾸기</b><span>장면 편집 › 선택지 › <i>조건 · 점수</i>를 펼치고 <i>고르면 점수 바꾸기</i>에서 정해요. 장면에 들어올 때 바꾸려면 아래쪽 <i>이 장면에 들어올 때 점수 바꾸기</i>를 써요.</span></li>
+      <li><b>쓰기</b><span><i>이럴 때만 이 선택지 보이기</i>로 선택지를 조건부로 보이게 하거나, 장면의 <i>영상이 끝나면</i>을 <i>점수에 따라 자동 이동</i>으로 바꿔 갈래를 나눠요.</span></li>
+    </ol>
+    <h3>이렇게 써 보세요</h3>
+    <div class="vh-recipes">
+      <div class="recipe"><b>① 호감도에 따라 엔딩 나누기</b><p>친절한 선택지마다 <code>고르면: 호감 1 더하기</code>. 마지막 장면을 <code>점수에 따라 자동 이동</code>으로 바꾸고, 규칙1 <code>호감 3 이상 → 해피엔딩</code>, 규칙2 조건 없음 <code>→ 노멀엔딩</code>.</p></div>
+      <div class="recipe"><b>② 아이템이 있어야 열리는 선택지</b><p>창고 장면의 "열쇠를 줍는다"에 <code>고르면: 열쇠 켜기</code>. 문 앞 장면의 "문을 연다"에 <code>이럴 때만 보이기: 열쇠 켜져 있을 때</code>.</p></div>
+      <div class="recipe"><b>③ 한 번 본 장면 기억하기</b><p>회상 장면에서 <code>이 장면에 들어올 때: 비밀을_알았다 켜기</code>. 다른 장면의 "그 이야기 꺼내기"를 <code>비밀을_알았다 켜져 있을 때</code>만 보이게.</p></div>
+      <div class="recipe"><b>④ 실수가 쌓이면 게임 오버</b><p>틀린 선택지마다 <code>고르면: 실수 1 더하기</code>. 중간 장면을 자동 이동으로 바꾸고 <code>실수 3 이상 → 게임 오버</code>, 조건 없음 <code>→ 계속 진행</code>.</p></div>
+    </div>
+    <p class="hint">템플릿의 <b>첫 만남</b>(호감도), <b>열쇠와 문</b>(스위치), <b>추격전</b>(실수 카운트)을 열어 보면 실제로 어떻게 쓰는지 볼 수 있어요.</p>
+    <div class="actions"><button class="btn primary" id="vhClose">닫기</button></div>
   </div>
 </div>
 <div class="toast" id="toast" role="status" hidden></div>
@@ -2113,15 +2158,9 @@ function renderVarsPanel(){
       <div class="vuse"><span>${u?`선택지·장면 ${u}곳에서 사용 중`:'아직 아무 데서도 안 쓰는 중'}</span><span class="vnow" data-now="${esc(n)}"></span></div>
     </div>`;}).join('');
   $('varsPanel').innerHTML=`
-    <div class="vp-intro">
-      <b>점수 변수란?</b>
-      <p>플레이어가 고른 것을 기억해 두는 값이에요. 친절한 선택을 할 때마다 <span class="mono">호감</span>을 1씩 올리고, 마지막에 호감이 3 이상이면 다른 엔딩으로 보낼 수 있어요.</p>
-      <ol class="vp-steps">
-        <li><b>만들기</b> · 아래에서 숫자 점수나 켬/끔 스위치를 추가</li>
-        <li><b>바꾸기</b> · 장면 편집 › 선택지 › "고르면 점수 바꾸기"</li>
-        <li><b>쓰기</b> · 선택지를 조건부로 보이게 하거나, 장면을 "점수에 따라 자동 이동"으로 바꿔 갈래 나누기</li>
-      </ol>
-    </div>
+    <button class="vp-help" data-vhelp aria-haspopup="dialog">
+      <span class="q">?</span><span><b>점수 변수란?</b> 플레이어가 고른 것을 기억해 두는 값이에요.</span><span class="more-t">사용법 크게 보기 ›</span>
+    </button>
     <div class="vp-add">
       <button class="btn sm primary" data-vadd="num">＋ 숫자 점수</button>
       <button class="btn sm primary" data-vadd="flag">＋ 켬/끔 스위치</button>
@@ -2129,13 +2168,7 @@ function renderVarsPanel(){
     <div class="vp-ex"><span class="hint">예시로 바로 추가</span>
       ${VAR_EX.map((x,i)=>`<button class="chipbtn" data-vex="${i}" title="${esc(x[3])}">${esc(x[0])}<small>${x[1]==='flag'?'스위치':'점수'}</small></button>`).join('')}</div>
     <div class="vp-list">${rows||'<p class="hint">아직 변수가 없어요. 위 버튼으로 하나 만들어 보세요.</p>'}</div>
-    <details class="vp-recipes" ${names.length?'':'open'}><summary>이렇게 써 보세요 · 예시 4가지</summary>
-      <div class="recipe"><b>① 호감도에 따라 엔딩 나누기</b><p>친절한 선택지마다 <code>고르면: 호감 1 더하기</code>. 마지막 장면을 <code>점수에 따라 자동 이동</code>으로 바꾸고, 규칙1 <code>호감 3 이상 → 해피엔딩</code>, 규칙2 조건 없음 <code>→ 노멀엔딩</code>.</p></div>
-      <div class="recipe"><b>② 아이템이 있어야 열리는 선택지</b><p>창고 장면의 "열쇠를 줍는다"에 <code>고르면: 열쇠 켜기</code>. 문 앞 장면의 "문을 연다"에 <code>이럴 때만 보이기: 열쇠 켜져 있을 때</code>.</p></div>
-      <div class="recipe"><b>③ 한 번 본 장면 기억하기</b><p>회상 장면에서 <code>이 장면에 들어올 때: 비밀을_알았다 켜기</code>. 다른 장면의 "그 이야기 꺼내기"를 <code>비밀을_알았다 켜져 있을 때</code>만 보이게.</p></div>
-      <div class="recipe"><b>④ 실수가 쌓이면 게임 오버</b><p>틀린 선택지마다 <code>고르면: 실수 1 더하기</code>. 중간 장면을 자동 이동으로 바꾸고 <code>실수 3 이상 → 게임 오버</code>, 조건 없음 <code>→ 계속 진행</code>.</p></div>
-    </details>
-    <p class="hint">미리보기 아래와 각 변수 옆에서 지금 값을 실시간으로 볼 수 있어요.</p>`;
+    <p class="hint">예시 4가지와 자세한 사용법은 위 <b>사용법 크게 보기</b>에서 볼 수 있어요. 지금 값은 각 변수 옆과 미리보기 아래에 실시간으로 나와요.</p>`;
   updateVarNow();
 }
 function updateVarNow(){
@@ -2145,8 +2178,11 @@ function updateVarNow(){
   });
 }
 const vp=$('varsPanel');
+$('vhClose').onclick=()=>{$('varHelp').hidden=true};
+$('varHelp').addEventListener('click',e=>{if(e.target.id==='varHelp')$('varHelp').hidden=true});
 vp.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
+  if(b.hasAttribute('data-vhelp')){$('varHelp').hidden=false;$('varHelp').querySelector('.modal-box').scrollTop=0;$('vhClose').focus({preventScroll:true});return}
   if(b.dataset.vadd){
     const t=b.dataset.vadd,n=addVar(t==='flag'?'스위치':'점수',t,0,false);
     save();renderVarsPanel();renderInspector();
