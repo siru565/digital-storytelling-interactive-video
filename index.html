@@ -259,8 +259,11 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .lib-th{grid-row:span 2;width:72px;height:41px;object-fit:cover;border-radius:5px;background:var(--monitor);display:block}
 .lib-info{min-width:0;display:flex;flex-direction:column;gap:2px}
 .lib-name{display:flex;align-items:center;min-width:0;border:1px solid transparent;border-radius:5px;padding:1px 4px;margin-left:-5px}
-.lib-name:hover{border-color:var(--line2)}
-.lib-name:focus-within{border-color:var(--accent-ink);background:var(--bg)}
+.lib-name .nm{font:600 13px var(--f-mono);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lib-name.editing{border-color:var(--accent-ink);background:var(--bg)}
+.libtools{display:contents}
+.lib-list.selmode .lib-row{cursor:pointer}
+.lib-list.selmode .lib-row:hover{border-color:var(--line2)}
 .lib-rn{min-width:3ch;max-width:100%;field-sizing:content;background:none;border:0;outline:none;font:600 13px var(--f-mono);padding:2px 0}
 .lib-name .ext{font:13px var(--f-mono);color:var(--dim)}
 .lib-row .use{font-size:12px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -701,14 +704,20 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 
   <section class="panel" data-panel="library" data-title="영상 보관함">
     <div class="ptool">
-      <label class="btn sm primary">영상 추가<input type="file" accept="video/*" id="libAdd" multiple hidden></label>
-      <button class="btn sm" id="libAll">모두 선택</button>
-      <button class="btn sm" id="libUnused" title="어느 장면에서도 안 쓰는 영상만 골라요">안 쓰는 영상 고르기</button>
-      <button class="btn sm danger" id="libDelSel" disabled>선택한 영상 삭제</button>
+      <label class="btn sm primary" id="libAddBtn">영상 추가<input type="file" accept="video/*" id="libAdd" multiple hidden></label>
+      <span class="libtools" id="libTools" hidden>
+        <button class="btn sm" id="libAll">모두 선택</button>
+        <button class="btn sm" id="libUnused" title="어느 장면에서도 안 쓰는 영상만 골라요">안 쓰는 영상 고르기</button>
+        <button class="btn sm" id="libRename" disabled>이름 바꾸기</button>
+        <button class="btn sm danger" id="libDelSel" disabled>선택한 영상 삭제</button>
+      </span>
+      <span class="msg" id="libHint"></span>
+      <span class="grow"></span>
+      <button class="btn sm" id="libSelMode">선택</button>
       <span class="msg" id="libMsg"></span>
     </div>
     <div class="pscroll">
-      <p class="hint">이 브라우저에 저장된 영상이에요. 이름 칸을 눌러 파일 이름을 바꿀 수 있고(쓰는 장면도 함께 바뀌어요), 체크해서 여러 개를 한 번에 지울 수 있어요. <b>이 장면에 넣기</b>는 지금 고른 장면에 바로 연결해요.</p>
+      <p class="hint">이 브라우저에 저장된 영상이에요. <b>이 장면에 넣기</b>로 지금 고른 장면에 바로 연결하고, 지우거나 이름을 바꾸려면 오른쪽 위 <b>선택</b>을 누르세요.</p>
       <div class="lib-list" id="libList"></div>
     </div>
   </section>
@@ -2334,39 +2343,50 @@ $('jApply').onclick=()=>{
 };
 
 /* --- 영상 보관함 ---------------------------------------------------------
-   · 체크해서 여러 개 골라 삭제, 이름 칸을 고쳐서 파일 이름 바꾸기
-   · "이 장면에 넣기"로 지금 고른 장면에 바로 연결
+   · 평소: 영상 추가 + 목록 (이 장면에 넣기)
+   · [선택]을 누르면 선택 모드: 체크해서 삭제, 하나 골라 이름 바꾸기, 모두 선택
    -------------------------------------------------------------------- */
 const libSel=new Set();
+let libMode=false,libRenaming=null;
 function usersOf(name){return Object.values(P.scenes).filter(s=>s.media?.type==='file'&&s.media.name===name)}
 function splitExt(n){const m=n.match(/^(.*?)(\.[A-Za-z0-9]{1,5})?$/);return[m[1],m[2]||'']}
 function renderLib(){
   const names=Library.names();
   [...libSel].forEach(n=>{if(!Library.has(n))libSel.delete(n)});
+  if(libRenaming&&!Library.has(libRenaming))libRenaming=null;
   const cur=P.scenes[sel];
+  $('libList').classList.toggle('selmode',libMode);
   $('libList').innerHTML=names.length?names.map(n=>{
     const u=usersOf(n),[base,ext]=splitExt(n),on=libSel.has(n),here=cur&&cur.media?.type==='file'&&cur.media.name===n;
+    const name=libRenaming===n
+      ?`<div class="lib-name editing"><input class="lib-rn" value="${esc(base)}" size="${Math.max(3,[...base].length+1)}" spellcheck="false" aria-label="새 파일 이름"><span class="ext">${esc(ext)}</span></div>`
+      :`<div class="lib-name"><span class="nm">${esc(base)}</span><span class="ext">${esc(ext)}</span></div>`;
     return`<div class="lib-row ${on?'on':''}" data-name="${esc(n)}">
-      <label class="lib-ck" title="선택"><input type="checkbox" class="lib-sel" ${on?'checked':''} aria-label="${esc(n)} 선택"></label>
+      ${libMode?`<label class="lib-ck" title="선택"><input type="checkbox" class="lib-sel" ${on?'checked':''} aria-label="${esc(n)} 선택"></label>`:''}
       <video class="lib-th" src="${Library.urls.get(n)}#t=0.1" muted preload="metadata" playsinline></video>
-      <div class="lib-info">
-        <div class="lib-name"><input class="lib-rn" value="${esc(base)}" size="${Math.max(3,[...base].length+1)}" spellcheck="false" aria-label="파일 이름" title="눌러서 이름 바꾸기"><span class="ext">${esc(ext)}</span></div>
+      <div class="lib-info">${name}
         <div class="use ${u.length?'':'none'}">${u.length?'사용 중: '+u.map(s=>esc(s.title)).join(', '):'어느 장면에서도 안 쓰는 중'} · <span class="sz">${fmtSize(Library.blobs.get(n)?.size)}</span></div>
       </div>
-      <div class="lib-act">
-        ${cur&&!here?`<button class="btn sm" data-put title="'${esc(cur.title)}' 장면에 이 영상 넣기">이 장면에 넣기</button>`:here?'<span class="chip ph">이 장면에서 사용 중</span>':''}
-        <button class="x" data-del title="이 영상 삭제" aria-label="${esc(n)} 삭제">×</button>
-      </div></div>`}).join('')
+      ${libMode?'':`<div class="lib-act">${cur&&!here?`<button class="btn sm" data-put title="'${esc(cur.title)}' 장면에 이 영상 넣기">이 장면에 넣기</button>`:here?'<span class="chip ph">이 장면에서 사용 중</span>':''}</div>`}
+      </div>`}).join('')
     :'<p class="empty" style="margin:0">아직 저장된 영상이 없어요. "영상 추가"로 여러 개를 한 번에 넣을 수 있어요.</p>';
+  // 도구 막대
   const n=libSel.size;
-  $('libDelSel').disabled=!n;$('libDelSel').textContent=n?`선택한 ${n}개 삭제`:'선택한 영상 삭제';
-  $('libDelSel').classList.remove('armed');
+  $('libAddBtn').hidden=libMode;$('libTools').hidden=!libMode;
+  $('libSelMode').textContent=libMode?'완료':'선택';$('libSelMode').classList.toggle('primary',libMode);
+  $('libSelMode').disabled=!names.length&&!libMode;
   $('libAll').textContent=names.length&&n===names.length?'선택 해제':'모두 선택';
-  $('libAll').disabled=!names.length;$('libUnused').disabled=!names.some(x=>!usersOf(x).length);
+  $('libUnused').disabled=!names.some(x=>!usersOf(x).length);
+  $('libRename').disabled=n!==1;$('libRename').title=n===1?'고른 영상의 이름 바꾸기':'영상을 하나만 고르세요';
+  $('libDelSel').disabled=!n;$('libDelSel').textContent=n?`선택한 ${n}개 삭제`:'선택한 영상 삭제';$('libDelSel').classList.remove('armed');
+  $('libHint').textContent=libMode?(n?`${n}개 골랐어요`:'영상을 눌러서 고르세요'):'';
+  if(libRenaming){const i=$('libList').querySelector('.lib-rn');if(i&&document.activeElement!==i){i.focus();i.select()}}
 }
+function setLibMode(on){libMode=on;libRenaming=null;if(!on)libSel.clear();renderLib()}
 function openLib(){$('libMsg').textContent=Store.ok?'':'이 환경에서는 브라우저 저장소를 쓸 수 없어서 새로고침하면 영상이 사라져요';renderLib();focusPanel('library')}
 async function deleteVideos(list){
   for(const n of list){await Library.remove(n);libSel.delete(n)}
+  if(!Library.names().length)libMode=false;
   renderLib();renderGraph();renderGuide();renderInspector();
   if(engine.cur&&list.includes(engine.cur.scene.media?.name))refreshPreview(engine.cur.scene.id);
 }
@@ -2374,7 +2394,7 @@ async function renameVideo(old,base){
   const[,ext]=splitExt(old);base=base.trim().replace(/[\\/:*?"<>|]+/g,'');
   const nw=base+ext;
   if(!base){toast('이름을 비울 수 없어요',true);return false}
-  if(nw===old)return false;
+  if(nw===old)return true;
   if(Library.has(nw)){toast(`'${nw}' 이름의 영상이 이미 있어요`,true);return false}
   const blob=Library.blobs.get(old);
   await Library.add(nw,blob,true);await Library.remove(old);
@@ -2384,27 +2404,35 @@ async function renameVideo(old,base){
   toast(`이름을 '${nw}'(으)로 바꿨어요${used.length?` · 장면 ${used.length}개도 함께 바뀌었어요`:''}`);
   return true;
 }
+async function finishRename(input,commit){
+  const old=libRenaming;if(!old)return;libRenaming=null;
+  if(commit&&!await renameVideo(old,input.value)){libRenaming=old;renderLib();return}
+  renderLib();
+}
 $('libAdd').onchange=async e=>{for(const f of e.target.files)await Library.add(f.name,f,true);toast(`영상 ${e.target.files.length}개를 저장했어요`);e.target.value='';renderLib();renderGraph();renderGuide();renderInspector()};
-$('libList').addEventListener('change',async e=>{
-  const row=e.target.closest('.lib-row');if(!row)return;const n=row.dataset.name;
-  if(e.target.classList.contains('lib-sel')){e.target.checked?libSel.add(n):libSel.delete(n);renderLib()}
-  else if(e.target.classList.contains('lib-rn')){if(!await renameVideo(n,e.target.value))e.target.value=splitExt(n)[0];renderLib()}
+$('libSelMode').onclick=()=>setLibMode(!libMode);
+$('libList').addEventListener('change',e=>{
+  const row=e.target.closest('.lib-row');if(!row||!e.target.classList.contains('lib-sel'))return;
+  const n=row.dataset.name;e.target.checked?libSel.add(n):libSel.delete(n);renderLib();
 });
-$('libList').addEventListener('keydown',e=>{if(e.target.classList.contains('lib-rn')&&e.key==='Enter'){e.preventDefault();e.target.blur()}});
+$('libList').addEventListener('keydown',e=>{
+  if(!e.target.classList.contains('lib-rn'))return;
+  if(e.key==='Enter'){e.preventDefault();finishRename(e.target,true)}
+  else if(e.key==='Escape'){e.preventDefault();e.stopPropagation();finishRename(e.target,false)}
+});
+$('libList').addEventListener('focusout',e=>{if(e.target.classList.contains('lib-rn')&&libRenaming)finishRename(e.target,true)});
 $('libList').addEventListener('click',async e=>{
-  const b=e.target.closest('button');if(!b)return;const n=b.closest('.lib-row').dataset.name;
-  if(b.hasAttribute('data-put')){
-    const s=P.scenes[sel];if(!s)return;
-    s.media.type='file';s.media.name=n;s.media.duration=await Library.probe(n)||s.media.duration;
-    save();renderGraph();renderInspector();renderLib();refreshPreview(s.id);toast(`'${s.title}' 장면에 '${n}'을 넣었어요`);
-  }else if(b.hasAttribute('data-del')){
-    const u=usersOf(n).length;
-    if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent=u?`장면 ${u}곳에서 쓰는 중 · 삭제?`:'삭제?';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='×'}},2800);return}
-    await deleteVideos([n]);toast(`'${n}'을 삭제했어요`);
-  }
+  const row=e.target.closest('.lib-row');if(!row)return;const n=row.dataset.name;
+  // 선택 모드에서는 줄 아무 곳이나 눌러서 고르기
+  if(libMode&&!e.target.closest('input,label,button')){libSel.has(n)?libSel.delete(n):libSel.add(n);renderLib();return}
+  const b=e.target.closest('button[data-put]');if(!b)return;
+  const s=P.scenes[sel];if(!s)return;
+  s.media.type='file';s.media.name=n;s.media.duration=await Library.probe(n)||s.media.duration;
+  save();renderGraph();renderInspector();renderLib();refreshPreview(s.id);toast(`'${s.title}' 장면에 '${n}'을 넣었어요`);
 });
 $('libAll').onclick=()=>{const all=Library.names();if(libSel.size===all.length)libSel.clear();else all.forEach(n=>libSel.add(n));renderLib()};
 $('libUnused').onclick=()=>{libSel.clear();Library.names().filter(n=>!usersOf(n).length).forEach(n=>libSel.add(n));renderLib();toast(`안 쓰는 영상 ${libSel.size}개를 골랐어요 · 확인하고 삭제하세요`)};
+$('libRename').onclick=()=>{if(libSel.size!==1)return;libRenaming=[...libSel][0];renderLib()};
 $('libDelSel').onclick=async e=>{
   const b=e.currentTarget,list=[...libSel];if(!list.length)return;
   const used=list.filter(n=>usersOf(n).length).length;
