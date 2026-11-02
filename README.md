@@ -23,7 +23,7 @@
 | 미디어 어댑터 | `VideoAdapter`, `PlaceholderAdapter`, `Media.resolve` | 실제 영상 / 글자 화면을 같은 인터페이스로 재생. `resolve`만 바꾸면 영상 출처 교체 |
 | 스킨 | `Skins.register({id, name, mount})` | 영상 위 선택지 UI. 시네마형, 카드형 기본 제공 |
 | 저장소 | `Store` (IndexedDB) | 영상 Blob과 프로젝트 JSON 저장. 같은 메서드로 다른 저장소 어댑터 교체 가능 |
-| 편집기 | 두 번째 `<script>` | 장면 지도, 장면 편집, 영상 보관함, 내보내기/불러오기 |
+| 편집기 | 두 번째 `<script>` | 노드형 장면 지도(끌어서 연결·이동·확대), 장면 편집, 영상 보관함, 내보내기/불러오기 |
 
 ### 엔진 이벤트
 

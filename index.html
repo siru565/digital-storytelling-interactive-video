@@ -182,6 +182,49 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .vars-box .row{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
 .vars-box input{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:6px 10px;font:13px var(--f-mono);flex:1;min-width:160px}
 
+/* 노드 편집기 */
+.canvas{position:relative;height:480px;min-height:260px;resize:vertical;overflow:hidden;background-color:var(--bg);background-image:radial-gradient(circle,#2a303a 1px,transparent 1.3px);background-size:20px 20px;border-block:1px solid var(--line);touch-action:none;cursor:grab;user-select:none}
+.canvas.panning{cursor:grabbing}
+.world{position:absolute;left:0;top:0;transform-origin:0 0}
+.edges{position:absolute;left:0;top:0;width:1px;height:1px;overflow:visible;pointer-events:none}
+.edges path.e{fill:none;stroke:#5f697a;stroke-width:2}
+.edges path.e.cond{stroke-dasharray:6 5}
+.edges path.e.live{stroke:var(--branch)}
+.edges path.e.sel{stroke:var(--accent);stroke-width:3}
+.edges path.hit{fill:none;stroke:transparent;stroke-width:16;pointer-events:stroke;cursor:pointer}
+.edges path.temp{fill:none;stroke:var(--accent);stroke-width:2;stroke-dasharray:6 4}
+.node{position:absolute;width:210px;background:var(--panel2);border:1.5px solid var(--line2);border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.35)}
+.node.sel{border-color:var(--accent);box-shadow:0 0 0 3px rgba(240,168,58,.2),0 4px 14px rgba(0,0,0,.35)}
+.node.live{background:#1b2b2f}
+.node.drop{border-color:var(--branch);box-shadow:0 0 0 5px rgba(94,196,212,.28)}
+.node.dragging{opacity:.92;box-shadow:0 12px 28px rgba(0,0,0,.5)}
+.nh{height:52px;padding:9px 12px 0 16px;cursor:move;position:relative}
+.nh .t{font-weight:600;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:26px}
+.nh .s{font-size:11.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nh .s.bad{color:var(--danger)}
+.nflag{position:absolute;top:-10px;left:10px;font-size:10px;font-weight:700;background:var(--accent);color:#1d1406;padding:1px 7px;border-radius:4px;z-index:1}
+.nend{position:absolute;top:10px;right:10px;font:600 10px var(--f-mono);color:var(--mute);letter-spacing:.06em}
+.inport{position:absolute;left:-7px;top:19px;width:12px;height:12px;border-radius:50%;background:var(--panel2);border:2px solid #6b7484}
+.nrow{height:30px;display:flex;align-items:center;gap:8px;padding:0 22px 0 12px;border-top:1px solid var(--line);font-size:12.5px;position:relative;cursor:pointer}
+.nrow:hover{background:#272c35}
+.nrow .k{font:600 10.5px var(--f-mono);color:var(--accent);width:14px;flex:none;text-align:center}
+.nrow .l{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.nrow.empty .l{color:var(--dim);font-style:italic}
+.nrow.add{color:var(--mute)}
+.nrow.add .k{color:var(--mute)}
+.port{position:absolute;right:-8px;top:8px;width:14px;height:14px;border-radius:50%;background:var(--bg);border:2px solid var(--branch);cursor:crosshair;transition:transform .12s}
+.port:hover,.port.on{background:var(--branch);transform:scale(1.3)}
+.nrow.open .port{border-color:var(--danger)}
+.nrow.add .port{border-color:var(--accent);border-style:dashed}
+.nrow.add .port:hover{background:var(--accent)}
+.etools{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:5px 6px 5px 10px;box-shadow:0 6px 18px rgba(0,0,0,.45);white-space:nowrap;cursor:default}
+.etools span{font-size:12px;color:var(--mute);max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.zoom{display:flex;gap:4px;align-items:center}
+.ib.sm{width:30px;height:30px;font-size:16px}
+.zlabel{background:none;border:0;font:12px var(--f-mono);color:var(--mute);width:46px}
+.legend .lg-dot{display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid var(--branch);margin-right:5px;vertical-align:-1px}
+@media (max-width:640px){.canvas{height:380px}.zoom .zlabel{display:none}}
+
 /* 장면 편집 */
 .editor{padding:16px;display:flex;flex-direction:column;gap:18px;min-width:0}
 .ed-top{display:flex;flex-direction:column;gap:8px}
@@ -351,11 +394,24 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 
     <section class="card">
       <div class="card-h">
-        <h2>장면 지도<small>화살표 = 선택지로 이어지는 길</small></h2>
+        <h2>장면 지도<small>선택지 옆 점을 끌어서 장면을 이어요</small></h2>
+        <div class="zoom">
+          <button class="ib sm" id="zOut" aria-label="축소" title="축소">−</button>
+          <button class="zlabel" id="zPct" title="100%로 보기">100%</button>
+          <button class="ib sm" id="zIn" aria-label="확대" title="확대">+</button>
+          <button class="btn sm" id="zFit">전체 보기</button>
+          <button class="btn sm" id="zAuto" title="흐름 순서대로 다시 배치">자동 정렬</button>
+        </div>
         <button class="btn sm primary" id="bAddScene">+ 새 장면</button>
       </div>
-      <div class="graph-wrap" id="graph"></div>
-      <div class="legend"><span>클릭: 편집</span><span>더블클릭: 그 장면부터 재생</span><span>점선: 조건이 있는 선택지</span></div>
+      <div class="canvas" id="graph"><div class="world" id="world"></div></div>
+      <div class="legend">
+        <span><i class="lg-dot"></i>점 끌어서 장면에 놓기 = 연결</span>
+        <span>빈 곳에 놓기 = 새 장면</span>
+        <span>장면 위쪽 끌기 = 위치 이동</span>
+        <span>선 클릭 = 연결 끊기</span>
+        <span>빈 곳 끌기 = 화면 이동 · Ctrl+휠 = 확대</span>
+      </div>
       <details class="vars-box">
         <summary>점수 변수 (조건 분기를 쓸 때만)</summary>
         <p class="hint" style="margin-top:8px">선택에 따라 점수를 올리고, 점수에 따라 다른 선택지를 보여줄 수 있어요. 예: <span class="mono">용기=0, 호감=0</span></p>
@@ -862,9 +918,9 @@ function sampleProject(){
     }
   };
 }
-function newScene(title){
+function newScene(title,pos){
   const id=uid('s');
-  return{id,title:title||'새 장면',media:{type:'file',name:'',color:'#2a3342',duration:6,caption:''},
+  return{id,title:title||'새 장면',pos:pos||null,media:{type:'file',name:'',color:'#2a3342',duration:6,caption:''},
     choiceAt:'',timeLimit:0,loop:true,ending:false,defaultChoice:'',choices:[]};
 }
 const KEY='forkreel-project-v1';
@@ -948,52 +1004,194 @@ function renderGuide(){
   $('gExport').onclick=openExport;
 }
 
-/* --- 장면 지도 --- */
-function renderGraph(){
-  const depth={},q=[];
-  if(P.scenes[P.start]){depth[P.start]=0;q.push(P.start)}
-  while(q.length){const id=q.shift();for(const c of P.scenes[id].choices){if(P.scenes[c.target]&&depth[c.target]==null){depth[c.target]=depth[id]+1;q.push(c.target)}}}
-  const maxD=Math.max(0,...Object.values(depth));
-  for(const id in P.scenes)if(depth[id]==null)depth[id]=maxD+1;
-  const cols={},pos={},NW=176,NH=58,GX=224,GY=74;
-  Object.keys(P.scenes).forEach(id=>{(cols[depth[id]]??=[]).push(id)});
-  let H=0;
-  Object.entries(cols).forEach(([d,ids])=>ids.forEach((id,i)=>{pos[id]={x:6+d*GX,y:16+i*GY};H=Math.max(H,16+i*GY+NH)}));
-  const W=Math.max(...Object.values(pos).map(p=>p.x))+NW+10;
-  let edges='',nodes='';
-  for(const id in P.scenes){
-    const s=P.scenes[id],a=pos[id];
-    s.choices.forEach(c=>{
-      const b=pos[c.target];if(!b)return;
-      const x1=a.x+NW,y1=a.y+NH/2,x2=b.x,y2=b.y+NH/2,back=x2<=a.x;
-      const path=back?`M${a.x+NW/2},${a.y+NH} C${a.x+NW/2},${a.y+NH+44} ${b.x+NW/2},${b.y+NH+44} ${b.x+NW/2},${b.y+NH+4}`
-                     :`M${x1},${y1} C${x1+44},${y1} ${x2-44},${y2} ${x2-5},${y2}`;
-      edges+=`<path class="gedge ${c.if?'cond':''} ${id===liveId?'live':''}" d="${path}" marker-end="url(#arr)"/>`;
-    });
-    const open=openChoices(s).length,m=s.media||{};
-    let sub,bad=false;
-    if(open){sub=`연결 안 된 선택지 ${open}`;bad=true}
-    else if(m.type==='file'&&m.name&&!Library.has(m.name)){sub='영상 다시 연결 필요';bad=true}
-    else if(hasVideo(s))sub=`영상 ${fmt(m.duration)}`;
-    else if(m.type==='file')sub='영상 없음 · 글자 화면';
-    else sub='글자 화면';
-    if(!s.ending&&!bad)sub+=` · 선택지 ${s.choices.length}`;
-    nodes+=`<g class="gnode ${id===sel?'sel':''} ${id===liveId?'live':''}" data-id="${id}" transform="translate(${a.x},${a.y})" tabindex="0" role="button" aria-label="${esc(s.title)} 편집">
-      <rect class="box" width="${NW}" height="${NH}" rx="8"/>
-      ${P.start===id?`<rect class="flag" x="10" y="-9" width="34" height="17" rx="4"/><text class="flagt" x="27" y="3" text-anchor="middle">시작</text>`:''}
-      ${s.ending?`<text class="endt" x="${NW-10}" y="20" text-anchor="end">END</text>`:''}
-      <text class="t" x="12" y="25">${esc(s.title.length>11?s.title.slice(0,10)+'…':s.title)}</text>
-      <text class="s ${bad?'bad':''}" x="12" y="44">${esc(sub)}</text></g>`;
+/* --- 장면 지도 (노드 편집기) ---------------------------------------
+   · 장면 머리를 끌면 위치 이동, 선택지 오른쪽 점을 끌어 다른 장면에 놓으면 연결
+   · 빈 곳에 놓으면 그 자리에 새 장면을 만들고 연결
+   · 빈 곳 끌기 = 화면 이동, Ctrl+휠 = 확대/축소, 선 클릭 = 연결 끊기
+   -------------------------------------------------------------------- */
+const NW=210,HH=52,RH=30;
+const G={z:1,px:24,py:24,selEdge:null,drag:null};
+const canvas=$('graph'),world=$('world');
+function nodeH(s){return HH+(s.ending?0:(s.choices.length+1)*RH)+3}
+function outPt(s,i){return{x:s.pos.x+NW+1,y:s.pos.y+1.5+HH+i*RH+15}}
+function inPt(s){return{x:s.pos.x-1,y:s.pos.y+26}}
+function curve(a,b){const back=b.x<a.x+40,dx=back?Math.max(90,Math.abs(b.y-a.y)*.45):Math.max(50,(b.x-a.x)*.5);return`M${a.x},${a.y} C${a.x+dx},${a.y} ${b.x-dx},${b.y} ${b.x},${b.y}`}
+/* 위치가 없는 장면에 자리를 정해 줍니다. all=true면 전체를 다시 정렬합니다 */
+function autoLayout(all){
+  const sc=Object.values(P.scenes);
+  const lacking=sc.filter(s=>!s.pos);
+  if(!all&&!lacking.length)return;
+  if(all||lacking.length===sc.length){
+    const depth={},q=[];
+    if(P.scenes[P.start]){depth[P.start]=0;q.push(P.start)}
+    while(q.length){const id=q.shift();for(const c of P.scenes[id].choices){if(P.scenes[c.target]&&depth[c.target]==null){depth[c.target]=depth[id]+1;q.push(c.target)}}}
+    const maxD=Math.max(0,...Object.values(depth));
+    sc.forEach(s=>{if(depth[s.id]==null)depth[s.id]=maxD+1});
+    const colY={};
+    sc.forEach(s=>{const d=depth[s.id];const y=colY[d]??0;s.pos={x:d*290,y};colY[d]=y+nodeH(s)+36});
+    return;
   }
-  $('graph').innerHTML=`<svg width="${W}" height="${H+46}" viewBox="0 0 ${W} ${H+46}">
-    <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6b7484"/></marker></defs>
-    ${edges}${nodes}</svg>`;
+  const placed=sc.filter(s=>s.pos);
+  let x=Math.max(...placed.map(s=>s.pos.x))+290,y=Math.min(...placed.map(s=>s.pos.y));
+  lacking.forEach(s=>{s.pos={x,y};y+=nodeH(s)+36});
 }
-function selectScene(id){sel=id;renderGraph();renderInspector()}
-$('graph').addEventListener('click',e=>{const g=e.target.closest('.gnode');if(g)selectScene(g.dataset.id)});
-$('graph').addEventListener('keydown',e=>{const g=e.target.closest('.gnode');if(g&&(e.key==='Enter'||e.key===' ')){e.preventDefault();selectScene(g.dataset.id)}});
-$('graph').addEventListener('dblclick',e=>{const g=e.target.closest('.gnode');if(g)playFrom(g.dataset.id)});
-$('bAddScene').onclick=()=>{const s=newScene();P.scenes[s.id]=s;save();selectScene(s.id)};
+function applyView(){
+  world.style.transform=`translate(${G.px}px,${G.py}px) scale(${G.z})`;
+  $('zPct').textContent=Math.round(G.z*100)+'%';
+  canvas.style.backgroundSize=`${20*G.z}px ${20*G.z}px`;
+  canvas.style.backgroundPosition=`${G.px}px ${G.py}px`;
+}
+function fitView(){
+  const sc=Object.values(P.scenes).filter(s=>s.pos);if(!sc.length)return;
+  const W=canvas.clientWidth,H=canvas.clientHeight;if(!W||!H)return;
+  const x0=Math.min(...sc.map(s=>s.pos.x)),y0=Math.min(...sc.map(s=>s.pos.y));
+  const x1=Math.max(...sc.map(s=>s.pos.x+NW)),y1=Math.max(...sc.map(s=>s.pos.y+nodeH(s)));
+  G.z=Math.max(.3,Math.min(1.1,(W-80)/(x1-x0),(H-70)/(y1-y0)));
+  G.px=(W-(x1-x0)*G.z)/2-x0*G.z;G.py=(H-(y1-y0)*G.z)/2-y0*G.z+8;
+  applyView();
+}
+function zoomAt(cx,cy,f){
+  const r=canvas.getBoundingClientRect(),z2=Math.max(.3,Math.min(2,G.z*f));
+  const wx=(cx-r.left-G.px)/G.z,wy=(cy-r.top-G.py)/G.z;
+  G.px=cx-r.left-wx*z2;G.py=cy-r.top-wy*z2;G.z=z2;applyView();
+}
+function toWorld(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left-G.px)/G.z,y:(e.clientY-r.top-G.py)/G.z}}
+function nodeSub(s){
+  const open=openChoices(s).length,m=s.media||{};
+  if(open)return[`연결 안 된 선택지 ${open}개`,true];
+  if(m.type==='file'&&m.name&&!Library.has(m.name))return['영상 다시 연결 필요',true];
+  if(hasVideo(s))return[`영상 ${fmt(m.duration)}`,false];
+  if(m.type==='file')return['영상 없음 · 글자 화면',false];
+  return['글자 화면',false];
+}
+function renderEdges(){
+  const svg=$('edges');if(!svg)return;
+  let out='';
+  for(const s of Object.values(P.scenes)){
+    if(s.ending)continue;
+    s.choices.forEach((c,i)=>{
+      const t=P.scenes[c.target];if(!t)return;
+      const d=curve(outPt(s,i),inPt(t));
+      const sel=G.selEdge&&G.selEdge.s===s.id&&G.selEdge.i===i;
+      out+=`<path class="e ${c.if?'cond':''} ${s.id===liveId?'live':''} ${sel?'sel':''}" d="${d}" marker-end="url(#arrow${sel?'S':''})"/>`+
+           `<path class="hit" data-s="${s.id}" data-i="${i}" d="${d}"/>`;
+    });
+  }
+  const dr=G.drag;
+  if(dr?.type==='link'){
+    const s=P.scenes[dr.from],i=dr.port==='add'?s.choices.length:+dr.port;
+    out+=`<path class="temp" d="${curve(outPt(s,i),dr.cur)}"/>`;
+  }
+  svg.innerHTML=`<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#6b7484"/></marker>
+    <marker id="arrowS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f0a83a"/></marker></defs>`+out;
+  // 선택한 연결선 위의 작은 도구 막대
+  const et=$('etools'),se=G.selEdge,s=se&&P.scenes[se.s],c=s?.choices[se.i],t=c&&P.scenes[c.target];
+  if(t){
+    const a=outPt(s,se.i),b=inPt(t);
+    et.hidden=false;et.style.left=((a.x+b.x)/2)+'px';et.style.top=((a.y+b.y)/2)+'px';
+    et.querySelector('span').textContent=`${s.title} → ${t.title}`;
+  }else{et.hidden=true;if(se)G.selEdge=null}
+}
+function renderGraph(){
+  autoLayout(false);
+  let nodes='';
+  for(const s of Object.values(P.scenes)){
+    const [sub,bad]=nodeSub(s);
+    const rows=s.ending?'':s.choices.map((c,i)=>`<div class="nrow ${P.scenes[c.target]?'':'open'} ${c.label?'':'empty'}" data-i="${i}" title="${esc(c.label||'이름 없는 선택지')}">
+        <span class="k">${i+1}</span><span class="l">${esc(c.label||'이름 없는 선택지')}</span><span class="port" data-port="${i}" title="끌어서 다른 장면에 연결"></span></div>`).join('')+
+      `<div class="nrow add"><span class="k">＋</span><span class="l">끌어서 새 갈래</span><span class="port" data-port="add" title="끌어서 새 선택지 만들기"></span></div>`;
+    nodes+=`<div class="node ${s.id===sel?'sel':''} ${s.id===liveId?'live':''}" data-id="${s.id}" style="left:${s.pos.x}px;top:${s.pos.y}px">
+      ${P.start===s.id?'<span class="nflag">시작</span>':''}<span class="inport"></span>
+      <div class="nh" title="끌어서 이동 · 더블클릭하면 이 장면부터 재생">${s.ending?'<span class="nend">END</span>':''}
+        <div class="t">${esc(s.title||'제목 없음')}</div><div class="s ${bad?'bad':''}">${esc(sub)}</div></div>${rows}</div>`;
+  }
+  world.innerHTML=`<svg class="edges" id="edges"></svg>${nodes}
+    <div class="etools" id="etools" hidden><span></span><button class="btn sm" data-et="cut">연결 끊기</button><button class="btn sm danger" data-et="del">선택지 삭제</button></div>`;
+  renderEdges();applyView();
+}
+function selectScene(id,choiceIdx){
+  sel=id;renderGraph();renderInspector();
+  if(choiceIdx!=null){
+    const inp=insp.querySelector(`.ch[data-i="${choiceIdx}"] input[data-k="label"]`);
+    if(inp){inp.scrollIntoView({block:'center',behavior:'smooth'});inp.focus({preventScroll:true})}
+  }
+}
+function clearDrop(){world.querySelectorAll('.node.drop').forEach(n=>n.classList.remove('drop'))}
+function nodeAt(e){return document.elementFromPoint(e.clientX,e.clientY)?.closest('#world .node')}
+canvas.addEventListener('pointerdown',e=>{
+  if(e.button!==0||e.target.closest('.etools'))return;
+  const port=e.target.closest('.port'),node=e.target.closest('.node'),hit=e.target.closest('path.hit');
+  const w=toWorld(e);
+  if(hit){G.selEdge={s:hit.dataset.s,i:+hit.dataset.i};renderEdges();return}
+  canvas.setPointerCapture(e.pointerId);
+  if(port){G.drag={type:'link',from:node.dataset.id,port:port.dataset.port,start:w,cur:w};port.classList.add('on')}
+  else if(node){const s=P.scenes[node.dataset.id];G.drag={type:'node',id:s.id,ox:w.x-s.pos.x,oy:w.y-s.pos.y,sx:e.clientX,sy:e.clientY,moved:false,row:e.target.closest('.nrow:not(.add)')?.dataset.i}}
+  else{G.drag={type:'pan',sx:e.clientX,sy:e.clientY,px:G.px,py:G.py,moved:false};canvas.classList.add('panning')}
+});
+canvas.addEventListener('pointermove',e=>{
+  const d=G.drag;if(!d)return;
+  if(d.type==='pan'){
+    G.px=d.px+e.clientX-d.sx;G.py=d.py+e.clientY-d.sy;
+    if(Math.abs(e.clientX-d.sx)+Math.abs(e.clientY-d.sy)>3)d.moved=true;applyView();
+  }else if(d.type==='node'){
+    if(!d.moved&&Math.hypot(e.clientX-d.sx,e.clientY-d.sy)<4)return;
+    d.moved=true;const w=toWorld(e),s=P.scenes[d.id];
+    s.pos={x:Math.round((w.x-d.ox)/8)*8,y:Math.round((w.y-d.oy)/8)*8};
+    const el=world.querySelector(`.node[data-id="${d.id}"]`);el.style.left=s.pos.x+'px';el.style.top=s.pos.y+'px';el.classList.add('dragging');
+    renderEdges();
+  }else if(d.type==='link'){
+    d.cur=toWorld(e);renderEdges();
+    clearDrop();const n=nodeAt(e);if(n&&n.dataset.id!==d.from)n.classList.add('drop');
+  }
+});
+function endDrag(e){
+  const d=G.drag;if(!d)return;G.drag=null;canvas.classList.remove('panning');clearDrop();
+  if(d.type==='pan'){if(!d.moved&&G.selEdge){G.selEdge=null;renderEdges()}return}
+  if(d.type==='node'){if(d.moved){save();renderGraph()}else selectScene(d.id,d.row);return}
+  // 연결 만들기
+  const s=P.scenes[d.from],n=e&&nodeAt(e);
+  let target=n?.dataset.id;
+  const dist=Math.hypot(d.cur.x-d.start.x,d.cur.y-d.start.y);
+  if(!target&&dist<12){renderEdges();selectScene(d.from,d.port==='add'?null:+d.port);return}
+  if(target===d.from){toast('같은 장면으로는 연결할 수 없어요',true);renderEdges();return}
+  let made='';
+  if(!target){
+    const ns=newScene('새 장면',{x:Math.round(d.cur.x/8)*8+20,y:Math.round((d.cur.y-26)/8)*8});
+    P.scenes[ns.id]=ns;target=ns.id;made=' (새 장면을 만들었어요)';
+  }
+  let idx;
+  if(d.port==='add'){
+    s.choices.push({id:uid('c'),label:'',target,set:'',if:''});idx=s.choices.length-1;
+    if(+s.timeLimit&&!s.defaultChoice)s.defaultChoice=s.choices[idx].id;
+  }else{idx=+d.port;s.choices[idx].target=target}
+  save();toast(`'${s.title}' → '${P.scenes[target].title}' 연결${made}`);
+  selectScene(d.from,s.choices[idx].label?null:idx);
+}
+canvas.addEventListener('pointerup',endDrag);
+canvas.addEventListener('pointercancel',()=>{G.drag=null;canvas.classList.remove('panning');clearDrop();renderGraph()});
+canvas.addEventListener('dblclick',e=>{const n=e.target.closest('.nh');if(n)playFrom(n.parentElement.dataset.id)});
+canvas.addEventListener('wheel',e=>{
+  e.preventDefault();
+  if(e.ctrlKey||e.metaKey)zoomAt(e.clientX,e.clientY,Math.exp(-e.deltaY*.0018));
+  else{G.px-=e.deltaX;G.py-=e.deltaY;applyView()}
+},{passive:false});
+function cutEdge(del){
+  const se=G.selEdge;if(!se)return;const s=P.scenes[se.s];if(!s)return;
+  if(del){const[c]=s.choices.splice(se.i,1);if(s.defaultChoice===c.id)s.defaultChoice=s.choices[0]?.id||'';toast('선택지를 삭제했어요')}
+  else{s.choices[se.i].target='';toast('연결을 끊었어요. 점을 다시 끌어서 이어 주세요.')}
+  G.selEdge=null;save();renderGraph();if(sel===s.id)renderInspector();
+}
+world.addEventListener('click',e=>{const b=e.target.closest('[data-et]');if(b)cutEdge(b.dataset.et==='del')});
+$('zIn').onclick=()=>{const r=canvas.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1.2)};
+$('zOut').onclick=()=>{const r=canvas.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1/1.2)};
+$('zPct').onclick=()=>{const r=canvas.getBoundingClientRect();zoomAt(r.left+r.width/2,r.top+r.height/2,1/G.z)};
+$('zFit').onclick=fitView;
+$('zAuto').onclick=()=>{autoLayout(true);save();renderGraph();fitView();toast('장면을 흐름 순서대로 정렬했어요')};
+$('bAddScene').onclick=()=>{
+  const W=canvas.clientWidth,H=canvas.clientHeight;
+  const s=newScene('새 장면',{x:Math.round(((W/2-G.px)/G.z-NW/2)/8)*8,y:Math.round(((H/2-G.py)/G.z-40)/8)*8});
+  P.scenes[s.id]=s;save();selectScene(s.id);
+};
 $('varsIn').value=Logic.stringifyVars(P.vars);
 $('varsIn').addEventListener('change',()=>{P.vars=Logic.parseVars($('varsIn').value);$('varsIn').value=Logic.stringifyVars(P.vars);save();renderInspector()});
 
@@ -1124,7 +1322,7 @@ insp.addEventListener('change',async e=>{
   else if(t.id==='f-lib'&&t.value){s.media.name=t.value;s.media.duration=await Library.probe(t.value)||s.media.duration}
   else if(t.dataset.k==='target'){
     const c=s.choices[+t.closest('.ch').dataset.i];
-    if(t.value==='__new'){const n=newScene(c.label?`${c.label} 이후`:'새 장면');P.scenes[n.id]=n;c.target=n.id;toast(`'${n.title}' 장면을 만들었어요. 지도에서 클릭해 영상을 넣으세요.`)}
+    if(t.value==='__new'){const n=newScene(c.label?`${c.label} 이후`:'새 장면',s.pos?{x:s.pos.x+290,y:s.pos.y+(+t.closest('.ch').dataset.i)*70}:null);P.scenes[n.id]=n;c.target=n.id;toast(`'${n.title}' 장면을 만들었어요. 지도에서 클릭해 영상을 넣으세요.`)}
     else c.target=t.value;
   }else return;
   save();renderGraph();renderInspector();
@@ -1179,7 +1377,7 @@ function replaceProject(np){
   P=np;engine.load(P);sel=P.start;save();
   $('pTitle').value=P.title||'';$('varsIn').value=Logic.stringifyVars(P.vars);
   $('skinSel').value=Skins.get(P.skin).id;useSkin($('skinSel').value);
-  cover.hidden=false;renderGraph();renderInspector();
+  cover.hidden=false;G.selEdge=null;renderGraph();renderInspector();fitView();
 }
 $('pTitle').addEventListener('input',()=>{P.title=$('pTitle').value;save()});
 
@@ -1352,6 +1550,7 @@ document.addEventListener('keydown',e=>{
   if(/^[1-9]$/.test(e.key))engine.chooseIndex(+e.key-1);
   else if(e.key===' '&&!e.target.closest('button')){e.preventDefault();$('tPlay').click()}
   else if(e.key==='b'||e.key==='B')$('tBack').click();
+  else if((e.key==='Delete'||e.key==='Backspace')&&G.selEdge){e.preventDefault();cutEdge(false)}
 });
 
 /* --- 시작 --- */
@@ -1371,7 +1570,7 @@ renderGuide();renderGraph();renderInspector();
     try{const n=await Library.restore();if(n)toast(`보관함에서 영상 ${n}개를 불러왔어요`)}catch(e){}
   }
   if(firstVisit&&!(P.savedAt))$('welcome').hidden=false;
-  renderGuide();renderGraph();renderInspector();
+  renderGuide();renderGraph();renderInspector();fitView();
 })();
 </script>
 
