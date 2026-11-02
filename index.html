@@ -334,6 +334,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .ib.sm{width:30px;height:30px;font-size:16px}
 .zlabel{background:none;border:0;font:12px var(--f-mono);color:var(--mute);width:46px}
 .panel[data-panel=graph]{position:relative}
+.pv-follow{display:inline-flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap}
 .ib:disabled{opacity:.35;cursor:default}
 .kbhelp{position:absolute;right:10px;top:50px;z-index:12;width:min(330px,calc(100% - 20px));background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;box-shadow:0 12px 30px rgba(0,0,0,.5);font-size:12.5px}
 .kbhelp b{font-size:13.5px}
@@ -614,6 +615,8 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
     <div class="ptool">
       <label class="hint" for="skinSel">선택지 모양</label>
       <select id="skinSel" class="sel"></select>
+      <span class="grow"></span>
+      <label class="hint pv-follow" title="장면 지도나 편집 칸에서 장면을 고르면 미리보기도 그 장면으로 바뀌어요"><input type="checkbox" id="pvFollow" checked> 고른 장면 따라가기</label>
     </div>
     <div class="stage-wrap" id="stageWrap">
       <div class="stage" id="stage">
@@ -859,6 +862,8 @@ class IVEngine extends Emitter{
     this.goto(sceneId||p.start);
   }
   restart(){this.start(this.project.start)}
+  /* 장면을 불러와 첫 화면에서 멈춘 채 대기 (편집기에서 장면을 고를 때 사용) */
+  cue(sceneId){this.vars={...(this.project.vars||{})};this.history=[];this.paused=true;this.emit('state',this.stateInfo());this.goto(sceneId)}
   async goto(id){
     const scene=this.project.scenes[id];
     if(!scene){this._end(this.cur?.scene);return}
@@ -1487,6 +1492,8 @@ engine.on('state',s=>setIcons(s));
 $('coverPlay').onclick=()=>playFrom(P.start);
 $('bPlayAll').onclick=()=>{playFrom(P.start);if(!maxOpen())$('stage').scrollIntoView({behavior:'smooth',block:'center'})};
 $('bTheater').onclick=openTheater;
+try{const f=localStorage.getItem('dsiv-pv-follow');if(f!=null)$('pvFollow').checked=f==='1'}catch(e){}
+$('pvFollow').onchange=e=>{try{localStorage.setItem('dsiv-pv-follow',e.target.checked?'1':'0')}catch(_){};if(e.target.checked)cuePreview(sel)};
 $('tPlay').onclick=()=>{if(cover.hidden)engine.setPaused(!engine.paused);else playFrom(P.start)};
 $('tBack').onclick=()=>{if(!cover.hidden)return;engine.back()};
 $('tMute').onclick=()=>engine.setMuted(!engine.muted);
@@ -1640,6 +1647,7 @@ function renderGraph(){
 }
 function selectScene(id,choiceIdx){
   if(placing&&placing!==id)stopPlacing();
+  cuePreview(id);
   sel=id;G.selChoice=choiceIdx!=null?{s:id,i:+choiceIdx}:null;if(choiceIdx!=null)G.selEdge=null;
   renderGraph();renderInspector();
   if(choiceIdx!=null){
@@ -1647,6 +1655,11 @@ function selectScene(id,choiceIdx){
     if(card){card.classList.add('hl');card.scrollIntoView({block:'nearest',behavior:'smooth'});
       const inp=card.querySelector('input[data-k="label"]');if(inp&&!inp.value)inp.focus({preventScroll:true})}
   }
+}
+function cuePreview(id){
+  if(placing||!$('pvFollow')?.checked||!P.scenes[id])return;
+  if(engine.cur&&engine.cur.scene.id===id&&cover.hidden)return;   // 이미 그 장면이면 그대로 둡니다
+  cover.hidden=true;engine.cue(id);
 }
 function clearDrop(){world.querySelectorAll('.node.drop').forEach(n=>n.classList.remove('drop'))}
 function nodeAt(e){return document.elementFromPoint(e.clientX,e.clientY)?.closest('#world .node')}
