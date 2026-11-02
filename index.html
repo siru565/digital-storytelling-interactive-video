@@ -281,7 +281,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
   html,body{height:auto!important;overflow:visible!important}
   .ws{display:flex!important;flex-direction:column;gap:12px}
   .gut,.tmax,.wsgrip{display:none}
-  .slot[data-slot=A]{order:1}.slot[data-slot=C]{order:2}.slot[data-slot=B]{order:3}.slot[data-slot=D]{order:4}
+  .slot[data-slot=C]{order:1}.slot[data-slot=B]{order:2}.slot[data-slot=D]{order:3}.slot[data-slot=A]{order:4}
   .ws{height:auto!important}
   .slot{min-height:0}
   .slot-body{flex:none}
@@ -524,7 +524,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
     <div class="more">
       <button class="btn ghost" id="bWs" aria-haspopup="true" aria-expanded="false">작업 영역 ▾</button>
       <div class="menu" id="wsMenu" hidden>
-        <button data-ws="edit">기본 편집<small>장면 지도 · 미리보기 · 장면 편집</small></button>
+        <button data-ws="edit">기본 편집<small>보관함 · 미리보기 · 장면 편집 / 아래 장면 지도</small></button>
         <button data-ws="link">장면 연결 집중<small>장면 지도를 크게</small></button>
         <button data-ws="watch">미리보기 집중<small>영상 화면을 크게</small></button>
         <hr>
@@ -1305,11 +1305,11 @@ function usedVideos(){return[...new Set(Object.values(P.scenes).filter(s=>s.medi
 const PANELS={};
 document.querySelectorAll('#panelStore [data-panel]').forEach(p=>PANELS[p.dataset.panel]=p);
 const PRESETS={
-  edit:{slots:{A:['graph'],B:['vars','library'],C:['preview'],D:['inspector']},L:40,R:27,T:58},
-  link:{slots:{A:['graph'],B:['vars','library'],C:['preview'],D:['inspector']},L:56,R:24,T:68},
-  watch:{slots:{A:['graph'],B:['vars','library'],C:['preview'],D:['inspector']},L:26,R:24,T:64}
+  edit:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:30,R:27,T:52},
+  link:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:30,R:24,T:38},
+  watch:{slots:{A:['library','vars'],B:['graph'],C:['preview'],D:['inspector']},L:22,R:24,T:64}
 };
-const LKEY='dsiv-layout-v2',ws=$('ws');
+const LKEY='dsiv-layout-v3',ws=$('ws');
 function cloneLayout(k){const p=PRESETS[k];return{slots:JSON.parse(JSON.stringify(p.slots)),L:p.L,R:p.R,T:p.T,H:LY?.H,active:{},preset:k}}
 function validLayout(l){
   if(!l||!l.slots)return false;
