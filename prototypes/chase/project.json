@@ -1,0 +1,215 @@
+{
+  "title": "추격전",
+  "start": "run1",
+  "skin": "cards",
+  "vars": {
+    "실수": 0
+  },
+  "varMeta": {
+    "실수": {
+      "type": "num",
+      "show": true
+    }
+  },
+  "scenes": {
+    "run1": {
+      "id": "run1",
+      "title": "갈림길",
+      "media": {
+        "type": "placeholder",
+        "color": "#3a2326",
+        "duration": 6,
+        "caption": "누군가 뒤를 쫓아온다!\n갈림길이다.",
+        "name": ""
+      },
+      "choiceAt": 1,
+      "timeLimit": 4,
+      "loop": true,
+      "ending": false,
+      "auto": false,
+      "defaultChoice": "q2",
+      "enter": "",
+      "choices": [
+        {
+          "id": "q1",
+          "label": "왼쪽 골목으로",
+          "target": "run2",
+          "set": "",
+          "if": ""
+        },
+        {
+          "id": "q2",
+          "label": "오른쪽 대로로",
+          "target": "run2",
+          "set": "실수+=1",
+          "if": ""
+        }
+      ],
+      "pos": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "run2": {
+      "id": "run2",
+      "title": "막다른 담",
+      "media": {
+        "type": "placeholder",
+        "color": "#33262a",
+        "duration": 6,
+        "caption": "앞을 담벼락이 막고 있다!",
+        "name": ""
+      },
+      "choiceAt": 1,
+      "timeLimit": 3,
+      "loop": true,
+      "ending": false,
+      "auto": false,
+      "defaultChoice": "q4",
+      "enter": "",
+      "choices": [
+        {
+          "id": "q3",
+          "label": "담을 넘는다",
+          "target": "run3",
+          "set": "",
+          "if": ""
+        },
+        {
+          "id": "q4",
+          "label": "숨을 곳을 찾는다",
+          "target": "run3",
+          "set": "실수+=1",
+          "if": ""
+        }
+      ],
+      "pos": {
+        "x": 290,
+        "y": 0
+      }
+    },
+    "run3": {
+      "id": "run3",
+      "title": "지하철 입구",
+      "media": {
+        "type": "placeholder",
+        "color": "#262a36",
+        "duration": 6,
+        "caption": "지하철 문이 닫히려 한다!",
+        "name": ""
+      },
+      "choiceAt": 1,
+      "timeLimit": 3,
+      "loop": true,
+      "ending": false,
+      "auto": false,
+      "defaultChoice": "q6",
+      "enter": "",
+      "choices": [
+        {
+          "id": "q5",
+          "label": "뛰어든다",
+          "target": "result",
+          "set": "",
+          "if": ""
+        },
+        {
+          "id": "q6",
+          "label": "멈춰 선다",
+          "target": "result",
+          "set": "실수+=1",
+          "if": ""
+        }
+      ],
+      "pos": {
+        "x": 580,
+        "y": 0
+      }
+    },
+    "result": {
+      "id": "result",
+      "title": "숨 고르기",
+      "media": {
+        "type": "placeholder",
+        "color": "#1e2028",
+        "duration": 3,
+        "caption": "숨을 고른다…",
+        "name": ""
+      },
+      "choiceAt": "",
+      "timeLimit": 0,
+      "loop": true,
+      "ending": false,
+      "auto": true,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [
+        {
+          "id": "r1",
+          "label": "",
+          "target": "caught",
+          "set": "",
+          "if": "실수>=2"
+        },
+        {
+          "id": "r2",
+          "label": "",
+          "target": "safe",
+          "set": "",
+          "if": ""
+        }
+      ],
+      "pos": {
+        "x": 870,
+        "y": 0
+      }
+    },
+    "safe": {
+      "id": "safe",
+      "title": "따돌림",
+      "media": {
+        "type": "placeholder",
+        "color": "#2b4034",
+        "duration": 6,
+        "caption": "무사히 따돌렸다!",
+        "name": ""
+      },
+      "choiceAt": "",
+      "timeLimit": 0,
+      "loop": false,
+      "ending": true,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [],
+      "pos": {
+        "x": 1160,
+        "y": 0
+      }
+    },
+    "caught": {
+      "id": "caught",
+      "title": "붙잡힘",
+      "media": {
+        "type": "placeholder",
+        "color": "#3d2222",
+        "duration": 6,
+        "caption": "결국 붙잡히고 말았다.",
+        "name": ""
+      },
+      "choiceAt": "",
+      "timeLimit": 0,
+      "loop": false,
+      "ending": true,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [],
+      "pos": {
+        "x": 1160,
+        "y": 150
+      }
+    }
+  },
+  "savedAt": 1793596719412
+}
