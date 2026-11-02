@@ -15,6 +15,8 @@
     "meet": {
       "id": "meet",
       "title": "도서관",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#2d3550",
@@ -53,6 +55,8 @@
     "cafe": {
       "id": "cafe",
       "title": "카페",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#3d3226",
@@ -91,6 +95,8 @@
     "rain": {
       "id": "rain",
       "title": "갑작스러운 비",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#22303b",
@@ -129,6 +135,8 @@
     "judge": {
       "id": "judge",
       "title": "그날 밤",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#1e2230",
@@ -167,6 +175,8 @@
     "happy": {
       "id": "happy",
       "title": "다음 약속",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#4a3a24",
@@ -190,6 +200,8 @@
     "normal": {
       "id": "normal",
       "title": "스쳐 간 인연",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#23262e",
@@ -211,5 +223,5 @@
       }
     }
   },
-  "savedAt": 1793599048547
+  "savedAt": 1793601483589
 }

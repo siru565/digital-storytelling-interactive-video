@@ -407,6 +407,18 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .nrow.open .port{border-color:var(--danger)}
 .nrow.add .port{border-color:var(--accent-ink);border-style:dashed}
 .nrow.add .port:hover{background:var(--accent)}
+.nrow.to .k{color:var(--danger)}
+.nrow.to .l{color:var(--mute);font-size:12px}
+.nrow.to .port{border-color:var(--danger);border-style:dashed}
+.nrow.to .port:hover{background:var(--danger)}
+.edges path.e.to{stroke:var(--danger);stroke-dasharray:3 4;opacity:.85}
+.to-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.to-seg button{text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:1px}
+.to-seg button b{font-size:13px}
+.to-seg button span{font-size:11.5px;color:var(--mute)}
+.to-seg button.on{border-color:var(--accent-ink);background:var(--accent-soft)}
+#f-tot{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%}
+#f-tot.need{border-color:var(--danger);color:var(--danger)}
 .etools{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line2);border-radius:8px;padding:5px 6px 5px 10px;box-shadow:0 6px 18px rgba(0,0,0,.45);white-space:nowrap;cursor:default}
 .etools span{font-size:12px;color:var(--mute);max-width:220px;overflow:hidden;text-overflow:ellipsis}
 .zoom{display:flex;gap:4px;align-items:center}
@@ -1048,7 +1060,15 @@ class IVEngine extends Emitter{
     else if(c.phase==='waiting'&&s.loop)this._loopBack();
   }
   _loopBack(){const c=this.cur;if(c.adapter.failed)return;c.adapter.seek(this._loopStart(c.scene,c.adapter.duration));if(!this.paused)c.adapter.play()}
-  _timeout(){const c=this.cur;this.choose(this._defaultId(c),true)}
+  /* 시간 초과: 장면에 '시간 초과 시 이동할 장면'이 있으면 그리로(실패 엔딩 등), 없으면 기본 선택지를 자동으로 고릅니다 */
+  _timeout(){
+    const c=this.cur,s=c.scene,t=s.timeoutMode==='scene'&&this.project.scenes[s.timeoutTarget];
+    if(!t){this.choose(this._defaultId(c),true);return}
+    c.phase='chosen';c.deadline=null;
+    this.history.push({sceneId:s.id,vars:c.entry,label:'시간 초과'});
+    this.emit('chosen',{choice:{id:'__timeout',label:'시간 초과',target:t.id},timeout:true});
+    const seq=this._seq;setTimeout(()=>{if(seq===this._seq)this.goto(t.id)},420);
+  }
   choose(choiceId,timeout=false){
     const c=this.cur;if(!c||c.phase!=='waiting')return;
     const choice=c.list.find(x=>x.id===choiceId);if(!choice)return;
@@ -1312,6 +1332,12 @@ const Library={
 Media.resolve=n=>Library.urls.get(n)||null;
 
 /* --- 프로젝트 데이터 --- */
+/* 시간 초과용 실패 엔딩 장면 */
+function failScene(pos){
+  const f=newScene('시간 초과',pos);
+  f.media={type:'placeholder',color:'#3a2226',duration:4,caption:'시간 안에 고르지 못했다…',name:''};
+  f.ending=true;f.loop=false;return f;
+}
 function newScene(title,pos){
   const id=uid('s');
   return{id,title:title||'새 장면',pos:pos||null,media:{type:'file',name:'',color:'#2a3342',duration:6,caption:''},
@@ -1323,7 +1349,7 @@ function newScene(title,pos){
    -------------------------------------------------------------------- */
 const PLAY_BASE='https://siru565.github.io/digital-storytelling-interactive-video/prototypes/';
 function tplScene(id,title,color,dur,caption,o={}){
-  return{id,title,media:{type:'placeholder',color,duration:dur,caption,name:''},
+  return{id,title,timeoutMode:o.timeoutMode||'',timeoutTarget:o.timeoutTarget||'',media:{type:'placeholder',color,duration:dur,caption,name:''},
     choiceAt:o.at??'',timeLimit:o.lim||0,loop:o.loop??true,ending:!!o.end,auto:!!o.auto,
     defaultChoice:o.def||'',enter:o.enter||'',choices:o.ch||[],pos:o.pos||null};
 }
@@ -1374,20 +1400,21 @@ const TEMPLATES=[
         ch:[tplChoice('e8','다시 문 앞으로','door')]}),
       escape:tplScene('escape','탈출','#4b4128',6,'문이 열리고,\n아침 햇살이 쏟아진다.',{end:true,loop:false,pos:{x:870,y:0}})
     }})},
-  {id:'chase',slug:'chase',name:'추격전 · 시간 제한 선택',desc:'몇 초 안에 고르지 못하면 실수가 쌓이고, 실수 횟수로 결말이 정해져요.',tags:['제한 시간','실수 카운트','자동 이동'],
+  {id:'chase',slug:'chase',name:'추격전 · 시간 초과 실패',desc:'제한 시간 안에 고르지 못하면 바로 붙잡히는 실패 엔딩으로 가고, 잘못 고르면 실수가 쌓여 결말이 달라져요.',tags:['제한 시간','시간 초과 → 실패 엔딩','실수 카운트','자동 이동'],
    make:()=>({title:'추격전',start:'run1',skin:'cards',
     vars:{실수:0},varMeta:{실수:{type:'num',show:true}},
     scenes:{
-      run1:tplScene('run1','갈림길','#3a2326',6,'누군가 뒤를 쫓아온다!\n갈림길이다.',{at:1,lim:4,def:'q2',pos:{x:0,y:0},
+      run1:tplScene('run1','갈림길','#3a2326',6,'누군가 뒤를 쫓아온다!\n4초 안에 길을 고르세요.',{at:1,lim:4,pos:{x:0,y:0},timeoutMode:'scene',timeoutTarget:'caught',
         ch:[tplChoice('q1','왼쪽 골목으로','run2'),tplChoice('q2','오른쪽 대로로','run2','실수+=1')]}),
-      run2:tplScene('run2','막다른 담','#33262a',6,'앞을 담벼락이 막고 있다!',{at:1,lim:3,def:'q4',pos:{x:290,y:0},
+      run2:tplScene('run2','막다른 담','#33262a',6,'앞을 담벼락이 막고 있다!\n3초 안에 고르세요.',{at:1,lim:3,pos:{x:290,y:0},timeoutMode:'scene',timeoutTarget:'caught',
         ch:[tplChoice('q3','담을 넘는다','run3'),tplChoice('q4','숨을 곳을 찾는다','run3','실수+=1')]}),
-      run3:tplScene('run3','지하철 입구','#262a36',6,'지하철 문이 닫히려 한다!',{at:1,lim:3,def:'q6',pos:{x:580,y:0},
+      run3:tplScene('run3','지하철 입구','#262a36',6,'지하철 문이 닫히려 한다!\n3초 안에 고르세요.',{at:1,lim:3,pos:{x:580,y:0},timeoutMode:'scene',timeoutTarget:'caught',
         ch:[tplChoice('q5','뛰어든다','result'),tplChoice('q6','멈춰 선다','result','실수+=1')]}),
       result:tplScene('result','숨 고르기','#1e2028',3,'숨을 고른다…',{auto:true,pos:{x:870,y:0},
-        ch:[tplChoice('r1','','caught','','실수>=2'),tplChoice('r2','','safe')]}),
+        ch:[tplChoice('r1','','lost','','실수>=2'),tplChoice('r2','','safe')]}),
       safe:tplScene('safe','따돌림','#2b4034',6,'무사히 따돌렸다!',{end:true,loop:false,pos:{x:1160,y:0}}),
-      caught:tplScene('caught','붙잡힘','#3d2222',6,'결국 붙잡히고 말았다.',{end:true,loop:false,pos:{x:1160,y:150}})
+      lost:tplScene('lost','길을 잃음','#33302a',6,'겨우 도망쳤지만\n낯선 곳에서 길을 잃었다.',{end:true,loop:false,pos:{x:1160,y:150}}),
+      caught:tplScene('caught','시간 초과 · 붙잡힘','#3d2222',5,'망설이는 사이\n결국 붙잡히고 말았다.',{end:true,loop:false,pos:{x:580,y:250}})
     }})}
 ];
 function sampleProject(){return TEMPLATES.find(t=>t.id==='midnight').make()}
@@ -1715,7 +1742,8 @@ function renderGuide(){
 const NW=210,HH=52,RH=30;
 const G={z:1,px:24,py:24,selEdge:null,selChoice:null,drag:null};
 const canvas=$('graph'),world=$('world');
-function nodeH(s){return HH+(s.ending?0:(s.choices.length+1)*RH)+3}
+function hasTO(s){return!s.ending&&!s.auto&&+s.timeLimit>0}
+function nodeH(s){return HH+(s.ending?0:(s.choices.length+1+(hasTO(s)?1:0))*RH)+3}
 function outPt(s,i){return{x:s.pos.x+NW+1,y:s.pos.y+1.5+HH+i*RH+15}}
 function inPt(s){return{x:s.pos.x-1,y:s.pos.y+26}}
 function curve(a,b){const back=b.x<a.x+40,dx=back?Math.max(90,Math.abs(b.y-a.y)*.45):Math.max(50,(b.x-a.x)*.5);return`M${a.x},${a.y} C${a.x+dx},${a.y} ${b.x-dx},${b.y} ${b.x},${b.y}`}
@@ -1780,20 +1808,29 @@ function renderEdges(){
       out+=`<path class="e ${c.if?'cond':''} ${s.id===liveId?'live':''} ${sel?'sel':''}" d="${d}" marker-end="url(#arrow${sel?'S':''})"/>`+
            `<path class="hit" data-s="${s.id}" data-i="${i}" d="${d}"/>`;
     });
+    // 시간 초과 길 (빨간 점선)
+    const tt=hasTO(s)&&s.timeoutMode==='scene'&&P.scenes[s.timeoutTarget];
+    if(tt){
+      const d=curve(outPt(s,s.choices.length),inPt(tt)),sel=G.selEdge&&G.selEdge.s===s.id&&G.selEdge.i==='timeout';
+      out+=`<path class="e to ${sel?'sel':''}" d="${d}" marker-end="url(#arrow${sel?'S':'T'})"/><path class="hit" data-s="${s.id}" data-i="timeout" d="${d}"/>`;
+    }
   }
   const dr=G.drag;
   if(dr?.type==='link'){
-    const s=P.scenes[dr.from],i=dr.port==='add'?s.choices.length:+dr.port;
+    const s=P.scenes[dr.from],i=dr.port==='timeout'?s.choices.length:dr.port==='add'?s.choices.length+(hasTO(s)?1:0):+dr.port;
     out+=`<path class="temp" d="${curve(outPt(s,i),dr.cur)}"/>`;
   }
   svg.innerHTML=`<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--edge)"/></marker>
-    <marker id="arrowS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f0a83a"/></marker></defs>`+out;
+    <marker id="arrowS" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f0a83a"/></marker>
+    <marker id="arrowT" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--danger)"/></marker></defs>`+out;
   // 선택한 연결선 위의 작은 도구 막대
-  const et=$('etools'),se=G.selEdge,s=se&&P.scenes[se.s],c=s?.choices[se.i],t=c&&P.scenes[c.target];
+  const et=$('etools'),se=G.selEdge,s=se&&P.scenes[se.s],isTO=se&&se.i==='timeout';
+  const t=s&&(isTO?P.scenes[s.timeoutTarget]:P.scenes[s.choices[se.i]?.target]);
   if(t){
-    const a=outPt(s,se.i),b=inPt(t);
+    const a=outPt(s,isTO?s.choices.length:se.i),b=inPt(t);
     et.hidden=false;et.style.left=((a.x+b.x)/2)+'px';et.style.top=((a.y+b.y)/2)+'px';
-    et.querySelector('span').textContent=`${s.title} → ${t.title}`;
+    et.querySelector('span').textContent=isTO?`⏱ 시간 초과 → ${t.title}`:`${s.title} → ${t.title}`;
+    et.querySelector('[data-et="del"]').hidden=isTO;
   }else{et.hidden=true;if(se)G.selEdge=null}
 }
 function renderGraph(){
@@ -1806,6 +1843,9 @@ function renderGraph(){
       const bd=(!s.auto&&c.if?'<i class="bd c" title="조건이 있어요">조건</i>':'')+(c.set?'<i class="bd s" title="점수가 바뀌어요">점수</i>':'');
       return`<div class="nrow ${P.scenes[c.target]?'':'open'} ${!s.auto&&!c.label?'empty':''} ${G.selChoice&&G.selChoice.s===s.id&&G.selChoice.i===i?'rsel':''}" data-i="${i}" title="${esc(txt)}">
         <span class="k">${i+1}</span><span class="l">${esc(txt)}</span>${bd}<span class="port" data-port="${i}" title="끌어서 다른 장면에 연결"></span></div>`}).join('')+
+      (hasTO(s)?(()=>{const tt=s.timeoutMode==='scene'&&P.scenes[s.timeoutTarget],di=s.choices.findIndex(c=>c.id===s.defaultChoice);
+        const lab=s.timeoutMode==='scene'?(tt?`시간 초과 시 (${s.timeLimit}초)`:'시간 초과 시 → 연결 필요'):`시간 초과: ${di>=0?di+1:1}번 자동 선택`;
+        return`<div class="nrow to ${s.timeoutMode==='scene'&&!tt?'open':''}" title="시간 안에 못 고르면 · 점을 끌어서 실패 엔딩 등에 연결"><span class="k">⏱</span><span class="l">${lab}</span><span class="port" data-port="timeout" title="끌어서 시간 초과 시 갈 장면에 연결"></span></div>`})():'')+
       `<div class="nrow add"><span class="k">＋</span><span class="l">${s.auto?'끌어서 새 규칙':'끌어서 새 갈래'}</span><span class="port" data-port="add" title="끌어서 새로 만들기"></span></div>`;
     nodes+=`<div class="node ${s.id===sel?'sel':''} ${s.id===liveId?'live':''} ${s.auto?'auto':''}" data-id="${s.id}" style="left:${s.pos.x}px;top:${s.pos.y}px">
       ${P.start===s.id?'<span class="nflag">시작</span>':''}<span class="inport"></span>
@@ -1839,10 +1879,10 @@ canvas.addEventListener('pointerdown',e=>{
   if(e.button!==0||e.target.closest('.etools'))return;
   const port=e.target.closest('.port'),node=e.target.closest('.node'),hit=e.target.closest('path.hit');
   const w=toWorld(e);
-  if(hit){G.selEdge={s:hit.dataset.s,i:+hit.dataset.i};if(G.selChoice){G.selChoice=null;renderGraph()}else renderEdges();return}
+  if(hit){G.selEdge={s:hit.dataset.s,i:hit.dataset.i==='timeout'?'timeout':+hit.dataset.i};if(G.selChoice){G.selChoice=null;renderGraph()}else renderEdges();return}
   canvas.setPointerCapture(e.pointerId);
   if(port){G.drag={type:'link',from:node.dataset.id,port:port.dataset.port,start:w,cur:w};port.classList.add('on')}
-  else if(node){const s=P.scenes[node.dataset.id];G.drag={type:'node',id:s.id,ox:w.x-s.pos.x,oy:w.y-s.pos.y,sx:e.clientX,sy:e.clientY,moved:false,row:e.target.closest('.nrow:not(.add)')?.dataset.i}}
+  else if(node){const s=P.scenes[node.dataset.id];G.drag={type:'node',id:s.id,ox:w.x-s.pos.x,oy:w.y-s.pos.y,sx:e.clientX,sy:e.clientY,moved:false,row:e.target.closest('.nrow:not(.add):not(.to)')?.dataset.i,to:!!e.target.closest('.nrow.to')}}
   else{G.drag={type:'pan',sx:e.clientX,sy:e.clientY,px:G.px,py:G.py,moved:false};canvas.classList.add('panning')}
 });
 canvas.addEventListener('pointermove',e=>{
@@ -1864,17 +1904,22 @@ canvas.addEventListener('pointermove',e=>{
 function endDrag(e){
   const d=G.drag;if(!d)return;G.drag=null;canvas.classList.remove('panning');clearDrop();
   if(d.type==='pan'){if(!d.moved&&(G.selEdge||G.selChoice)){G.selEdge=null;G.selChoice=null;renderGraph()}return}
-  if(d.type==='node'){if(d.moved){save();renderGraph()}else selectScene(d.id,d.row);return}
+  if(d.type==='node'){if(d.moved){save();renderGraph()}else if(d.to){advOpen=true;selectScene(d.id);insp.querySelector('#adv')?.scrollIntoView({block:'nearest',behavior:'smooth'})}else selectScene(d.id,d.row);return}
   // 연결 만들기
   const s=P.scenes[d.from],n=e&&nodeAt(e);
   let target=n?.dataset.id;
   const dist=Math.hypot(d.cur.x-d.start.x,d.cur.y-d.start.y);
-  if(!target&&dist<12){renderEdges();selectScene(d.from,d.port==='add'?null:+d.port);return}
+  if(!target&&dist<12){renderEdges();if(d.port==='timeout'){advOpen=true;selectScene(d.from)}else selectScene(d.from,d.port==='add'?null:+d.port);return}
   if(target===d.from){toast('같은 장면으로는 연결할 수 없어요',true);renderEdges();return}
   let made='';
   if(!target){
-    const ns=newScene('새 장면',{x:Math.round(d.cur.x/8)*8+20,y:Math.round((d.cur.y-26)/8)*8});
-    P.scenes[ns.id]=ns;target=ns.id;made=' (새 장면을 만들었어요)';
+    const pos={x:Math.round(d.cur.x/8)*8+20,y:Math.round((d.cur.y-26)/8)*8};
+    const ns=d.port==='timeout'?failScene(pos):newScene('새 장면',pos);
+    P.scenes[ns.id]=ns;target=ns.id;made=d.port==='timeout'?' (실패 엔딩을 만들었어요)':' (새 장면을 만들었어요)';
+  }
+  if(d.port==='timeout'){
+    s.timeoutMode='scene';s.timeoutTarget=target;save();
+    toast(`⏱ 시간 안에 못 고르면 '${P.scenes[target].title}'(으)로 가요${made}`);selectScene(d.from);return;
   }
   let idx;
   if(d.port==='add'){
@@ -1893,6 +1938,7 @@ canvas.addEventListener('wheel',e=>{
 },{passive:false});
 function cutEdge(del){
   const se=G.selEdge;if(!se)return;const s=P.scenes[se.s];if(!s)return;
+  if(se.i==='timeout'){s.timeoutTarget='';G.selEdge=null;save();renderGraph();if(sel===s.id)renderInspector();toast('시간 초과 연결을 끊었어요');return}
   if(del){const[c]=s.choices.splice(se.i,1);if(s.defaultChoice===c.id)s.defaultChoice=s.choices[0]?.id||'';toast('선택지를 삭제했어요')}
   else{s.choices[se.i].target='';toast('연결을 끊었어요. 점을 다시 끌어서 이어 주세요.')}
   G.selEdge=null;save();renderGraph();if(sel===s.id)renderInspector();
@@ -2023,7 +2069,7 @@ function renderInspector(){
       ${cposPicker(s)}
     </section>
     <details class="adv" id="adv" ${advOpen?'open':''}>
-      <summary>고급 설정 · 선택지 나오는 시점, 제한 시간</summary>
+      <summary>고급 설정 · 선택지 나오는 시점, 제한 시간${+s.timeLimit?` <span class="sumtxt">⏱ ${s.timeLimit}초${s.timeoutMode==='scene'&&P.scenes[s.timeoutTarget]?' · 못 고르면 '+esc(P.scenes[s.timeoutTarget].title):''}</span>`:''}</summary>
       <div class="adv-body">
         ${d?`<div class="mt-wrap"><p class="hint">주황 손잡이를 좌우로 끌어서 선택지가 나올 시점을 정하세요. 맨 끝으로 끌거나 더블클릭하면 "영상이 끝날 때"가 돼요.</p>
           <div class="minitl" id="mtl" data-d="${d}"><div class="play" style="width:${at/d*100}%"></div><div class="wait" style="left:${at/d*100}%;width:${(d-at)/d*100}%"></div>
@@ -2034,8 +2080,18 @@ function renderInspector(){
           <label class="field"><span>선택지 나오는 시점 (초)</span><input type="number" id="f-at" min="0" step="0.5" value="${s.choiceAt??''}" placeholder="비우면 영상 끝"><em>영상이 몇 초일 때 버튼을 띄울지</em></label>
           <label class="field"><span>제한 시간 (초)</span><input type="number" id="f-lim" min="0" step="1" value="${+s.timeLimit||0}"><em>0이면 무제한</em></label>
         </div>
-        ${+s.timeLimit&&s.choices.length?`<label class="field"><span>시간이 다 되면 자동으로 고를 선택지</span>
-          <select id="f-def">${s.choices.map((c,i)=>`<option value="${c.id}" ${c.id===s.defaultChoice?'selected':''}>${i+1}. ${esc(c.label)}</option>`).join('')}</select></label>`:''}
+        ${+s.timeLimit?`<div class="field"><span>시간 안에 못 고르면</span>
+          <div class="to-seg">
+            <button data-tom="pick" class="${s.timeoutMode!=='scene'?'on':''}"><b>선택지 하나를 자동으로 고르기</b><span>정해 둔 선택지로 그냥 진행</span></button>
+            <button data-tom="scene" class="${s.timeoutMode==='scene'?'on':''}"><b>다른 장면으로 이동</b><span>실패 엔딩, 게임 오버 등</span></button>
+          </div>
+          ${s.timeoutMode==='scene'
+            ?`<select id="f-tot" class="${P.scenes[s.timeoutTarget]?'':'need'}"><option value="" ${P.scenes[s.timeoutTarget]?'':'selected'}>이동할 장면 고르기…</option>
+                ${others.map(x=>`<option value="${x.id}" ${x.id===s.timeoutTarget?'selected':''}>${esc(x.title)}${x.ending?' (엔딩)':''}</option>`).join('')}
+                <option value="__fail">＋ 실패 엔딩 새로 만들기</option></select>
+              <em>장면 지도의 ⏱ 줄에서 점을 끌어서 연결해도 돼요</em>`
+            :s.choices.length?`<select id="f-def">${s.choices.map((c,i)=>`<option value="${c.id}" ${c.id===s.defaultChoice?'selected':''}>${i+1}. ${esc(c.label)}</option>`).join('')}</select>`:''}
+        </div>`:''}
         <label class="check"><input type="checkbox" id="f-loop" ${s.loop?'checked':''}><span>고르는 동안 영상 반복<br><span class="hint">끄면 마지막 장면에서 멈춘 채 기다려요</span></span></label>
       </div>
     </details>`;
@@ -2126,6 +2182,10 @@ insp.addEventListener('change',async e=>{
   else if(t.id==='f-at')s.choiceAt=t.value===''?'':Math.max(0,+t.value);
   else if(t.id==='f-lim'){s.timeLimit=Math.max(0,+t.value||0);if(s.timeLimit&&!s.defaultChoice&&s.choices[0])s.defaultChoice=s.choices[0].id}
   else if(t.id==='f-def')s.defaultChoice=t.value;
+  else if(t.id==='f-tot'){
+    if(t.value==='__fail'){const f=failScene(s.pos?{x:s.pos.x+290,y:s.pos.y+nodeH(s)+40}:null);P.scenes[f.id]=f;s.timeoutTarget=f.id;toast(`'${f.title}' 엔딩을 만들었어요. 문장이나 영상을 바꿔 보세요`)}
+    else s.timeoutTarget=t.value;
+  }
   else if(t.id==='f-loop')s.loop=t.checked;
   else if(t.classList.contains('f-file')){if(t.files[0])await attachVideo(s,t.files[0]);return}
   else if(t.id==='f-lib'&&t.value){s.media.type='file';s.media.name=t.value;s.media.duration=await Library.probe(t.value)||s.media.duration;save();renderGraph();renderInspector();refreshPreview(s.id);return}
@@ -2176,6 +2236,7 @@ insp.addEventListener('click',e=>{
     if(bl.dataset.kind==='enter')advEnterOpen=true;else openD.add(s.id+':'+bl.dataset.ci);
     save();renderGraph();renderInspector();return;
   }
+  if(b.dataset.tom){s.timeoutMode=b.dataset.tom==='scene'?'scene':'';advOpen=true;save();renderGraph();renderInspector();return}
   if(b.dataset.mt){s.media.type=b.dataset.mt;save();renderGraph();renderInspector();refreshPreview(s.id);return}
   else if(b.dataset.mode){
     const md=b.dataset.mode;s.ending=md==='end';s.auto=md==='auto';
@@ -2712,7 +2773,7 @@ function deleteChoice(sid,i){
 function deleteScene(id){
   if(Object.keys(P.scenes).length<=1){toast('장면이 하나뿐이라 지울 수 없어요',true);return}
   const t=P.scenes[id].title;delete P.scenes[id];
-  Object.values(P.scenes).forEach(x=>x.choices.forEach(c=>{if(c.target===id)c.target=''}));
+  Object.values(P.scenes).forEach(x=>{x.choices.forEach(c=>{if(c.target===id)c.target=''});if(x.timeoutTarget===id)x.timeoutTarget=''});
   if(P.start===id)P.start=Object.keys(P.scenes)[0];
   sel=P.start;G.selEdge=null;G.selChoice=null;save();renderGraph();renderInspector();
   toast(`'${t}' 장면을 삭제했어요 · Ctrl+Z로 되돌리기`);
@@ -2752,7 +2813,7 @@ document.addEventListener('keydown',e=>{
   if(mod&&k==='v'&&graphActive&&sceneClip){e.preventDefault();pasteScene();return}
   if(mod)return;
   if(e.key==='Delete'||e.key==='Backspace'){
-    if(G.selEdge){e.preventDefault();deleteChoice(G.selEdge.s,G.selEdge.i);return}
+    if(G.selEdge){e.preventDefault();if(G.selEdge.i==='timeout')cutEdge(false);else deleteChoice(G.selEdge.s,G.selEdge.i);return}
     if(G.selChoice){e.preventDefault();deleteChoice(G.selChoice.s,G.selChoice.i);return}
     if(graphActive&&P.scenes[sel]){e.preventDefault();deleteScene(sel);return}
     return;

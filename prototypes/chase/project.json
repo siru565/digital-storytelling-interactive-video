@@ -15,11 +15,13 @@
     "run1": {
       "id": "run1",
       "title": "갈림길",
+      "timeoutMode": "scene",
+      "timeoutTarget": "caught",
       "media": {
         "type": "placeholder",
         "color": "#3a2326",
         "duration": 6,
-        "caption": "누군가 뒤를 쫓아온다!\n갈림길이다.",
+        "caption": "누군가 뒤를 쫓아온다!\n4초 안에 길을 고르세요.",
         "name": ""
       },
       "choiceAt": 1,
@@ -27,7 +29,7 @@
       "loop": true,
       "ending": false,
       "auto": false,
-      "defaultChoice": "q2",
+      "defaultChoice": "",
       "enter": "",
       "choices": [
         {
@@ -53,11 +55,13 @@
     "run2": {
       "id": "run2",
       "title": "막다른 담",
+      "timeoutMode": "scene",
+      "timeoutTarget": "caught",
       "media": {
         "type": "placeholder",
         "color": "#33262a",
         "duration": 6,
-        "caption": "앞을 담벼락이 막고 있다!",
+        "caption": "앞을 담벼락이 막고 있다!\n3초 안에 고르세요.",
         "name": ""
       },
       "choiceAt": 1,
@@ -65,7 +69,7 @@
       "loop": true,
       "ending": false,
       "auto": false,
-      "defaultChoice": "q4",
+      "defaultChoice": "",
       "enter": "",
       "choices": [
         {
@@ -91,11 +95,13 @@
     "run3": {
       "id": "run3",
       "title": "지하철 입구",
+      "timeoutMode": "scene",
+      "timeoutTarget": "caught",
       "media": {
         "type": "placeholder",
         "color": "#262a36",
         "duration": 6,
-        "caption": "지하철 문이 닫히려 한다!",
+        "caption": "지하철 문이 닫히려 한다!\n3초 안에 고르세요.",
         "name": ""
       },
       "choiceAt": 1,
@@ -103,7 +109,7 @@
       "loop": true,
       "ending": false,
       "auto": false,
-      "defaultChoice": "q6",
+      "defaultChoice": "",
       "enter": "",
       "choices": [
         {
@@ -129,6 +135,8 @@
     "result": {
       "id": "result",
       "title": "숨 고르기",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#1e2028",
@@ -147,7 +155,7 @@
         {
           "id": "r1",
           "label": "",
-          "target": "caught",
+          "target": "lost",
           "set": "",
           "if": "실수>=2"
         },
@@ -167,6 +175,8 @@
     "safe": {
       "id": "safe",
       "title": "따돌림",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#2b4034",
@@ -187,14 +197,16 @@
         "y": 0
       }
     },
-    "caught": {
-      "id": "caught",
-      "title": "붙잡힘",
+    "lost": {
+      "id": "lost",
+      "title": "길을 잃음",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
-        "color": "#3d2222",
+        "color": "#33302a",
         "duration": 6,
-        "caption": "결국 붙잡히고 말았다.",
+        "caption": "겨우 도망쳤지만\n낯선 곳에서 길을 잃었다.",
         "name": ""
       },
       "choiceAt": "",
@@ -209,7 +221,32 @@
         "x": 1160,
         "y": 150
       }
+    },
+    "caught": {
+      "id": "caught",
+      "title": "시간 초과 · 붙잡힘",
+      "timeoutMode": "",
+      "timeoutTarget": "",
+      "media": {
+        "type": "placeholder",
+        "color": "#3d2222",
+        "duration": 5,
+        "caption": "망설이는 사이\n결국 붙잡히고 말았다.",
+        "name": ""
+      },
+      "choiceAt": "",
+      "timeLimit": 0,
+      "loop": false,
+      "ending": true,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [],
+      "pos": {
+        "x": 580,
+        "y": 250
+      }
     }
   },
-  "savedAt": 1793599048605
+  "savedAt": 1793601483642
 }

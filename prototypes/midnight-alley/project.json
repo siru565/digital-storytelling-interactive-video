@@ -20,6 +20,8 @@
     "intro": {
       "id": "intro",
       "title": "퇴근길 골목",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#26324a",
@@ -58,6 +60,8 @@
     "box": {
       "id": "box",
       "title": "젖은 상자",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#3a2f2a",
@@ -103,6 +107,8 @@
     "store": {
       "id": "store",
       "title": "새벽 편의점",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#22413c",
@@ -141,6 +147,8 @@
     "home": {
       "id": "home",
       "title": "평범한 밤",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#1c1f27",
@@ -164,6 +172,8 @@
     "adopt": {
       "id": "adopt",
       "title": "새 식구",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#4a3a24",
@@ -187,6 +197,8 @@
     "together": {
       "id": "together",
       "title": "둘이서 구조",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#2c3f55",
@@ -208,5 +220,5 @@
       }
     }
   },
-  "savedAt": 1793599048523
+  "savedAt": 1793601483560
 }

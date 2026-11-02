@@ -15,6 +15,8 @@
     "hall": {
       "id": "hall",
       "title": "낯선 복도",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#262b33",
@@ -53,6 +55,8 @@
     "storage": {
       "id": "storage",
       "title": "먼지 쌓인 창고",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#33302a",
@@ -91,6 +95,8 @@
     "door": {
       "id": "door",
       "title": "철문 앞",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#2a2f3a",
@@ -136,6 +142,8 @@
     "knock": {
       "id": "knock",
       "title": "대답 없는 문",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#1f232b",
@@ -167,6 +175,8 @@
     "escape": {
       "id": "escape",
       "title": "탈출",
+      "timeoutMode": "",
+      "timeoutTarget": "",
       "media": {
         "type": "placeholder",
         "color": "#4b4128",
@@ -188,5 +198,5 @@
       }
     }
   },
-  "savedAt": 1793599048578
+  "savedAt": 1793601483612
 }
