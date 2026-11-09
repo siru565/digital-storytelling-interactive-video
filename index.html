@@ -708,7 +708,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
         <button data-m="intro">시작 화면 · 크레딧<small>제목, 소개, 안내, 크레딧(AI 사용 표시 등)</small></button>
         <button data-m="json">프로젝트 JSON 보기</button>
         <hr>
-        <button data-m="welcome">새로 만들기 · 템플릿<small>빈 프로젝트, 템플릿 6가지, zip 불러오기</small></button>
+        <button data-m="welcome">새로 만들기 · 템플릿<small>빈 프로젝트, 템플릿 5가지, zip 불러오기</small></button>
         <button data-m="new" class="danger">새 프로젝트 (전부 비우기)</button>
       </div>
     </div>
@@ -850,8 +850,8 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
   <div class="modal-box" role="dialog" aria-labelledby="introH">
     <h2 id="introH">시작 화면 · 크레딧</h2>
     <p class="hint">플레이어가 처음 보는 화면과, 엔딩에서 <b>크레딧</b> 버튼을 누르면 나오는 화면이에요. 내보낸 게임에도 그대로 나와요.</p>
-    <label class="field"><span>제목</span><input id="inTitle" placeholder="예: 없는 정류장"></label>
-    <label class="field"><span>소개 문구 <em>제목 아래에 나와요 · 줄바꿈 가능</em></span><textarea id="inSub" rows="3" placeholder="예: 막차에서 잠든 윤서가 노선도에 없는 심야 버스에서 깨어난다."></textarea></label>
+    <label class="field"><span>제목</span><input id="inTitle" placeholder="예: 자정의 골목길"></label>
+    <label class="field"><span>소개 문구 <em>제목 아래에 나와요 · 줄바꿈 가능</em></span><textarea id="inSub" rows="3" placeholder="예: 가로등이 깜빡이는 골목에서 작은 울음소리가 들린다."></textarea></label>
     <label class="field"><span>안내 <em>시작 버튼 아래 노란 글씨</em></span><input id="inNote" placeholder="예: 🎧 이어폰을 끼고 플레이하세요"></label>
     <label class="field"><span>크레딧 <em>비우면 크레딧 버튼이 안 나와요 · 한 줄에 하나씩</em></span><textarea id="inCred" rows="8" placeholder="기획·연출: 이름&#10;영상: Google Veo (AI 생성)&#10;음성: ElevenLabs (AI 생성)&#10;배경음악: Suno (AI 생성)&#10;효과음: 출처 · 라이선스"></textarea></label>
     <div class="actions">
@@ -1599,48 +1599,7 @@ const TEMPLATES=[
         ch:[tplHot('h3','난간 위의 손','escape',{x:60,y:72,w:18,h:16},'발견+=1')]}),
       escape:tplScene('escape','아침','#3b3a2a',6,'창밖이 밝아 온다.\n이상현상을 모두 찾아냈다.',{end:true,loop:false,pos:{x:870,y:0}}),
       taken:tplScene('taken','이상현상에 당함','#3d1f22',5,'눈치채지 못한 사이\n그것이 바로 뒤에 서 있었다.',{end:true,loop:false,over:true,etext:'이상현상을 놓쳤습니다.',pos:{x:430,y:230}})
-    }})},
-  {id:'nostop',slug:'no-stop',name:'없는 정류장 (규칙 괴담)',desc:'노선도에 없는 심야 버스. 승객에게 물건을 모으고, 운행 규칙대로 이상 현상을 가려내 새벽역에 내려야 해요. 개발계획서 v3.2의 20개 장면이 모두 연결되어 있어요.',tags:['장면 20','가방','투명 클릭 영역','게임 오버 4','엔딩 2','크레딧'],
-   make:()=>{
-    const L=10,T=(id,title,color,dur,cap,o)=>tplScene(id,title,color,dur,cap,o),C=tplChoice;
-    const over=(id,title,cap,etext,pos)=>T(id,title,'#3a1416',6,cap,{end:true,over:true,loop:false,etext,pos});
-    return{title:'없는 정류장',start:'sc01',skin:'cinema',
-    intro:{sub:'막차에서 잠든 윤서가 노선도에 없는 심야 버스에서 깨어난다.\n운행 규칙을 기억하고, 달라진 것을 찾아 새벽역까지 살아서 내려야 한다.',
-      note:'🎧 이어폰을 끼고 플레이하세요 · 화면 속 이상 현상은 직접 클릭해요',
-      credits:'기획 · 연출 · 편집\n[이름]\n\n장면 영상: Google Veo / Kling AI / Runway (AI 생성)\n기준 이미지: ChatGPT 이미지 생성 / Midjourney (AI 생성)\n대사 · 내레이션: ElevenLabs / 타입캐스트 / 클로바더빙 (AI 생성)\n엔딩 배경음악: Suno / Udio (AI 생성)\n기획 문서 도움: DCU AI\n효과음: [출처 · 라이선스]\n\n등장하는 인물 · 회사 · 장소는 모두 가상입니다.\n제작 도구: 디지털스토리텔링 인터랙티브 비디오 제작용'},
-    hud:{mode:'bag',title:'🎒 가방'},
-    vars:{손전등:0,방울:0,승차권:0},
-    varMeta:{손전등:{type:'flag',show:true,icon:'🔦'},방울:{type:'flag',show:true,icon:'🔔'},승차권:{type:'flag',show:true,icon:'🎫'}},
-    scenes:{
-      sc01:T('sc01','SC-01 깨어난 버스','#1d2230',10,'02:17. 낯선 심야 버스에서 깨어났다.\n[운행 규칙] ① 처음과 다른 것을 보면 뒷자리로 가 눈을 감을 것\n② 불이 꺼지면 빛을 비출 것 ③ 이름을 불러도 대답하지 말 것\n④ 종점에서 승차권을 보일 것 ⑤ 빌린 것은 돌려줄 것',{pos:{x:0,y:0},
-        ch:[C('i01','주위를 둘러본다','sc02')]}),
-      sc02:T('sc02','SC-02 세 명의 승객','#222636',8,'손전등을 쥔 아이, 눈을 감은 노인,\n그리고 이상할 만큼 깨끗한 빈 좌석.',{pos:{x:290,y:0},
-        ch:[C('i02','아이에게 말을 건다','sc03','','손전등==0'),C('i03','노인 옆에 앉는다','sc04','','방울==0'),C('i04','빈 좌석을 살핀다','sc05','','승차권==0'),C('i05','앞자리로 가서 앉는다','sc06')]}),
-      sc03:T('sc03','SC-03 아이의 손전등','#2a2a3a',8,'"이거 빌려줄게요. 대신 내릴 때 꼭 돌려줘요."',{pos:{x:580,y:200},ch:[C('i06','손전등을 빌린다','sc02','손전등=1')]}),
-      sc04:T('sc04','SC-04 노인의 방울','#2b2630',8,'"밖에서 네 이름을 부를 거다. 대답하지 마라.\n이걸 흔들면 물러간다."',{pos:{x:580,y:330},ch:[C('i07','방울을 받는다','sc02','방울=1')]}),
-      sc05:T('sc05','SC-05 깨끗한 빈 좌석','#24282e',8,'좌석 아래 승차권 한 장.\n목적지 새벽역, 승객 이름 윤서.',{pos:{x:580,y:460},ch:[C('i08','승차권을 챙긴다','sc02','승차권=1')]}),
-      sc06:T('sc06','SC-06 이상 점검 ① 정차','#1f2230',8,'"이름 없는 정류장입니다." 아무도 타지 않았다. 그런데…\n(영상 속 늘어난 승객을 직접 클릭 · 지금은 왼쪽 아래 영역)',{at:3,lim:L,pos:{x:870,y:0},timeoutMode:'scene',timeoutTarget:'sc17',miss:'sc17',
-        ch:[tplHot('i09','늘어난 승객','sc07',{x:28,y:62,w:18,h:30})]}),
-      sc07:T('sc07','SC-07 관문 ① 어둠','#0c0d12',8,'버스의 불이 모두 꺼졌다.\n뒤에서 발소리가 다가온다.',{at:3,lim:L,pos:{x:1160,y:0},timeoutMode:'scene',timeoutTarget:'sc18',
-        ch:[C('i11','손전등을 켠다','sc08','','손전등==1'),C('i12','어둠 속을 더듬어 앞으로 간다','sc18')]}),
-      sc08:T('sc08','SC-08 빛 속의 통로','#30302a',7,'빛이 닿자 발소리가 멎었다.\n그림자가 좌석 사이로 사라진다.',{next:true,loop:false,pos:{x:1450,y:0},ch:[C('n08','','sc09')]}),
-      sc09:T('sc09','SC-09 이상 점검 ② 같은 풍경','#222636',8,'같은 터널, 같은 광고판, 승객 둘과 빈 좌석 하나.\n처음과… 같은가? (이상이 없으면 아무것도 누르지 마세요)',{at:3,lim:L,pos:{x:1740,y:0},timeoutMode:'scene',timeoutTarget:'sc10',miss:'sc17'}),
-      sc10:T('sc10','SC-10 관문 ② 창밖의 목소리','#1a1d28',8,'"윤서야, 엄마야. 문 열어."\n유리에 손자국이 하나씩 생긴다.',{at:3,lim:L,pos:{x:2030,y:0},timeoutMode:'scene',timeoutTarget:'sc19',
-        ch:[C('i15','방울을 흔든다','sc11','','방울==1'),C('i16','창문을 열고 대답한다','sc19')]}),
-      sc11:T('sc11','SC-11 방울 소리','#2c2e36',7,'맑은 방울 소리. 목소리가 비명으로 바뀌며 멀어진다.\n창밖이 아주 조금 밝아졌다.',{next:true,loop:false,pos:{x:2320,y:0},ch:[C('n11','','sc12')]}),
-      sc12:T('sc12','SC-12 이상 점검 ③ 백미러','#1f2230',8,'"곧 종점입니다." 기사는 평소처럼 운전하고 있었다.\n(백미러를 직접 클릭 · 지금은 위쪽 가운데 영역)',{at:3,lim:L,pos:{x:2610,y:0},timeoutMode:'scene',timeoutTarget:'sc17',miss:'sc17',
-        ch:[tplHot('i17','얼굴 없는 백미러','sc13',{x:50,y:16,w:24,h:16})]}),
-      sc13:T('sc13','SC-13 관문 ③ 종점 검표','#22252c',8,'"종점 새벽역입니다. 승차권 확인하겠습니다."',{at:3,lim:L,pos:{x:2900,y:0},timeoutMode:'scene',timeoutTarget:'sc20',
-        ch:[C('i19','승차권을 낸다','sc14','','승차권==1'),C('i20','표를 잃어버렸다고 말한다','sc20')]}),
-      sc14:T('sc14','SC-14 새벽역 앞문','#3a3528',8,'앞문이 열린다. 손에는 아직 아이의 손전등.\n빌린 것은 내리기 전에 돌려주십시오.',{pos:{x:3190,y:0},
-        ch:[C('i21','아이에게 손전등을 돌려주고 내린다','sc15','손전등=0'),C('i22','손전등을 쥔 채 그냥 내린다','sc16')]}),
-      sc15:T('sc15','엔딩 A · 새벽역','#4a4128',8,'"약속 지켰네요."\n버스는 새벽빛 속으로 사라졌다.',{end:true,loop:false,etext:'약속을 지키고 새벽역에 내렸습니다.',pos:{x:3480,y:0}}),
-      sc16:T('sc16','엔딩 B · 다음 승객','#1c1e26',8,'손전등이 꺼진다. 휴대폰이 다시 02:17.\n[하차 벨]',{end:true,loop:false,etext:'빌린 것은 돌려주십시오.',pos:{x:3480,y:170}}),
-      sc17:over('sc17','규칙 위반','승객들이 일제히 고개를 돌린다.\n눈앞에 얼굴 없는 "그것"이 서 있다.','규칙 ① 처음과 다른 것을 보면 뒷자리로 가 눈을 감으십시오.\n아무것도 다르지 않다면 움직이지 마십시오.',{x:1740,y:300}),
-      sc18:over('sc18','어둠','더듬던 손을 차가운 다른 손이 붙잡는다.','규칙 ② 불이 꺼지면 빛을 비추십시오.',{x:1160,y:300}),
-      sc19:over('sc19','대답','"찾았다."','규칙 ③ 이름을 불러도 대답하지 마십시오.',{x:2030,y:440}),
-      sc20:over('sc20','종점에 남은 승객','정신을 차리니 그 깨끗한 빈 좌석.\n안전벨트가 저절로 채워진다.','규칙 ④ 종점에서는 승차권을 확인합니다.',{x:2900,y:300})
-    }}}}
+    }})}
 ];
 function sampleProject(){return TEMPLATES.find(t=>t.id==='midnight').make()}
 function renderTemplates(){
@@ -2363,7 +2322,7 @@ function renderInspector(){
       <h3><span class="sn">3</span>엔딩 화면</h3>
       <div class="ch-kind end-kind"><button data-ek="" class="${over?'':'on'}">🏁 엔딩</button><button data-ek="over" class="${over?'on':''}">💀 게임 오버</button></div>
       <label class="field"><span>화면에 나올 문구 <em>장면 이름 아래 · 비워도 돼요</em></span>
-        <textarea id="f-endtxt" rows="2" placeholder="${over?'예: 규칙 ①을 지키지 못했습니다.':'예: 엔딩 A · 새벽역'}">${esc(s.endText||'')}</textarea></label>
+        <textarea id="f-endtxt" rows="2" placeholder="${over?'예: 시간 안에 빠져나가지 못했습니다.':'예: 엔딩 A · 새 식구'}">${esc(s.endText||'')}</textarea></label>
       <p class="hint">${over?'붉은 <b>GAME OVER</b> 화면이 나와요. "이전 선택으로"를 누르면 실패 직전 선택으로 돌아가 다시 도전해요.':'<b>THE END</b> 화면이 나와요. 시작 화면 · 크레딧에 크레딧을 쓰면 <b>크레딧</b> 버튼도 함께 나와요.'}</p>
     </section>`;
   }else if(mode==='auto'){

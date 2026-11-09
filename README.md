@@ -74,7 +74,6 @@
 | **첫 만남 · 호감도 엔딩** | 점수 변수 · 점수에 따라 자동 이동 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/first-meeting/) |
 | **열쇠와 문 · 방 탈출** | 스위치 · 아이템이 있어야 보이는 선택지 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/escape-room/) |
 | **추격전 · 시간 초과 실패** | 제한 시간 안에 못 고르면 실패 엔딩 · 실수 카운트 · 자동 이동 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/chase/) |
-| **없는 정류장 (규칙 괴담)** | 개발계획서 v3.2의 20장면 · 가방 · 클릭 점검 · 게임 오버 4 · 엔딩 2 · 크레딧 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/no-stop/) |
 | **이상현상 · 화면을 직접 클릭** | 화면 속 이상현상을 시간 안에 눌러야 함 · 헛클릭 실패 · 타이머 숨기기 | [▶](https://siru565.github.io/digital-storytelling-interactive-video/prototypes/anomaly/) |
 
 각 폴더(`prototypes/…`)는 내보내기 결과와 같은 구조(`index.html`, `project.json`, `README.txt`)예요.
@@ -173,7 +172,7 @@
 
 ### 가만히 있어야 통과하는 장면
 
-선택지를 하나도 두지 않고 **제한 시간** + **시간 안에 못 고르면 › 다른 장면으로 이동**(다음 장면)을 정하면, 끝까지 아무것도 누르지 않아야 통과해요. **화면 클릭 설정 › 영역 밖을 누르면**에 실패 장면을 고르면 화면을 누르는 순간 실패해요. (예: 「없는 정류장」 SC-09 이상 없는 풍경)
+선택지를 하나도 두지 않고 **제한 시간** + **시간 안에 못 고르면 › 다른 장면으로 이동**(다음 장면)을 정하면, 끝까지 아무것도 누르지 않아야 통과해요. **화면 클릭 설정 › 영역 밖을 누르면**에 실패 장면을 고르면 화면을 누르는 순간 실패해요.
 
 ### 시간 초과 → 실패 엔딩 만들기
 
@@ -364,7 +363,6 @@
 | 첫 만남 · 호감도 엔딩 | 점수 변수 + 자동 이동 |
 | 열쇠와 문 · 방 탈출 | 스위치 + 조건 선택지 |
 | 추격전 · 시간 초과 실패 | 시간 초과 → 실패 엔딩 + 실수 카운트 + 자동 이동 (엔딩 3개) |
-| 없는 정류장 (규칙 괴담) | 20장면 · 가방 · 클릭 점검 · 가만히 있어야 통과 · 게임 오버 4 · 엔딩 2 · 크레딧 |
 | 이상현상 · 화면을 직접 클릭 | 투명 클릭 영역 + 헛클릭 실패 + 타이머 숨기기 (연습 → 실전 3단계) |
 
 각 템플릿 카드의 **▶ 바로 플레이**로 완성본을 먼저 볼 수 있어요.
@@ -424,7 +422,7 @@
 
 ```
 index.html            편집기 (엔진 + 편집기)
-prototypes/<이름>/    플레이 가능한 프로토타입 6종 (내보내기 결과와 같은 구조)
+prototypes/<이름>/    플레이 가능한 프로토타입 5종 (내보내기 결과와 같은 구조)
 README.md
 ```
 
