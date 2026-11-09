@@ -50,7 +50,10 @@
       "pos": {
         "x": 0,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "cafe": {
       "id": "cafe",
@@ -90,7 +93,10 @@
       "pos": {
         "x": 290,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "rain": {
       "id": "rain",
@@ -130,7 +136,10 @@
       "pos": {
         "x": 580,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "judge": {
       "id": "judge",
@@ -170,7 +179,10 @@
       "pos": {
         "x": 870,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "happy": {
       "id": "happy",
@@ -195,7 +207,10 @@
       "pos": {
         "x": 1160,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "normal": {
       "id": "normal",
@@ -220,8 +235,11 @@
       "pos": {
         "x": 1160,
         "y": 150
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     }
   },
-  "savedAt": 1793601483589
+  "savedAt": 1794200665371
 }

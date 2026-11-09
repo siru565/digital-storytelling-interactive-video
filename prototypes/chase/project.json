@@ -50,7 +50,10 @@
       "pos": {
         "x": 0,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "run2": {
       "id": "run2",
@@ -90,7 +93,10 @@
       "pos": {
         "x": 290,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "run3": {
       "id": "run3",
@@ -130,7 +136,10 @@
       "pos": {
         "x": 580,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "result": {
       "id": "result",
@@ -170,7 +179,10 @@
       "pos": {
         "x": 870,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "safe": {
       "id": "safe",
@@ -195,7 +207,10 @@
       "pos": {
         "x": 1160,
         "y": 0
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "lost": {
       "id": "lost",
@@ -220,7 +235,10 @@
       "pos": {
         "x": 1160,
         "y": 150
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     },
     "caught": {
       "id": "caught",
@@ -245,8 +263,11 @@
       "pos": {
         "x": 580,
         "y": 250
-      }
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
     }
   },
-  "savedAt": 1793601483642
+  "savedAt": 1794200665431
 }

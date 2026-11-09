@@ -1,0 +1,202 @@
+{
+  "title": "이상현상",
+  "start": "room",
+  "skin": "cinema",
+  "vars": {
+    "발견": 0
+  },
+  "varMeta": {
+    "발견": {
+      "type": "num",
+      "show": true
+    }
+  },
+  "scenes": {
+    "room": {
+      "id": "room",
+      "title": "자취방",
+      "timeoutMode": "scene",
+      "timeoutTarget": "taken",
+      "media": {
+        "type": "placeholder",
+        "color": "#1f2430",
+        "duration": 5,
+        "caption": "불을 끄려는 순간, 방 안의 무언가가 달라졌다.\n(연습) 오른쪽 위의 이상현상을 5초 안에 누르세요.",
+        "name": ""
+      },
+      "choiceAt": 1,
+      "timeLimit": 5,
+      "loop": true,
+      "ending": false,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [
+        {
+          "id": "h1",
+          "label": "창문에 비친 얼굴",
+          "target": "hall",
+          "set": "발견+=1",
+          "if": "",
+          "hot": true,
+          "spot": {
+            "x": 82,
+            "y": 20,
+            "w": 16,
+            "h": 22
+          }
+        }
+      ],
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "missTarget": "taken",
+      "hotHint": true,
+      "hideTimer": false
+    },
+    "hall": {
+      "id": "hall",
+      "title": "복도",
+      "timeoutMode": "scene",
+      "timeoutTarget": "taken",
+      "media": {
+        "type": "placeholder",
+        "color": "#262230",
+        "duration": 5,
+        "caption": "복도 끝 형광등이 깜빡인다.\n이번엔 힌트가 없어요. 4초 안에 찾으세요.",
+        "name": ""
+      },
+      "choiceAt": 1,
+      "timeLimit": 4,
+      "loop": true,
+      "ending": false,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [
+        {
+          "id": "h2",
+          "label": "멈춘 시계",
+          "target": "stairs",
+          "set": "발견+=1",
+          "if": "",
+          "hot": true,
+          "spot": {
+            "x": 18,
+            "y": 30,
+            "w": 12,
+            "h": 18
+          }
+        }
+      ],
+      "pos": {
+        "x": 290,
+        "y": 0
+      },
+      "missTarget": "taken",
+      "hotHint": false,
+      "hideTimer": false
+    },
+    "stairs": {
+      "id": "stairs",
+      "title": "계단",
+      "timeoutMode": "scene",
+      "timeoutTarget": "taken",
+      "media": {
+        "type": "placeholder",
+        "color": "#2a2026",
+        "duration": 5,
+        "caption": "계단 아래에서 발소리가 올라온다.\n시간 막대도 보이지 않는다. 3초 안에!",
+        "name": ""
+      },
+      "choiceAt": 1,
+      "timeLimit": 3,
+      "loop": true,
+      "ending": false,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [
+        {
+          "id": "h3",
+          "label": "난간 위의 손",
+          "target": "escape",
+          "set": "발견+=1",
+          "if": "",
+          "hot": true,
+          "spot": {
+            "x": 60,
+            "y": 72,
+            "w": 18,
+            "h": 16
+          }
+        }
+      ],
+      "pos": {
+        "x": 580,
+        "y": 0
+      },
+      "missTarget": "taken",
+      "hotHint": false,
+      "hideTimer": true
+    },
+    "escape": {
+      "id": "escape",
+      "title": "아침",
+      "timeoutMode": "",
+      "timeoutTarget": "",
+      "media": {
+        "type": "placeholder",
+        "color": "#3b3a2a",
+        "duration": 6,
+        "caption": "창밖이 밝아 온다.\n이상현상을 모두 찾아냈다.",
+        "name": ""
+      },
+      "choiceAt": "",
+      "timeLimit": 0,
+      "loop": false,
+      "ending": true,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [],
+      "pos": {
+        "x": 870,
+        "y": 0
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
+    },
+    "taken": {
+      "id": "taken",
+      "title": "이상현상에 당함",
+      "timeoutMode": "",
+      "timeoutTarget": "",
+      "media": {
+        "type": "placeholder",
+        "color": "#3d1f22",
+        "duration": 5,
+        "caption": "눈치채지 못한 사이\n그것이 바로 뒤에 서 있었다.",
+        "name": ""
+      },
+      "choiceAt": "",
+      "timeLimit": 0,
+      "loop": false,
+      "ending": true,
+      "auto": false,
+      "defaultChoice": "",
+      "enter": "",
+      "choices": [],
+      "pos": {
+        "x": 430,
+        "y": 230
+      },
+      "missTarget": "",
+      "hotHint": false,
+      "hideTimer": false
+    }
+  },
+  "savedAt": 1794200665456
+}

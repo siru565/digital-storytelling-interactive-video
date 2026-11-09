@@ -12,6 +12,7 @@
 }
 .stage{position:relative;aspect-ratio:16/9;max-width:100%;background:#000;overflow:hidden;container-type:inline-size}
 .layers,.skin-root{position:absolute;inset:0}
+.skin-root{pointer-events:none}.skin-root button,.skin-root [role=group] *,.skin-root .cin-end,.skin-root .cd-end{pointer-events:auto}
 .layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .35s ease;background:#000}
 .layer.on{opacity:1}
 .cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at center,rgba(20,22,28,.55),rgba(0,0,0,.92))}
@@ -90,6 +91,22 @@
 .cd-free .cd-btn{max-width:46cqw}
 .free-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden}
 .free-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
+/* 투명 클릭 영역(핫스팟): 영상 속 물체를 직접 누르게 하는 보이지 않는 버튼 */
+.hot-root{position:absolute;inset:0;pointer-events:none}
+.hot-layer{position:absolute;inset:0;pointer-events:auto;cursor:crosshair}
+.hot-layer[hidden]{display:none}
+.hot-btn{position:absolute;background:transparent;border:0;padding:0;margin:0;cursor:crosshair;border-radius:6px;-webkit-tap-highlight-color:transparent}
+.hot-btn:focus-visible{outline:2px solid rgba(255,255,255,.7)}
+.hot-btn.hint{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);animation:hotPulse 1.6s ease-in-out infinite}
+@keyframes hotPulse{50%{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.1)}}
+.show-hot .hot-btn{outline:2px dashed #f8c440;outline-offset:-2px;background:rgba(248,196,64,.16)}
+.show-hot .hot-btn::after{content:attr(aria-label);position:absolute;left:4px;top:3px;font:600 11px/1.2 system-ui,sans-serif;color:#1a1406;background:#f8c440;padding:1px 5px;border-radius:4px;white-space:nowrap}
+.hot-fx{position:absolute;width:0;height:0;pointer-events:none}
+.hot-fx::before{content:"";position:absolute;left:-3cqw;top:-3cqw;width:6cqw;height:6cqw;border-radius:50%;border:.35cqw solid #fff;animation:hotHit .5s ease-out forwards}
+.hot-fx.miss::before{border-color:#ff5a4f;border-radius:0;border-width:0;width:6cqw;height:6cqw;background:linear-gradient(45deg,transparent 45%,#ff5a4f 45%,#ff5a4f 55%,transparent 55%),linear-gradient(-45deg,transparent 45%,#ff5a4f 45%,#ff5a4f 55%,transparent 55%)}
+@keyframes hotHit{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+.hot-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden;pointer-events:none}
+.hot-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
 @media (prefers-reduced-motion:reduce){.layer,.cin-choices,.cd-panel,.cin-title,.cd-bar{transition:none!important}.free-layer .free-btn{animation:none}}
 
 html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui)}
@@ -100,10 +117,10 @@ html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui
 .ctrl button{background:rgba(0,0,0,.6);color:#eee;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:6px 10px;font:13px var(--f-ui);cursor:pointer}
 [hidden]{display:none!important}
 </style></head><body>
-<div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
+<div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="hot-root" id="hotRoot"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
 <div class="cover" id="cover"><button id="coverPlay">▶ 시작하기</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div></div></div>
 <div class="ctrl"><button id="cBack">↶ 이전 선택</button><button id="cRestart">처음부터</button><button id="cMute">소리 끄기</button><button id="cFull">전체화면</button></div>
-<script type="application/json" id="project">{"title":"자정의 골목길","start":"intro","skin":"cinema","vars":{"courage":0,"kind":0},"varMeta":{"courage":{"type":"num","show":false},"kind":{"type":"num","show":true}},"scenes":{"intro":{"id":"intro","title":"퇴근길 골목","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#26324a","duration":8,"caption":"가로등이 깜빡이는 골목.\n어디선가 작은 울음소리가 들린다.","name":""},"choiceAt":5,"timeLimit":7,"loop":true,"ending":false,"auto":false,"defaultChoice":"c2","enter":"","choices":[{"id":"c1","label":"소리를 따라간다","target":"box","set":"kind += 1","if":"kind = 0"},{"id":"c2","label":"모른 척 집으로 간다","target":"home","set":"","if":""}],"pos":{"x":0,"y":0}},"box":{"id":"box","title":"젖은 상자","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3a2f2a","duration":7,"caption":"상자 안에서 젖은 새끼 고양이가\n나를 올려다본다.","name":""},"choiceAt":4,"timeLimit":6,"loop":true,"ending":false,"auto":false,"defaultChoice":"c5","enter":"","choices":[{"id":"c3","label":"품에 안고 간다","target":"adopt","set":"kind+=1","if":""},{"id":"c4","label":"편의점에서 우유를 사 온다","target":"store","set":"kind+=1","if":""},{"id":"c5","label":"그냥 두고 간다","target":"home","set":"","if":""}],"pos":{"x":290,"y":0}},"store":{"id":"store","title":"새벽 편의점","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#22413c","duration":7,"caption":"알바생이 우유를 계산하다\n내 젖은 소매를 본다.","name":""},"choiceAt":4,"timeLimit":8,"loop":true,"ending":false,"auto":false,"defaultChoice":"c7","enter":"","choices":[{"id":"c6","label":"같이 가 달라고 부탁한다","target":"together","set":"","if":"courage>=1"},{"id":"c7","label":"우유만 들고 돌아간다","target":"adopt","set":"","if":""}],"pos":{"x":580,"y":0}},"home":{"id":"home","title":"평범한 밤","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#1c1f27","duration":6,"caption":"따뜻한 방. 그런데 울음소리가\n자꾸 귀에 맴돈다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":296,"y":232}},"adopt":{"id":"adopt","title":"새 식구","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#4a3a24","duration":6,"caption":"수건으로 감싼 작은 몸이\n골골 소리를 낸다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":580,"y":181}},"together":{"id":"together","title":"둘이서 구조","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#2c3f55","duration":6,"caption":"퇴근한 알바생과 함께\n동물병원 문을 두드린다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0}}},"savedAt":1793601483560}</script>
+<script type="application/json" id="project">{"title":"자정의 골목길","start":"intro","skin":"cinema","vars":{"courage":0,"kind":0},"varMeta":{"courage":{"type":"num","show":false},"kind":{"type":"num","show":true}},"scenes":{"intro":{"id":"intro","title":"퇴근길 골목","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#26324a","duration":8,"caption":"가로등이 깜빡이는 골목.\n어디선가 작은 울음소리가 들린다.","name":""},"choiceAt":5,"timeLimit":7,"loop":true,"ending":false,"auto":false,"defaultChoice":"c2","enter":"","choices":[{"id":"c1","label":"소리를 따라간다","target":"box","set":"kind += 1","if":"kind = 0"},{"id":"c2","label":"모른 척 집으로 간다","target":"home","set":"","if":""}],"pos":{"x":0,"y":0},"missTarget":"","hotHint":false,"hideTimer":false},"box":{"id":"box","title":"젖은 상자","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3a2f2a","duration":7,"caption":"상자 안에서 젖은 새끼 고양이가\n나를 올려다본다.","name":""},"choiceAt":4,"timeLimit":6,"loop":true,"ending":false,"auto":false,"defaultChoice":"c5","enter":"","choices":[{"id":"c3","label":"품에 안고 간다","target":"adopt","set":"kind+=1","if":""},{"id":"c4","label":"편의점에서 우유를 사 온다","target":"store","set":"kind+=1","if":""},{"id":"c5","label":"그냥 두고 간다","target":"home","set":"","if":""}],"pos":{"x":290,"y":0},"missTarget":"","hotHint":false,"hideTimer":false},"store":{"id":"store","title":"새벽 편의점","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#22413c","duration":7,"caption":"알바생이 우유를 계산하다\n내 젖은 소매를 본다.","name":""},"choiceAt":4,"timeLimit":8,"loop":true,"ending":false,"auto":false,"defaultChoice":"c7","enter":"","choices":[{"id":"c6","label":"같이 가 달라고 부탁한다","target":"together","set":"","if":"courage>=1"},{"id":"c7","label":"우유만 들고 돌아간다","target":"adopt","set":"","if":""}],"pos":{"x":580,"y":0},"missTarget":"","hotHint":false,"hideTimer":false},"home":{"id":"home","title":"평범한 밤","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#1c1f27","duration":6,"caption":"따뜻한 방. 그런데 울음소리가\n자꾸 귀에 맴돈다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":296,"y":232},"missTarget":"","hotHint":false,"hideTimer":false},"adopt":{"id":"adopt","title":"새 식구","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#4a3a24","duration":6,"caption":"수건으로 감싼 작은 몸이\n골골 소리를 낸다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":580,"y":181},"missTarget":"","hotHint":false,"hideTimer":false},"together":{"id":"together","title":"둘이서 구조","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#2c3f55","duration":6,"caption":"퇴근한 알바생과 함께\n동물병원 문을 두드린다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0},"missTarget":"","hotHint":false,"hideTimer":false}},"savedAt":1794200665339}</script>
 <script>
 /* 발행 이벤트 (UI는 이것만 구독하면 됩니다)
    scene {scene,vars} · time {t,d,scene,phase} · choices {list,timeLimit,defaultId}
@@ -321,9 +338,19 @@ class IVEngine extends Emitter{
   _timeout(){
     const c=this.cur,s=c.scene,t=s.timeoutMode==='scene'&&this.project.scenes[s.timeoutTarget];
     if(!t){this.choose(this._defaultId(c),true);return}
+    this._failTo(t,'__timeout','시간 초과',{timeout:true});
+  }
+  /* 헛클릭: 투명 클릭 영역이 있는 장면에서 영역 밖을 누르면, 정해 둔 장면(실패 엔딩 등)으로 이동합니다 */
+  miss(x,y){
+    const c=this.cur;if(!c||c.phase!=='waiting')return false;
+    const t=this.project.scenes[c.scene.missTarget];if(!t)return false;
+    this._failTo(t,'__miss','헛클릭',{miss:true,x,y});return true;
+  }
+  _failTo(t,id,label,extra){
+    const c=this.cur,s=c.scene;
     c.phase='chosen';c.deadline=null;
-    this.history.push({sceneId:s.id,vars:c.entry,label:'시간 초과'});
-    this.emit('chosen',{choice:{id:'__timeout',label:'시간 초과',target:t.id},timeout:true});
+    this.history.push({sceneId:s.id,vars:c.entry,label});
+    this.emit('chosen',{choice:{id,label,target:t.id},...extra});
     const seq=this._seq;setTimeout(()=>{if(seq===this._seq)this.goto(t.id)},420);
   }
   choose(choiceId,timeout=false){
@@ -336,7 +363,7 @@ class IVEngine extends Emitter{
     const seq=this._seq;
     setTimeout(()=>{if(seq===this._seq)this.goto(choice.target)},420);
   }
-  chooseIndex(i){const c=this.cur;if(c?.phase==='waiting'&&c.list[i])this.choose(c.list[i].id)}
+  chooseIndex(i){const c=this.cur,l=c?.list.filter(x=>!x.hot)||[];if(c?.phase==='waiting'&&l[i])this.choose(l[i].id)}   // 숫자키는 글자 버튼만 (투명 영역은 직접 눌러야 해요)
   back(){
     const h=this.history.pop();
     if(!h){this.restart();return}
@@ -389,6 +416,38 @@ function renderFree(layer,list,timeLimit,btn){
     (timeLimit?'<div class="free-timer"><i></i></div>':'');
   layer.hidden=false;
 }
+/* 투명 클릭 영역 레이어: 스킨과 상관없이 영상 위에 보이지 않는 버튼을 깝니다.
+   선택지의 hot=true, spot{x,y,w,h}(화면 비율 %, x·y는 영역 가운데) */
+function hotRect(c){const p=c.spot||{};return{x:p.x??50,y:p.y??50,w:p.w??16,h:p.h??20}}
+const HotLayer={mount(engine,root){
+  root.innerHTML='<div class="hot-layer" hidden></div>';const layer=root.firstChild;let tm;
+  const fx=(x,y,miss)=>{const f=document.createElement('i');f.className='hot-fx'+(miss?' miss':'');f.style.left=x+'%';f.style.top=y+'%';root.appendChild(f);setTimeout(()=>f.remove(),600)};
+  const hide=()=>{layer.hidden=true;layer.innerHTML=''};
+  const offs=[
+    engine.on('scene',hide),engine.on('end',hide),
+    engine.on('choices',({list,timeLimit,scene})=>{
+      const hot=list.filter(c=>c.hot);if(!hot.length){hide();return}
+      const onlyHot=hot.length===list.length;
+      layer.innerHTML=hot.map(c=>{const r=hotRect(c);
+        return`<button class="hot-btn ${scene.hotHint?'hint':''}" data-hid="${c.id}" aria-label="${esc(c.label||'클릭 영역')}" style="left:${r.x-r.w/2}%;top:${r.y-r.h/2}%;width:${r.w}%;height:${r.h}%"></button>`}).join('')+
+        (onlyHot&&timeLimit&&!scene.hideTimer?'<div class="hot-timer"><i></i></div>':'');
+      layer.hidden=false;
+    }),
+    engine.on('timer',({remain,total})=>{const b=layer.querySelector('.hot-timer i');if(b)b.style.transform=`scaleX(${remain/total})`}),
+    engine.on('chosen',({choice,miss,x,y})=>{
+      if(choice.id!=='__miss'){const c=engine.cur?.list.find(v=>v.id===choice.id);if(c?.hot){const r=hotRect(c);fx(r.x,r.y)}}
+      clearTimeout(tm);tm=setTimeout(hide,250);
+    })
+  ];
+  const click=e=>{
+    const r=layer.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*100,y=(e.clientY-r.top)/r.height*100;
+    const b=e.target.closest('.hot-btn');
+    if(b){engine.choose(b.dataset.hid);return}
+    if(engine.miss(x,y))fx(x,y,true);
+  };
+  layer.addEventListener('click',click);
+  return()=>{offs.forEach(f=>f());clearTimeout(tm);root.innerHTML=''};
+}};
 Skins.register({
   id:'cinema',name:'시네마 (아래 자막형)',
   mount(engine,root){
@@ -410,6 +469,8 @@ Skins.register({
       }),
       engine.on('choices',({list,timeLimit,scene})=>{
         const mode=scene?.cpos||'';
+        list=list.filter(c=>!c.hot);if(scene?.hideTimer)timeLimit=0;   // 투명 영역은 HotLayer가 그려요
+        if(!list.length){row.innerHTML='';box.classList.remove('show');free.hidden=true;return}
         if(mode==='free'){
           row.innerHTML='';box.classList.remove('show');
           renderFree(free,list,timeLimit,(c,i,st)=>`<button class="cin-btn free-btn" data-id="${c.id}" style="${st}">${esc(c.label)}</button>`);
@@ -457,6 +518,8 @@ Skins.register({
       }),
       engine.on('choices',({list:l,timeLimit,defaultId,scene})=>{
         const mode=scene?.cpos||'';
+        l=l.filter(c=>!c.hot);if(scene?.hideTimer)timeLimit=0;
+        if(!l.length){panel.classList.remove('show');free.hidden=true;return}
         if(mode==='free'){
           panel.classList.remove('show');
           renderFree(free,l,timeLimit,(c,i,st)=>btn(c,i,c.id===defaultId&&timeLimit,st));
@@ -507,6 +570,7 @@ Media.resolve=n=>'videos/'+encodeURIComponent(n);
 const engine=new IVEngine(document.getElementById('layers'),Media);engine.load(P);
 Skins.get(P.skin).mount(engine,document.getElementById('skinRoot'));
 VarHud.mount(engine,document.getElementById('hudRoot'),()=>P);
+HotLayer.mount(engine,document.getElementById('hotRoot'));
 const cover=document.getElementById('cover'),g=id=>document.getElementById(id);
 g('coverPlay').onclick=()=>{cover.hidden=true;engine.start(P.start)};
 g('cBack').onclick=()=>{if(cover.hidden)engine.back()};

@@ -19,6 +19,7 @@
 }
 .stage{position:relative;aspect-ratio:16/9;max-width:100%;background:#000;overflow:hidden;container-type:inline-size}
 .layers,.skin-root{position:absolute;inset:0}
+.skin-root{pointer-events:none}.skin-root button,.skin-root [role=group] *,.skin-root .cin-end,.skin-root .cd-end{pointer-events:auto}
 .layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .35s ease;background:#000}
 .layer.on{opacity:1}
 .cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at center,rgba(20,22,28,.55),rgba(0,0,0,.92))}
@@ -97,6 +98,22 @@
 .cd-free .cd-btn{max-width:46cqw}
 .free-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden}
 .free-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
+/* 투명 클릭 영역(핫스팟): 영상 속 물체를 직접 누르게 하는 보이지 않는 버튼 */
+.hot-root{position:absolute;inset:0;pointer-events:none}
+.hot-layer{position:absolute;inset:0;pointer-events:auto;cursor:crosshair}
+.hot-layer[hidden]{display:none}
+.hot-btn{position:absolute;background:transparent;border:0;padding:0;margin:0;cursor:crosshair;border-radius:6px;-webkit-tap-highlight-color:transparent}
+.hot-btn:focus-visible{outline:2px solid rgba(255,255,255,.7)}
+.hot-btn.hint{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);animation:hotPulse 1.6s ease-in-out infinite}
+@keyframes hotPulse{50%{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.1)}}
+.show-hot .hot-btn{outline:2px dashed #f8c440;outline-offset:-2px;background:rgba(248,196,64,.16)}
+.show-hot .hot-btn::after{content:attr(aria-label);position:absolute;left:4px;top:3px;font:600 11px/1.2 system-ui,sans-serif;color:#1a1406;background:#f8c440;padding:1px 5px;border-radius:4px;white-space:nowrap}
+.hot-fx{position:absolute;width:0;height:0;pointer-events:none}
+.hot-fx::before{content:"";position:absolute;left:-3cqw;top:-3cqw;width:6cqw;height:6cqw;border-radius:50%;border:.35cqw solid #fff;animation:hotHit .5s ease-out forwards}
+.hot-fx.miss::before{border-color:#ff5a4f;border-radius:0;border-width:0;width:6cqw;height:6cqw;background:linear-gradient(45deg,transparent 45%,#ff5a4f 45%,#ff5a4f 55%,transparent 55%),linear-gradient(-45deg,transparent 45%,#ff5a4f 45%,#ff5a4f 55%,transparent 55%)}
+@keyframes hotHit{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+.hot-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden;pointer-events:none}
+.hot-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
 @media (prefers-reduced-motion:reduce){.layer,.cin-choices,.cd-panel,.cin-title,.cd-bar{transition:none!important}.free-layer .free-btn{animation:none}}
 </style>
 
@@ -451,6 +468,18 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .pl-bar{position:absolute;left:8px;right:8px;top:8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;background:rgba(16,18,22,.9);border:1px solid var(--line2);border-radius:8px;padding:6px 8px;font-size:12.5px;color:var(--fg);z-index:1}
 .pl-bar span{flex:1;min-width:120px}
 .pl-chip{position:absolute;width:max-content;transform:translate(var(--tx,-50%),var(--ty,-50%));display:inline-flex;gap:.5em;align-items:center;background:rgba(14,16,20,.9);border:1.5px solid var(--accent);color:#fff;padding:.4em .9em;border-radius:999px;font:600 clamp(11px,1.6cqw,16px) var(--f-ui);cursor:grab;touch-action:none;user-select:none;white-space:nowrap}
+#stage{scroll-margin-top:150px;scroll-margin-bottom:20px}   /* 위쪽 고정 머리글에 가려지지 않게 */
+.nosel,.nosel *{user-select:none!important;-webkit-user-select:none!important}
+.pl-hot{position:absolute;border:2px dashed #f8c440;background:rgba(248,196,64,.18);border-radius:6px;cursor:move;touch-action:none;user-select:none}
+.pl-hot.drag{background:rgba(248,196,64,.3)}
+.pl-hot span{position:absolute;left:4px;top:3px;font:600 clamp(10px,1.3cqw,13px) var(--f-ui);color:#1a1406;background:#f8c440;padding:1px 6px;border-radius:4px;white-space:nowrap;pointer-events:none}
+.pl-rs{position:absolute;right:-7px;bottom:-7px;width:14px;height:14px;background:#f8c440;border:2px solid #1a1406;border-radius:3px;cursor:nwse-resize}
+.ch-kind{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:6px 0 2px}
+.ch-kind button{background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:5px 6px;font-size:12px;color:var(--mute)}
+.ch-kind button.on{border-color:var(--accent-ink);color:var(--fg);background:var(--accent-soft)}
+.ch-hot{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:4px 0}
+.hotset{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px;margin-top:12px}
+.hotset select{width:100%}
 .pl-chip.drag{cursor:grabbing;box-shadow:0 0 0 4px rgba(240,168,58,.35)}
 .pl-chip kbd{font:600 .8em var(--f-mono);color:var(--accent-ink)}
 .pl-gv,.pl-gh{position:absolute;background:var(--branch);pointer-events:none}
@@ -509,6 +538,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .warn-t{color:var(--danger)}
 .nrow .bd{font-style:normal;font-size:9.5px;line-height:1;padding:2px 4px;border-radius:3px;flex:none}
 .nrow .bd.c{color:var(--branch-ink);border:1px solid rgba(94,196,212,.45)}
+.nrow .bd.h{color:#f8c440;border:1px solid rgba(248,196,64,.5)}
 .nrow .bd.s{color:var(--accent-ink);border:1px solid rgba(240,168,58,.45)}
 .node.auto{border-style:dashed}
 .ch{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:8px}
@@ -709,11 +739,13 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
       <label class="hint" for="skinSel">선택지 모양</label>
       <select id="skinSel" class="sel"></select>
       <span class="grow"></span>
+      <label class="hint pv-follow" title="투명 클릭 영역을 편집할 때만 노랗게 보여 줘요 (내보낸 플레이어에서는 안 보여요)"><input type="checkbox" id="pvHot"> 클릭 영역 보기</label>
       <label class="hint pv-follow" title="장면 지도나 편집 칸에서 장면을 고르면 미리보기도 그 장면으로 바뀌어요"><input type="checkbox" id="pvFollow" checked> 고른 장면 따라가기</label>
     </div>
     <div class="stage-wrap" id="stageWrap">
       <div class="stage" id="stage">
         <div class="layers" id="layers"></div>
+        <div class="hot-root" id="hotRoot"></div>
         <div class="skin-root" id="skinRoot"></div>
         <div class="hud-root" id="hudRoot"></div>
         <div class="place-root" id="placeRoot" hidden></div>
@@ -1064,9 +1096,19 @@ class IVEngine extends Emitter{
   _timeout(){
     const c=this.cur,s=c.scene,t=s.timeoutMode==='scene'&&this.project.scenes[s.timeoutTarget];
     if(!t){this.choose(this._defaultId(c),true);return}
+    this._failTo(t,'__timeout','시간 초과',{timeout:true});
+  }
+  /* 헛클릭: 투명 클릭 영역이 있는 장면에서 영역 밖을 누르면, 정해 둔 장면(실패 엔딩 등)으로 이동합니다 */
+  miss(x,y){
+    const c=this.cur;if(!c||c.phase!=='waiting')return false;
+    const t=this.project.scenes[c.scene.missTarget];if(!t)return false;
+    this._failTo(t,'__miss','헛클릭',{miss:true,x,y});return true;
+  }
+  _failTo(t,id,label,extra){
+    const c=this.cur,s=c.scene;
     c.phase='chosen';c.deadline=null;
-    this.history.push({sceneId:s.id,vars:c.entry,label:'시간 초과'});
-    this.emit('chosen',{choice:{id:'__timeout',label:'시간 초과',target:t.id},timeout:true});
+    this.history.push({sceneId:s.id,vars:c.entry,label});
+    this.emit('chosen',{choice:{id,label,target:t.id},...extra});
     const seq=this._seq;setTimeout(()=>{if(seq===this._seq)this.goto(t.id)},420);
   }
   choose(choiceId,timeout=false){
@@ -1079,7 +1121,7 @@ class IVEngine extends Emitter{
     const seq=this._seq;
     setTimeout(()=>{if(seq===this._seq)this.goto(choice.target)},420);
   }
-  chooseIndex(i){const c=this.cur;if(c?.phase==='waiting'&&c.list[i])this.choose(c.list[i].id)}
+  chooseIndex(i){const c=this.cur,l=c?.list.filter(x=>!x.hot)||[];if(c?.phase==='waiting'&&l[i])this.choose(l[i].id)}   // 숫자키는 글자 버튼만 (투명 영역은 직접 눌러야 해요)
   back(){
     const h=this.history.pop();
     if(!h){this.restart();return}
@@ -1132,6 +1174,38 @@ function renderFree(layer,list,timeLimit,btn){
     (timeLimit?'<div class="free-timer"><i></i></div>':'');
   layer.hidden=false;
 }
+/* 투명 클릭 영역 레이어: 스킨과 상관없이 영상 위에 보이지 않는 버튼을 깝니다.
+   선택지의 hot=true, spot{x,y,w,h}(화면 비율 %, x·y는 영역 가운데) */
+function hotRect(c){const p=c.spot||{};return{x:p.x??50,y:p.y??50,w:p.w??16,h:p.h??20}}
+const HotLayer={mount(engine,root){
+  root.innerHTML='<div class="hot-layer" hidden></div>';const layer=root.firstChild;let tm;
+  const fx=(x,y,miss)=>{const f=document.createElement('i');f.className='hot-fx'+(miss?' miss':'');f.style.left=x+'%';f.style.top=y+'%';root.appendChild(f);setTimeout(()=>f.remove(),600)};
+  const hide=()=>{layer.hidden=true;layer.innerHTML=''};
+  const offs=[
+    engine.on('scene',hide),engine.on('end',hide),
+    engine.on('choices',({list,timeLimit,scene})=>{
+      const hot=list.filter(c=>c.hot);if(!hot.length){hide();return}
+      const onlyHot=hot.length===list.length;
+      layer.innerHTML=hot.map(c=>{const r=hotRect(c);
+        return`<button class="hot-btn ${scene.hotHint?'hint':''}" data-hid="${c.id}" aria-label="${esc(c.label||'클릭 영역')}" style="left:${r.x-r.w/2}%;top:${r.y-r.h/2}%;width:${r.w}%;height:${r.h}%"></button>`}).join('')+
+        (onlyHot&&timeLimit&&!scene.hideTimer?'<div class="hot-timer"><i></i></div>':'');
+      layer.hidden=false;
+    }),
+    engine.on('timer',({remain,total})=>{const b=layer.querySelector('.hot-timer i');if(b)b.style.transform=`scaleX(${remain/total})`}),
+    engine.on('chosen',({choice,miss,x,y})=>{
+      if(choice.id!=='__miss'){const c=engine.cur?.list.find(v=>v.id===choice.id);if(c?.hot){const r=hotRect(c);fx(r.x,r.y)}}
+      clearTimeout(tm);tm=setTimeout(hide,250);
+    })
+  ];
+  const click=e=>{
+    const r=layer.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*100,y=(e.clientY-r.top)/r.height*100;
+    const b=e.target.closest('.hot-btn');
+    if(b){engine.choose(b.dataset.hid);return}
+    if(engine.miss(x,y))fx(x,y,true);
+  };
+  layer.addEventListener('click',click);
+  return()=>{offs.forEach(f=>f());clearTimeout(tm);root.innerHTML=''};
+}};
 Skins.register({
   id:'cinema',name:'시네마 (아래 자막형)',
   mount(engine,root){
@@ -1153,6 +1227,8 @@ Skins.register({
       }),
       engine.on('choices',({list,timeLimit,scene})=>{
         const mode=scene?.cpos||'';
+        list=list.filter(c=>!c.hot);if(scene?.hideTimer)timeLimit=0;   // 투명 영역은 HotLayer가 그려요
+        if(!list.length){row.innerHTML='';box.classList.remove('show');free.hidden=true;return}
         if(mode==='free'){
           row.innerHTML='';box.classList.remove('show');
           renderFree(free,list,timeLimit,(c,i,st)=>`<button class="cin-btn free-btn" data-id="${c.id}" style="${st}">${esc(c.label)}</button>`);
@@ -1200,6 +1276,8 @@ Skins.register({
       }),
       engine.on('choices',({list:l,timeLimit,defaultId,scene})=>{
         const mode=scene?.cpos||'';
+        l=l.filter(c=>!c.hot);if(scene?.hideTimer)timeLimit=0;
+        if(!l.length){panel.classList.remove('show');free.hidden=true;return}
         if(mode==='free'){
           panel.classList.remove('show');
           renderFree(free,l,timeLimit,(c,i,st)=>btn(c,i,c.id===defaultId&&timeLimit,st));
@@ -1351,9 +1429,11 @@ const PLAY_BASE='https://siru565.github.io/digital-storytelling-interactive-vide
 function tplScene(id,title,color,dur,caption,o={}){
   return{id,title,timeoutMode:o.timeoutMode||'',timeoutTarget:o.timeoutTarget||'',media:{type:'placeholder',color,duration:dur,caption,name:''},
     choiceAt:o.at??'',timeLimit:o.lim||0,loop:o.loop??true,ending:!!o.end,auto:!!o.auto,
-    defaultChoice:o.def||'',enter:o.enter||'',choices:o.ch||[],pos:o.pos||null};
+    defaultChoice:o.def||'',enter:o.enter||'',choices:o.ch||[],pos:o.pos||null,
+    missTarget:o.miss||'',hotHint:!!o.hint,hideTimer:!!o.hideTimer};
 }
 function tplChoice(id,label,target,set='',cond=''){return{id,label,target,set,if:cond}}
+function tplHot(id,label,target,spot,set=''){return{id,label,target,set,if:'',hot:true,spot}}
 function blankProject(){const s=newScene('첫 장면',{x:0,y:0});return{title:'새 인터랙티브 영상',start:s.id,vars:{},varMeta:{},skin:'cinema',scenes:{[s.id]:s}}}
 const TEMPLATES=[
   {id:'blank',slug:'',name:'빈 프로젝트',desc:'장면 하나에서 처음부터 만들어요.',tags:['장면 1'],make:blankProject},
@@ -1415,6 +1495,19 @@ const TEMPLATES=[
       safe:tplScene('safe','따돌림','#2b4034',6,'무사히 따돌렸다!',{end:true,loop:false,pos:{x:1160,y:0}}),
       lost:tplScene('lost','길을 잃음','#33302a',6,'겨우 도망쳤지만\n낯선 곳에서 길을 잃었다.',{end:true,loop:false,pos:{x:1160,y:150}}),
       caught:tplScene('caught','시간 초과 · 붙잡힘','#3d2222',5,'망설이는 사이\n결국 붙잡히고 말았다.',{end:true,loop:false,pos:{x:580,y:250}})
+    }})},
+  {id:'anomaly',slug:'anomaly',name:'이상현상 · 화면을 직접 클릭',desc:'영상 속 이상현상을 제한 시간 안에 직접 눌러야 해요. 못 누르거나 엉뚱한 곳을 누르면 이상현상에 당해요.',tags:['투명 클릭 영역','헛클릭 → 실패','제한 시간','타이머 숨기기'],
+   make:()=>({title:'이상현상',start:'room',skin:'cinema',
+    vars:{발견:0},varMeta:{발견:{type:'num',show:true}},
+    scenes:{
+      room:tplScene('room','자취방','#1f2430',5,'불을 끄려는 순간, 방 안의 무언가가 달라졌다.\n(연습) 오른쪽 위의 이상현상을 5초 안에 누르세요.',{at:1,lim:5,hint:true,pos:{x:0,y:0},timeoutMode:'scene',timeoutTarget:'taken',miss:'taken',
+        ch:[tplHot('h1','창문에 비친 얼굴','hall',{x:82,y:20,w:16,h:22},'발견+=1')]}),
+      hall:tplScene('hall','복도','#262230',5,'복도 끝 형광등이 깜빡인다.\n이번엔 힌트가 없어요. 4초 안에 찾으세요.',{at:1,lim:4,pos:{x:290,y:0},timeoutMode:'scene',timeoutTarget:'taken',miss:'taken',
+        ch:[tplHot('h2','멈춘 시계','stairs',{x:18,y:30,w:12,h:18},'발견+=1')]}),
+      stairs:tplScene('stairs','계단','#2a2026',5,'계단 아래에서 발소리가 올라온다.\n시간 막대도 보이지 않는다. 3초 안에!',{at:1,lim:3,hideTimer:true,pos:{x:580,y:0},timeoutMode:'scene',timeoutTarget:'taken',miss:'taken',
+        ch:[tplHot('h3','난간 위의 손','escape',{x:60,y:72,w:18,h:16},'발견+=1')]}),
+      escape:tplScene('escape','아침','#3b3a2a',6,'창밖이 밝아 온다.\n이상현상을 모두 찾아냈다.',{end:true,loop:false,pos:{x:870,y:0}}),
+      taken:tplScene('taken','이상현상에 당함','#3d1f22',5,'눈치채지 못한 사이\n그것이 바로 뒤에 서 있었다.',{end:true,loop:false,pos:{x:430,y:230}})
     }})}
 ];
 function sampleProject(){return TEMPLATES.find(t=>t.id==='midnight').make()}
@@ -1663,6 +1756,7 @@ function useSkin(id){
 $('skinSel').value=Skins.get(P.skin).id;useSkin($('skinSel').value);
 $('skinSel').onchange=()=>{useSkin($('skinSel').value);save()};
 VarHud.mount(engine,$('hudRoot'),()=>P);
+HotLayer.mount(engine,$('hotRoot'));
 
 /* --- 미리보기 컨트롤 --- */
 const cover=$('cover');
@@ -1691,6 +1785,9 @@ let curTheme='auto';try{curTheme=localStorage.getItem('dsiv-theme')||'auto'}catc
 applyTheme(curTheme);
 $('bTheme').onclick=()=>{const i=THEMES.findIndex(x=>x[0]===curTheme);curTheme=THEMES[(i+1)%3][0];applyTheme(curTheme);toast('화면 테마: '+THEMES.find(x=>x[0]===curTheme)[1].slice(2))};
 try{const f=localStorage.getItem('dsiv-pv-follow');if(f!=null)$('pvFollow').checked=f==='1'}catch(e){}
+try{$('pvHot').checked=localStorage.getItem('dsiv-pv-hot')==='1'}catch(e){}
+$('stage').classList.toggle('show-hot',$('pvHot').checked);
+$('pvHot').onchange=e=>{$('stage').classList.toggle('show-hot',e.target.checked);try{localStorage.setItem('dsiv-pv-hot',e.target.checked?'1':'0')}catch(_){}};
 $('pvFollow').onchange=e=>{try{localStorage.setItem('dsiv-pv-follow',e.target.checked?'1':'0')}catch(_){};if(e.target.checked)cuePreview(sel)};
 $('tPlay').onclick=()=>{if(cover.hidden)engine.setPaused(!engine.paused);else playFrom(P.start)};
 $('tBack').onclick=()=>{if(!cover.hidden)return;engine.back()};
@@ -1840,7 +1937,7 @@ function renderGraph(){
     const [sub,bad]=nodeSub(s);
     const rows=s.ending?'':s.choices.map((c,i)=>{
       const txt=s.auto?(c.if?condText(c.if):'그 밖의 경우'):(c.label||'이름 없는 선택지');
-      const bd=(!s.auto&&c.if?'<i class="bd c" title="조건이 있어요">조건</i>':'')+(c.set?'<i class="bd s" title="점수가 바뀌어요">점수</i>':'');
+      const bd=(c.hot?'<i class="bd h" title="투명 클릭 영역">영역</i>':'')+(!s.auto&&c.if?'<i class="bd c" title="조건이 있어요">조건</i>':'')+(c.set?'<i class="bd s" title="점수가 바뀌어요">점수</i>':'');
       return`<div class="nrow ${P.scenes[c.target]?'':'open'} ${!s.auto&&!c.label?'empty':''} ${G.selChoice&&G.selChoice.s===s.id&&G.selChoice.i===i?'rsel':''}" data-i="${i}" title="${esc(txt)}">
         <span class="k">${i+1}</span><span class="l">${esc(txt)}</span>${bd}<span class="port" data-port="${i}" title="끌어서 다른 장면에 연결"></span></div>`}).join('')+
       (hasTO(s)?(()=>{const tt=s.timeoutMode==='scene'&&P.scenes[s.timeoutTarget],di=s.choices.findIndex(c=>c.id===s.defaultChoice);
@@ -2020,9 +2117,12 @@ function choiceCard(s,c,i,others){
   }
   const sum=[c.if?'보이는 조건: '+condText(c.if):'',c.set?'고르면: '+setText(c.set):''].filter(Boolean).join(' · ');
   return`<div class="ch" data-i="${i}">
-    <div class="ch-row"><span class="key">${i+1}</span>
-      <input data-k="label" value="${esc(c.label)}" placeholder="버튼에 보일 글자" aria-label="${i+1}번 선택지 글자">
+    <div class="ch-row"><span class="key">${c.hot?'🎯':i+1}</span>
+      <input data-k="label" value="${esc(c.label)}" placeholder="${c.hot?'영역 이름 (화면엔 안 보여요 · 예: 창문 속 그림자)':'버튼에 보일 글자'}" aria-label="${i+1}번 선택지 글자">
       <button class="x" data-act="delch" aria-label="${i+1}번 선택지 삭제" title="삭제">×</button></div>
+    <div class="ch-kind" role="group" aria-label="버튼 모양"><button data-hot="0" class="${c.hot?'':'on'}">글자 버튼</button><button data-hot="1" class="${c.hot?'on':''}">🎯 투명 클릭 영역</button></div>
+    ${c.hot?(()=>{const r=hotRect(c);return`<div class="ch-hot"><button class="btn sm primary" data-act="placehot">${placing===s.id?'영역 정하는 중 · 미리보기를 보세요':'미리보기에서 영역 정하기'}</button>
+      <span class="hint">위치 ${Math.round(r.x)}% · ${Math.round(r.y)}% / 크기 ${Math.round(r.w)}×${Math.round(r.h)}</span></div>`})():''}
     <div class="ch-row2"><span class="arrow">누르면 →</span>${target}</div>
     <details data-d="${key}" ${isOpen?'open':''}><summary>${sum?`<span class="sumtxt">${esc(sum)}</span>`:'조건 · 점수 (선택 사항)'}</summary>
       <div class="bgroup"><div class="bl">이럴 때만 이 선택지 보이기<em>비우면 항상 보여요</em></div>${builderHtml('if',i,c.if)}</div>
@@ -2066,7 +2166,17 @@ function renderInspector(){
       <h3><span class="sn">3</span>선택지 <small>${s.choices.length}개</small></h3>
       ${cards||'<p class="hint">아직 선택지가 없어요. 아래 버튼으로 추가하거나, 장면 지도에서 ＋ 점을 끌어 보세요.</p>'}
       <button class="addch" data-act="addch">＋ 선택지 추가</button>
-      ${cposPicker(s)}
+      ${s.choices.some(c=>!c.hot)?cposPicker(s):''}
+      ${s.choices.some(c=>c.hot)?`<div class="hotset">
+        <div class="bl">🎯 투명 클릭 영역 설정<em>영상 속 물체를 직접 누르게 할 때</em></div>
+        <label class="field"><span>영역 밖(빈 곳)을 누르면</span><select id="f-miss" class="sel">
+          <option value="">아무 일도 없음</option>
+          ${others.map(x=>`<option value="${x.id}" ${x.id===s.missTarget?'selected':''}>${esc(x.title)}${x.ending?' (엔딩)':''}(으)로 이동</option>`).join('')}
+          <option value="__fail">＋ 실패 엔딩 새로 만들기</option></select>
+          <em>아무 데나 마구 누르는 걸 막고 싶을 때 실패 장면을 고르세요</em></label>
+        <label class="check"><input type="checkbox" id="f-hhint" ${s.hotHint?'checked':''}><span>플레이어에서도 영역 테두리 살짝 보이기<br><span class="hint">끄면 완전히 투명해요. 튜토리얼 장면에서만 켜는 걸 추천해요</span></span></label>
+        <p class="hint">미리보기 위의 <b>클릭 영역 보기</b>를 켜면 편집할 때만 영역이 노랗게 보여요.</p>
+      </div>`:''}
     </section>
     <details class="adv" id="adv" ${advOpen?'open':''}>
       <summary>고급 설정 · 선택지 나오는 시점, 제한 시간${+s.timeLimit?` <span class="sumtxt">⏱ ${s.timeLimit}초${s.timeoutMode==='scene'&&P.scenes[s.timeoutTarget]?' · 못 고르면 '+esc(P.scenes[s.timeoutTarget].title):''}</span>`:''}</summary>
@@ -2092,6 +2202,7 @@ function renderInspector(){
               <em>장면 지도의 ⏱ 줄에서 점을 끌어서 연결해도 돼요</em>`
             :s.choices.length?`<select id="f-def">${s.choices.map((c,i)=>`<option value="${c.id}" ${c.id===s.defaultChoice?'selected':''}>${i+1}. ${esc(c.label)}</option>`).join('')}</select>`:''}
         </div>`:''}
+        ${+s.timeLimit?`<label class="check"><input type="checkbox" id="f-hidetimer" ${s.hideTimer?'checked':''}><span>남은 시간 막대 숨기기<br><span class="hint">시간은 그대로 흐르지만 화면에 안 보여서 더 긴장돼요</span></span></label>`:''}
         <label class="check"><input type="checkbox" id="f-loop" ${s.loop?'checked':''}><span>고르는 동안 영상 반복<br><span class="hint">끄면 마지막 장면에서 멈춘 채 기다려요</span></span></label>
       </div>
     </details>`;
@@ -2187,6 +2298,12 @@ insp.addEventListener('change',async e=>{
     else s.timeoutTarget=t.value;
   }
   else if(t.id==='f-loop')s.loop=t.checked;
+  else if(t.id==='f-hidetimer')s.hideTimer=t.checked;
+  else if(t.id==='f-hhint')s.hotHint=t.checked;
+  else if(t.id==='f-miss'){
+    if(t.value==='__fail'){const f=failScene(s.pos?{x:s.pos.x+290,y:s.pos.y+nodeH(s)+90}:null);f.title='헛클릭 · 실패';P.scenes[f.id]=f;s.missTarget=f.id;toast(`'${f.title}' 엔딩을 만들었어요. 문장이나 영상을 바꿔 보세요`)}
+    else s.missTarget=t.value;
+  }
   else if(t.classList.contains('f-file')){if(t.files[0])await attachVideo(s,t.files[0]);return}
   else if(t.id==='f-lib'&&t.value){s.media.type='file';s.media.name=t.value;s.media.duration=await Library.probe(t.value)||s.media.duration;save();renderGraph();renderInspector();refreshPreview(s.id);return}
   else if(t.dataset.k==='target'){
@@ -2236,6 +2353,15 @@ insp.addEventListener('click',e=>{
     if(bl.dataset.kind==='enter')advEnterOpen=true;else openD.add(s.id+':'+bl.dataset.ci);
     save();renderGraph();renderInspector();return;
   }
+  if(b.dataset.hot!=null&&b.closest('.ch')){
+    const i=+b.closest('.ch').dataset.i,c=s.choices[i],on=b.dataset.hot==='1';
+    if(!!c.hot===on)return;
+    c.hot=on;
+    if(on){c.spot=hotRect({spot:c.spot&&c.spot.w?c.spot:null});save();renderGraph();startPlacing(s.id);toast('미리보기에서 노란 상자를 끌어 이상현상 위에 놓고, 모서리로 크기를 맞추세요');return}
+    else if(c.spot)c.spot={x:c.spot.x,y:c.spot.y};
+    save();renderGraph();renderInspector();return;
+  }
+  if(b.dataset.act==='placehot'){startPlacing(s.id);return}
   if(b.dataset.tom){s.timeoutMode=b.dataset.tom==='scene'?'scene':'';advOpen=true;save();renderGraph();renderInspector();return}
   if(b.dataset.mt){s.media.type=b.dataset.mt;save();renderGraph();renderInspector();refreshPreview(s.id);return}
   else if(b.dataset.mode){
@@ -2300,10 +2426,14 @@ function stopPlacing(){if(!placing)return;placing=null;$('placeRoot').hidden=tru
 function renderPlace(){
   const pr=$('placeRoot'),s=P.scenes[placing];if(!s){stopPlacing();return}
   pr.hidden=false;
-  pr.innerHTML=`<div class="pl-bar"><span><b>${esc(s.title)}</b> · 선택지를 끌어서 위치를 정하세요</span>
-      <button class="btn sm" data-pl="row">가로로 정렬</button><button class="btn sm" data-pl="col">세로로 정렬</button>
+  const chips=s.cpos==='free'?s.choices.filter(c=>!c.hot):[],hots=s.choices.filter(c=>c.hot);
+  pr.innerHTML=`<div class="pl-bar"><span><b>${esc(s.title)}</b> · ${hots.length?'노란 상자를 끌어 옮기고 오른쪽 아래 모서리로 크기를 맞추세요':'선택지를 끌어서 위치를 정하세요'}</span>
+      ${chips.length>1?'<button class="btn sm" data-pl="row">가로로 정렬</button><button class="btn sm" data-pl="col">세로로 정렬</button>':''}
       <button class="btn sm primary" data-pl="done">완료</button></div>
-    ${s.choices.map((c,i)=>{const p=freeSpot(c,i,s.choices.length);
+    ${s.choices.map((c,i)=>{
+      if(c.hot){const r=hotRect(c);return`<div class="pl-hot" data-i="${i}" style="left:${r.x-r.w/2}%;top:${r.y-r.h/2}%;width:${r.w}%;height:${r.h}%"><span>🎯 ${esc(c.label||'클릭 영역')}</span><i class="pl-rs" title="끌어서 크기 조절"></i></div>`}
+      if(s.cpos!=='free')return'';
+      const p=freeSpot(c,i,s.choices.length);
       return`<div class="pl-chip" data-i="${i}" style="${spotStyle(p)}"><kbd>${i+1}</kbd>${esc(c.label||'이름 없는 선택지')}</div>`}).join('')}
     <i class="pl-gv" hidden></i><i class="pl-gh" hidden></i>`;
 }
@@ -2311,9 +2441,33 @@ $('placeRoot').addEventListener('click',e=>{
   const b=e.target.closest('[data-pl]');if(!b)return;const s=P.scenes[placing];if(!s)return;
   const n=s.choices.length;
   if(b.dataset.pl==='done'){stopPlacing();toast('선택지 위치를 저장했어요');return}
-  s.choices.forEach((c,i)=>{c.spot=b.dataset.pl==='row'?{x:Math.round((i+1)/(n+1)*100),y:freeSpot(c,i,n).y}:{x:freeSpot(c,i,n).x,y:Math.round(30+(n>1?i*50/(n-1):25))}});
+  s.choices.forEach((c,i)=>{if(c.hot)return;c.spot=b.dataset.pl==='row'?{x:Math.round((i+1)/(n+1)*100),y:freeSpot(c,i,n).y}:{x:freeSpot(c,i,n).x,y:Math.round(30+(n>1?i*50/(n-1):25))}});
   save();renderPlace();
 });
+/* 투명 클릭 영역 상자: 끌어서 이동, 모서리로 크기 조절 */
+let hotDrag=null;
+// 끄는 동안 화면의 글자가 파랗게 선택되지 않게 막습니다
+$('placeRoot').addEventListener('pointerdown',e=>{if(e.target.closest('.pl-hot,.pl-chip')){document.body.classList.add('nosel');getSelection()?.removeAllRanges()}},true);
+addEventListener('pointerup',()=>document.body.classList.remove('nosel'));
+$('placeRoot').addEventListener('pointerdown',e=>{
+  const h=e.target.closest('.pl-hot');if(!h||e.button!==0)return;
+  e.preventDefault();e.stopImmediatePropagation();h.setPointerCapture(e.pointerId);h.classList.add('drag');
+  const s=P.scenes[placing],c=s.choices[+h.dataset.i],r=$('stage').getBoundingClientRect();
+  hotDrag={el:h,c,mode:e.target.closest('.pl-rs')?'size':'move',sx:e.clientX,sy:e.clientY,W:r.width,H:r.height,r0:hotRect(c)};
+},true);
+$('placeRoot').addEventListener('pointermove',e=>{
+  if(!hotDrag)return;e.stopImmediatePropagation();
+  const d=hotDrag,dx=(e.clientX-d.sx)/d.W*100,dy=(e.clientY-d.sy)/d.H*100,o=d.r0;let n;
+  if(d.mode==='move'){n={...o,x:Math.max(o.w/2,Math.min(100-o.w/2,o.x+dx)),y:Math.max(o.h/2,Math.min(100-o.h/2,o.y+dy))}}
+  else{const l=o.x-o.w/2,t=o.y-o.h/2,w=Math.max(3,Math.min(100-l,o.w+dx)),h=Math.max(3,Math.min(100-t,o.h+dy));n={x:l+w/2,y:t+h/2,w,h}}
+  const R=v=>Math.round(v*10)/10;d.n={x:R(n.x),y:R(n.y),w:R(n.w),h:R(n.h)};
+  Object.assign(d.el.style,{left:(d.n.x-d.n.w/2)+'%',top:(d.n.y-d.n.h/2)+'%',width:d.n.w+'%',height:d.n.h+'%'});
+},true);
+$('placeRoot').addEventListener('pointerup',e=>{
+  if(!hotDrag)return;e.stopImmediatePropagation();
+  const d=hotDrag;hotDrag=null;d.el.classList.remove('drag');
+  if(d.n){d.c.spot=d.n;save();renderInspector()}
+},true);
 $('placeRoot').addEventListener('pointerdown',e=>{
   const ch=e.target.closest('.pl-chip');if(!ch||e.button!==0)return;
   e.preventDefault();ch.setPointerCapture(e.pointerId);ch.classList.add('drag');plDrag=ch;
@@ -2643,7 +2797,7 @@ html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui
 .ctrl button{background:rgba(0,0,0,.6);color:#eee;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:6px 10px;font:13px var(--f-ui);cursor:pointer}
 [hidden]{display:none!important}
 </style></head><body>
-<div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
+<div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="hot-root" id="hotRoot"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
 <div class="cover" id="cover"><button id="coverPlay">▶ 시작하기</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div></div></div>
 <div class="ctrl"><button id="cBack">↶ 이전 선택</button><button id="cRestart">처음부터</button><button id="cMute">소리 끄기</button><button id="cFull">전체화면</button></div>
 <script type="application/json" id="project">${data}<\/script>
@@ -2654,6 +2808,7 @@ Media.resolve=n=>'videos/'+encodeURIComponent(n);
 const engine=new IVEngine(document.getElementById('layers'),Media);engine.load(P);
 Skins.get(P.skin).mount(engine,document.getElementById('skinRoot'));
 VarHud.mount(engine,document.getElementById('hudRoot'),()=>P);
+HotLayer.mount(engine,document.getElementById('hotRoot'));
 const cover=document.getElementById('cover'),g=id=>document.getElementById(id);
 g('coverPlay').onclick=()=>{cover.hidden=true;engine.start(P.start)};
 g('cBack').onclick=()=>{if(cover.hidden)engine.back()};
@@ -2673,7 +2828,7 @@ function openExport(){
   const sc=Object.values(P.scenes),open=sc.reduce((a,s)=>a+openChoices(s).length,0);
   const textOnly=sc.filter(s=>!hasVideo(s)).length;
   const reach=new Set([P.start]),q=[P.start];
-  while(q.length){const s=P.scenes[q.shift()];if(!s)continue;s.choices.forEach(c=>{if(P.scenes[c.target]&&!reach.has(c.target)){reach.add(c.target);q.push(c.target)}})}
+  while(q.length){const s=P.scenes[q.shift()];if(!s)continue;[...s.choices.map(c=>c.target),s.timeoutMode==='scene'&&+s.timeLimit?s.timeoutTarget:'',s.choices.some(c=>c.hot)?s.missTarget:''].forEach(t=>{if(P.scenes[t]&&!reach.has(t)){reach.add(t);q.push(t)}})}
   const orphan=sc.length-reach.size;
   const vids=have.slice(0,4).map((n,i)=>`    ${i===have.length-1&&have.length<=4?'└─':'├─'} ${esc(n)}`).join('\n')+(have.length>4?`\n    └─ … 외 ${have.length-4}개`:'');
   $('expTree').innerHTML=`<span class="h">${esc(folder)}/</span>
@@ -2773,7 +2928,7 @@ function deleteChoice(sid,i){
 function deleteScene(id){
   if(Object.keys(P.scenes).length<=1){toast('장면이 하나뿐이라 지울 수 없어요',true);return}
   const t=P.scenes[id].title;delete P.scenes[id];
-  Object.values(P.scenes).forEach(x=>{x.choices.forEach(c=>{if(c.target===id)c.target=''});if(x.timeoutTarget===id)x.timeoutTarget=''});
+  Object.values(P.scenes).forEach(x=>{x.choices.forEach(c=>{if(c.target===id)c.target=''});if(x.timeoutTarget===id)x.timeoutTarget='';if(x.missTarget===id)x.missTarget=''});
   if(P.start===id)P.start=Object.keys(P.scenes)[0];
   sel=P.start;G.selEdge=null;G.selChoice=null;save();renderGraph();renderInspector();
   toast(`'${t}' 장면을 삭제했어요 · Ctrl+Z로 되돌리기`);

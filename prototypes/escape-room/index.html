@@ -12,6 +12,7 @@
 }
 .stage{position:relative;aspect-ratio:16/9;max-width:100%;background:#000;overflow:hidden;container-type:inline-size}
 .layers,.skin-root{position:absolute;inset:0}
+.skin-root{pointer-events:none}.skin-root button,.skin-root [role=group] *,.skin-root .cin-end,.skin-root .cd-end{pointer-events:auto}
 .layer{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;transition:opacity .35s ease;background:#000}
 .layer.on{opacity:1}
 .cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(ellipse at center,rgba(20,22,28,.55),rgba(0,0,0,.92))}
@@ -90,6 +91,22 @@
 .cd-free .cd-btn{max-width:46cqw}
 .free-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden}
 .free-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
+/* 투명 클릭 영역(핫스팟): 영상 속 물체를 직접 누르게 하는 보이지 않는 버튼 */
+.hot-root{position:absolute;inset:0;pointer-events:none}
+.hot-layer{position:absolute;inset:0;pointer-events:auto;cursor:crosshair}
+.hot-layer[hidden]{display:none}
+.hot-btn{position:absolute;background:transparent;border:0;padding:0;margin:0;cursor:crosshair;border-radius:6px;-webkit-tap-highlight-color:transparent}
+.hot-btn:focus-visible{outline:2px solid rgba(255,255,255,.7)}
+.hot-btn.hint{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.35);animation:hotPulse 1.6s ease-in-out infinite}
+@keyframes hotPulse{50%{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.1)}}
+.show-hot .hot-btn{outline:2px dashed #f8c440;outline-offset:-2px;background:rgba(248,196,64,.16)}
+.show-hot .hot-btn::after{content:attr(aria-label);position:absolute;left:4px;top:3px;font:600 11px/1.2 system-ui,sans-serif;color:#1a1406;background:#f8c440;padding:1px 5px;border-radius:4px;white-space:nowrap}
+.hot-fx{position:absolute;width:0;height:0;pointer-events:none}
+.hot-fx::before{content:"";position:absolute;left:-3cqw;top:-3cqw;width:6cqw;height:6cqw;border-radius:50%;border:.35cqw solid #fff;animation:hotHit .5s ease-out forwards}
+.hot-fx.miss::before{border-color:#ff5a4f;border-radius:0;border-width:0;width:6cqw;height:6cqw;background:linear-gradient(45deg,transparent 45%,#ff5a4f 45%,#ff5a4f 55%,transparent 55%),linear-gradient(-45deg,transparent 45%,#ff5a4f 45%,#ff5a4f 55%,transparent 55%)}
+@keyframes hotHit{from{transform:scale(.3);opacity:1}to{transform:scale(1.4);opacity:0}}
+.hot-timer{position:absolute;left:50%;bottom:2.2cqw;transform:translateX(-50%);width:min(40cqw,420px);height:3px;background:rgba(255,255,255,.18);border-radius:2px;overflow:hidden;pointer-events:none}
+.hot-timer i{display:block;height:100%;background:#f4efe6;transform-origin:center}
 @media (prefers-reduced-motion:reduce){.layer,.cin-choices,.cd-panel,.cin-title,.cd-bar{transition:none!important}.free-layer .free-btn{animation:none}}
 
 html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui)}
@@ -100,10 +117,10 @@ html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui
 .ctrl button{background:rgba(0,0,0,.6);color:#eee;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:6px 10px;font:13px var(--f-ui);cursor:pointer}
 [hidden]{display:none!important}
 </style></head><body>
-<div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
+<div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="hot-root" id="hotRoot"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
 <div class="cover" id="cover"><button id="coverPlay">▶ 시작하기</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div></div></div>
 <div class="ctrl"><button id="cBack">↶ 이전 선택</button><button id="cRestart">처음부터</button><button id="cMute">소리 끄기</button><button id="cFull">전체화면</button></div>
-<script type="application/json" id="project">{"title":"열쇠와 문","start":"hall","skin":"cinema","vars":{"열쇠":0},"varMeta":{"열쇠":{"type":"flag","show":true}},"scenes":{"hall":{"id":"hall","title":"낯선 복도","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#262b33","duration":6,"caption":"눈을 뜨니 낯선 복도.\n끝에 철문이 보인다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e1","label":"창고를 뒤진다","target":"storage","set":"","if":""},{"id":"e2","label":"철문으로 간다","target":"door","set":"","if":""}],"pos":{"x":0,"y":0}},"storage":{"id":"storage","title":"먼지 쌓인 창고","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#33302a","duration":6,"caption":"선반 사이에서 무언가 반짝인다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e3","label":"반짝이는 것을 줍는다","target":"door","set":"열쇠=1","if":"열쇠==0"},{"id":"e4","label":"그냥 나간다","target":"door","set":"","if":""}],"pos":{"x":290,"y":0}},"door":{"id":"door","title":"철문 앞","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#2a2f3a","duration":6,"caption":"굳게 닫힌 철문.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e5","label":"열쇠로 문을 연다","target":"escape","set":"","if":"열쇠==1"},{"id":"e6","label":"문을 두드린다","target":"knock","set":"","if":""},{"id":"e7","label":"복도로 돌아간다","target":"hall","set":"","if":""}],"pos":{"x":580,"y":0}},"knock":{"id":"knock","title":"대답 없는 문","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#1f232b","duration":5,"caption":"쾅쾅… 아무 대답이 없다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e8","label":"다시 문 앞으로","target":"door","set":"","if":""}],"pos":{"x":870,"y":170}},"escape":{"id":"escape","title":"탈출","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#4b4128","duration":6,"caption":"문이 열리고,\n아침 햇살이 쏟아진다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0}}},"savedAt":1793601483612}</script>
+<script type="application/json" id="project">{"title":"열쇠와 문","start":"hall","skin":"cinema","vars":{"열쇠":0},"varMeta":{"열쇠":{"type":"flag","show":true}},"scenes":{"hall":{"id":"hall","title":"낯선 복도","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#262b33","duration":6,"caption":"눈을 뜨니 낯선 복도.\n끝에 철문이 보인다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e1","label":"창고를 뒤진다","target":"storage","set":"","if":""},{"id":"e2","label":"철문으로 간다","target":"door","set":"","if":""}],"pos":{"x":0,"y":0},"missTarget":"","hotHint":false,"hideTimer":false},"storage":{"id":"storage","title":"먼지 쌓인 창고","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#33302a","duration":6,"caption":"선반 사이에서 무언가 반짝인다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e3","label":"반짝이는 것을 줍는다","target":"door","set":"열쇠=1","if":"열쇠==0"},{"id":"e4","label":"그냥 나간다","target":"door","set":"","if":""}],"pos":{"x":290,"y":0},"missTarget":"","hotHint":false,"hideTimer":false},"door":{"id":"door","title":"철문 앞","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#2a2f3a","duration":6,"caption":"굳게 닫힌 철문.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e5","label":"열쇠로 문을 연다","target":"escape","set":"","if":"열쇠==1"},{"id":"e6","label":"문을 두드린다","target":"knock","set":"","if":""},{"id":"e7","label":"복도로 돌아간다","target":"hall","set":"","if":""}],"pos":{"x":580,"y":0},"missTarget":"","hotHint":false,"hideTimer":false},"knock":{"id":"knock","title":"대답 없는 문","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#1f232b","duration":5,"caption":"쾅쾅… 아무 대답이 없다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"e8","label":"다시 문 앞으로","target":"door","set":"","if":""}],"pos":{"x":870,"y":170},"missTarget":"","hotHint":false,"hideTimer":false},"escape":{"id":"escape","title":"탈출","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#4b4128","duration":6,"caption":"문이 열리고,\n아침 햇살이 쏟아진다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0},"missTarget":"","hotHint":false,"hideTimer":false}},"savedAt":1794200665407}</script>
 <script>
 /* 발행 이벤트 (UI는 이것만 구독하면 됩니다)
    scene {scene,vars} · time {t,d,scene,phase} · choices {list,timeLimit,defaultId}
@@ -321,9 +338,19 @@ class IVEngine extends Emitter{
   _timeout(){
     const c=this.cur,s=c.scene,t=s.timeoutMode==='scene'&&this.project.scenes[s.timeoutTarget];
     if(!t){this.choose(this._defaultId(c),true);return}
+    this._failTo(t,'__timeout','시간 초과',{timeout:true});
+  }
+  /* 헛클릭: 투명 클릭 영역이 있는 장면에서 영역 밖을 누르면, 정해 둔 장면(실패 엔딩 등)으로 이동합니다 */
+  miss(x,y){
+    const c=this.cur;if(!c||c.phase!=='waiting')return false;
+    const t=this.project.scenes[c.scene.missTarget];if(!t)return false;
+    this._failTo(t,'__miss','헛클릭',{miss:true,x,y});return true;
+  }
+  _failTo(t,id,label,extra){
+    const c=this.cur,s=c.scene;
     c.phase='chosen';c.deadline=null;
-    this.history.push({sceneId:s.id,vars:c.entry,label:'시간 초과'});
-    this.emit('chosen',{choice:{id:'__timeout',label:'시간 초과',target:t.id},timeout:true});
+    this.history.push({sceneId:s.id,vars:c.entry,label});
+    this.emit('chosen',{choice:{id,label,target:t.id},...extra});
     const seq=this._seq;setTimeout(()=>{if(seq===this._seq)this.goto(t.id)},420);
   }
   choose(choiceId,timeout=false){
@@ -336,7 +363,7 @@ class IVEngine extends Emitter{
     const seq=this._seq;
     setTimeout(()=>{if(seq===this._seq)this.goto(choice.target)},420);
   }
-  chooseIndex(i){const c=this.cur;if(c?.phase==='waiting'&&c.list[i])this.choose(c.list[i].id)}
+  chooseIndex(i){const c=this.cur,l=c?.list.filter(x=>!x.hot)||[];if(c?.phase==='waiting'&&l[i])this.choose(l[i].id)}   // 숫자키는 글자 버튼만 (투명 영역은 직접 눌러야 해요)
   back(){
     const h=this.history.pop();
     if(!h){this.restart();return}
@@ -389,6 +416,38 @@ function renderFree(layer,list,timeLimit,btn){
     (timeLimit?'<div class="free-timer"><i></i></div>':'');
   layer.hidden=false;
 }
+/* 투명 클릭 영역 레이어: 스킨과 상관없이 영상 위에 보이지 않는 버튼을 깝니다.
+   선택지의 hot=true, spot{x,y,w,h}(화면 비율 %, x·y는 영역 가운데) */
+function hotRect(c){const p=c.spot||{};return{x:p.x??50,y:p.y??50,w:p.w??16,h:p.h??20}}
+const HotLayer={mount(engine,root){
+  root.innerHTML='<div class="hot-layer" hidden></div>';const layer=root.firstChild;let tm;
+  const fx=(x,y,miss)=>{const f=document.createElement('i');f.className='hot-fx'+(miss?' miss':'');f.style.left=x+'%';f.style.top=y+'%';root.appendChild(f);setTimeout(()=>f.remove(),600)};
+  const hide=()=>{layer.hidden=true;layer.innerHTML=''};
+  const offs=[
+    engine.on('scene',hide),engine.on('end',hide),
+    engine.on('choices',({list,timeLimit,scene})=>{
+      const hot=list.filter(c=>c.hot);if(!hot.length){hide();return}
+      const onlyHot=hot.length===list.length;
+      layer.innerHTML=hot.map(c=>{const r=hotRect(c);
+        return`<button class="hot-btn ${scene.hotHint?'hint':''}" data-hid="${c.id}" aria-label="${esc(c.label||'클릭 영역')}" style="left:${r.x-r.w/2}%;top:${r.y-r.h/2}%;width:${r.w}%;height:${r.h}%"></button>`}).join('')+
+        (onlyHot&&timeLimit&&!scene.hideTimer?'<div class="hot-timer"><i></i></div>':'');
+      layer.hidden=false;
+    }),
+    engine.on('timer',({remain,total})=>{const b=layer.querySelector('.hot-timer i');if(b)b.style.transform=`scaleX(${remain/total})`}),
+    engine.on('chosen',({choice,miss,x,y})=>{
+      if(choice.id!=='__miss'){const c=engine.cur?.list.find(v=>v.id===choice.id);if(c?.hot){const r=hotRect(c);fx(r.x,r.y)}}
+      clearTimeout(tm);tm=setTimeout(hide,250);
+    })
+  ];
+  const click=e=>{
+    const r=layer.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*100,y=(e.clientY-r.top)/r.height*100;
+    const b=e.target.closest('.hot-btn');
+    if(b){engine.choose(b.dataset.hid);return}
+    if(engine.miss(x,y))fx(x,y,true);
+  };
+  layer.addEventListener('click',click);
+  return()=>{offs.forEach(f=>f());clearTimeout(tm);root.innerHTML=''};
+}};
 Skins.register({
   id:'cinema',name:'시네마 (아래 자막형)',
   mount(engine,root){
@@ -410,6 +469,8 @@ Skins.register({
       }),
       engine.on('choices',({list,timeLimit,scene})=>{
         const mode=scene?.cpos||'';
+        list=list.filter(c=>!c.hot);if(scene?.hideTimer)timeLimit=0;   // 투명 영역은 HotLayer가 그려요
+        if(!list.length){row.innerHTML='';box.classList.remove('show');free.hidden=true;return}
         if(mode==='free'){
           row.innerHTML='';box.classList.remove('show');
           renderFree(free,list,timeLimit,(c,i,st)=>`<button class="cin-btn free-btn" data-id="${c.id}" style="${st}">${esc(c.label)}</button>`);
@@ -457,6 +518,8 @@ Skins.register({
       }),
       engine.on('choices',({list:l,timeLimit,defaultId,scene})=>{
         const mode=scene?.cpos||'';
+        l=l.filter(c=>!c.hot);if(scene?.hideTimer)timeLimit=0;
+        if(!l.length){panel.classList.remove('show');free.hidden=true;return}
         if(mode==='free'){
           panel.classList.remove('show');
           renderFree(free,l,timeLimit,(c,i,st)=>btn(c,i,c.id===defaultId&&timeLimit,st));
@@ -507,6 +570,7 @@ Media.resolve=n=>'videos/'+encodeURIComponent(n);
 const engine=new IVEngine(document.getElementById('layers'),Media);engine.load(P);
 Skins.get(P.skin).mount(engine,document.getElementById('skinRoot'));
 VarHud.mount(engine,document.getElementById('hudRoot'),()=>P);
+HotLayer.mount(engine,document.getElementById('hotRoot'));
 const cover=document.getElementById('cover'),g=id=>document.getElementById(id);
 g('coverPlay').onclick=()=>{cover.hidden=true;engine.start(P.start)};
 g('cBack').onclick=()=>{if(cover.hidden)engine.back()};
