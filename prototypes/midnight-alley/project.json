@@ -58,7 +58,9 @@
       },
       "missTarget": "",
       "hotHint": false,
-      "hideTimer": false
+      "hideTimer": false,
+      "endKind": "",
+      "endText": ""
     },
     "box": {
       "id": "box",
@@ -108,7 +110,9 @@
       },
       "missTarget": "",
       "hotHint": false,
-      "hideTimer": false
+      "hideTimer": false,
+      "endKind": "",
+      "endText": ""
     },
     "store": {
       "id": "store",
@@ -151,7 +155,9 @@
       },
       "missTarget": "",
       "hotHint": false,
-      "hideTimer": false
+      "hideTimer": false,
+      "endKind": "",
+      "endText": ""
     },
     "home": {
       "id": "home",
@@ -179,7 +185,9 @@
       },
       "missTarget": "",
       "hotHint": false,
-      "hideTimer": false
+      "hideTimer": false,
+      "endKind": "",
+      "endText": ""
     },
     "adopt": {
       "id": "adopt",
@@ -207,7 +215,9 @@
       },
       "missTarget": "",
       "hotHint": false,
-      "hideTimer": false
+      "hideTimer": false,
+      "endKind": "",
+      "endText": ""
     },
     "together": {
       "id": "together",
@@ -235,8 +245,12 @@
       },
       "missTarget": "",
       "hotHint": false,
-      "hideTimer": false
+      "hideTimer": false,
+      "endKind": "",
+      "endText": ""
     }
   },
-  "savedAt": 1794200665339
+  "intro": {},
+  "hud": {},
+  "savedAt": 1794202588337
 }

@@ -66,6 +66,34 @@
 .vh{font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#eef1f5;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);padding:.25em .75em;border-radius:999px;transition:transform .25s}
 .vh b{color:var(--accent);font-family:var(--f-mono);margin-left:.3em}
 .vh.bump{transform:scale(1.15)}
+/* 가방 모드: 켜진 스위치를 물건처럼 보여 줍니다 */
+.bag{display:flex;align-items:center;gap:.6cqw;flex-wrap:wrap;justify-content:flex-end;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:1.2cqw;padding:.5cqw .8cqw}
+.bag-h{font:700 clamp(9px,1.2cqw,13px) var(--f-ui);color:#c9ced6;letter-spacing:.05em;margin-right:.2cqw}
+.bag-i{display:inline-flex;align-items:center;gap:.35em;font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#f4efe6;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:.8cqw;padding:.2em .6em}
+.bag-i i{font-style:normal;font-size:1.15em}
+.bag-i.new{animation:bagIn .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes bagIn{from{transform:scale(.3) translateY(40%);opacity:0}to{transform:none;opacity:1}}
+.bag-empty{font:500 clamp(9px,1.2cqw,12px) var(--f-ui);color:#8a909a}
+/* 엔딩 / 게임 오버 */
+.end-msg{margin:0;font:500 clamp(12px,1.8cqw,19px) var(--f-ui);color:#d6d9de;text-align:center;padding:0 6cqw;white-space:pre-line}
+.cin-end.over,.cd-end.over{background:radial-gradient(ellipse at center,rgba(58,4,6,.93),rgba(0,0,0,.97))}
+.over small{color:#ff5a4f!important;letter-spacing:.4em}
+.over h3{color:#ffb4ad!important}
+.over .end-msg{color:#ff8a80}
+/* 시작 화면 */
+.cv-in{display:flex;flex-direction:column;align-items:center;gap:1.2cqw;padding:0 6cqw;text-align:center}
+.cv-title{margin:0 0 .4cqw;font:800 clamp(20px,5.4cqw,60px) var(--f-cine);color:#f4efe6;letter-spacing:-.01em}
+.cv-sub{margin:0 0 1cqw;font:clamp(12px,1.8cqw,18px)/1.55 var(--f-ui);color:#cfd3da;max-width:70cqw;white-space:pre-line}
+.cover .cv-note{color:#e8c46a}
+.cover .cv-cred{font:500 clamp(10px,1.3cqw,13px) var(--f-ui);border:0;padding:.3em .8em;color:#a9afb9;text-decoration:underline}
+.end-btns button[hidden]{display:none}
+/* 크레딧 */
+.credits{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqw;animation:freeIn .4s ease both}
+.cr-roll{max-height:72%;overflow:auto;text-align:center;padding:0 6cqw}
+.cr-roll h2{margin:0 0 2cqw;font:800 clamp(18px,3.6cqw,40px) var(--f-cine);color:#f4efe6}
+.cr-roll p{margin:0;font:clamp(11px,1.6cqw,17px)/1.9 var(--f-ui);color:#cfd3da;white-space:pre-line}
+.credits button{font:500 clamp(11px,1.5cqw,15px) var(--f-ui);background:transparent;color:#f4efe6;border:1px solid rgba(244,239,230,.4);border-radius:999px;padding:.4em 1.4em;cursor:pointer}
+@media
 /* 선택지 위치 프리셋 */
 .cin-choices.pos-top{top:0;bottom:auto;padding:4cqw 5cqw 8cqw;background:linear-gradient(rgba(0,0,0,.82),transparent);transform:translateY(-1.5cqw)}
 .cin-choices.pos-center{top:0;justify-content:center;background:rgba(0,0,0,.45);padding:5cqw}
@@ -118,9 +146,9 @@ html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui
 [hidden]{display:none!important}
 </style></head><body>
 <div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="hot-root" id="hotRoot"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
-<div class="cover" id="cover"><button id="coverPlay">▶ 시작하기</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div></div></div>
+<div class="cover" id="cover"></div></div></div>
 <div class="ctrl"><button id="cBack">↶ 이전 선택</button><button id="cRestart">처음부터</button><button id="cMute">소리 끄기</button><button id="cFull">전체화면</button></div>
-<script type="application/json" id="project">{"title":"이상현상","start":"room","skin":"cinema","vars":{"발견":0},"varMeta":{"발견":{"type":"num","show":true}},"scenes":{"room":{"id":"room","title":"자취방","timeoutMode":"scene","timeoutTarget":"taken","media":{"type":"placeholder","color":"#1f2430","duration":5,"caption":"불을 끄려는 순간, 방 안의 무언가가 달라졌다.\n(연습) 오른쪽 위의 이상현상을 5초 안에 누르세요.","name":""},"choiceAt":1,"timeLimit":5,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"h1","label":"창문에 비친 얼굴","target":"hall","set":"발견+=1","if":"","hot":true,"spot":{"x":82,"y":20,"w":16,"h":22}}],"pos":{"x":0,"y":0},"missTarget":"taken","hotHint":true,"hideTimer":false},"hall":{"id":"hall","title":"복도","timeoutMode":"scene","timeoutTarget":"taken","media":{"type":"placeholder","color":"#262230","duration":5,"caption":"복도 끝 형광등이 깜빡인다.\n이번엔 힌트가 없어요. 4초 안에 찾으세요.","name":""},"choiceAt":1,"timeLimit":4,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"h2","label":"멈춘 시계","target":"stairs","set":"발견+=1","if":"","hot":true,"spot":{"x":18,"y":30,"w":12,"h":18}}],"pos":{"x":290,"y":0},"missTarget":"taken","hotHint":false,"hideTimer":false},"stairs":{"id":"stairs","title":"계단","timeoutMode":"scene","timeoutTarget":"taken","media":{"type":"placeholder","color":"#2a2026","duration":5,"caption":"계단 아래에서 발소리가 올라온다.\n시간 막대도 보이지 않는다. 3초 안에!","name":""},"choiceAt":1,"timeLimit":3,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"h3","label":"난간 위의 손","target":"escape","set":"발견+=1","if":"","hot":true,"spot":{"x":60,"y":72,"w":18,"h":16}}],"pos":{"x":580,"y":0},"missTarget":"taken","hotHint":false,"hideTimer":true},"escape":{"id":"escape","title":"아침","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3b3a2a","duration":6,"caption":"창밖이 밝아 온다.\n이상현상을 모두 찾아냈다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0},"missTarget":"","hotHint":false,"hideTimer":false},"taken":{"id":"taken","title":"이상현상에 당함","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3d1f22","duration":5,"caption":"눈치채지 못한 사이\n그것이 바로 뒤에 서 있었다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":430,"y":230},"missTarget":"","hotHint":false,"hideTimer":false}},"savedAt":1794200665456}</script>
+<script type="application/json" id="project">{"title":"이상현상","start":"room","skin":"cinema","vars":{"발견":0},"varMeta":{"발견":{"type":"num","show":true}},"scenes":{"room":{"id":"room","title":"자취방","timeoutMode":"scene","timeoutTarget":"taken","media":{"type":"placeholder","color":"#1f2430","duration":5,"caption":"불을 끄려는 순간, 방 안의 무언가가 달라졌다.\n(연습) 오른쪽 위의 이상현상을 5초 안에 누르세요.","name":""},"choiceAt":1,"timeLimit":5,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"h1","label":"창문에 비친 얼굴","target":"hall","set":"발견+=1","if":"","hot":true,"spot":{"x":82,"y":20,"w":16,"h":22}}],"pos":{"x":0,"y":0},"missTarget":"taken","hotHint":true,"hideTimer":false,"endKind":"","endText":""},"hall":{"id":"hall","title":"복도","timeoutMode":"scene","timeoutTarget":"taken","media":{"type":"placeholder","color":"#262230","duration":5,"caption":"복도 끝 형광등이 깜빡인다.\n이번엔 힌트가 없어요. 4초 안에 찾으세요.","name":""},"choiceAt":1,"timeLimit":4,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"h2","label":"멈춘 시계","target":"stairs","set":"발견+=1","if":"","hot":true,"spot":{"x":18,"y":30,"w":12,"h":18}}],"pos":{"x":290,"y":0},"missTarget":"taken","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"stairs":{"id":"stairs","title":"계단","timeoutMode":"scene","timeoutTarget":"taken","media":{"type":"placeholder","color":"#2a2026","duration":5,"caption":"계단 아래에서 발소리가 올라온다.\n시간 막대도 보이지 않는다. 3초 안에!","name":""},"choiceAt":1,"timeLimit":3,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"h3","label":"난간 위의 손","target":"escape","set":"발견+=1","if":"","hot":true,"spot":{"x":60,"y":72,"w":18,"h":16}}],"pos":{"x":580,"y":0},"missTarget":"taken","hotHint":false,"hideTimer":true,"endKind":"","endText":""},"escape":{"id":"escape","title":"아침","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3b3a2a","duration":6,"caption":"창밖이 밝아 온다.\n이상현상을 모두 찾아냈다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":870,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"taken":{"id":"taken","title":"이상현상에 당함","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3d1f22","duration":5,"caption":"눈치채지 못한 사이\n그것이 바로 뒤에 서 있었다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":430,"y":230},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"over","endText":"이상현상을 놓쳤습니다."}},"intro":{},"hud":{},"savedAt":1794202588493}</script>
 <script>
 /* 발행 이벤트 (UI는 이것만 구독하면 됩니다)
    scene {scene,vars} · time {t,d,scene,phase} · choices {list,timeLimit,defaultId}
@@ -316,14 +344,16 @@ class IVEngine extends Emitter{
   }
   _showChoices(){
     const c=this.cur,s=c.scene,list=this._visible(s);
-    if(!list.length){c.phase='noChoice';return}
+    // 선택지가 하나도 없어도, 제한 시간 뒤 이동할 장면이 있으면 기다립니다 (가만히 있어야 통과하는 장면)
+    const waitEmpty=+s.timeLimit>0&&s.timeoutMode==='scene'&&this.project.scenes[s.timeoutTarget]&&!s.auto;
+    if(!list.length&&!waitEmpty){c.phase='noChoice';return}
     c.phase='waiting';c.list=list;
     if(s.auto){this.choose(list[0].id);return}   // 점수에 따라 자동 이동
     const lim=+s.timeLimit||0;
     c.deadline=lim>0?performance.now()+lim*1000:null;
     this.emit('choices',{list,timeLimit:lim,defaultId:this._defaultId(c),scene:s});
   }
-  _defaultId(c){return c.list.find(x=>x.id===c.scene.defaultChoice)?.id||c.list[0].id}
+  _defaultId(c){return c.list.find(x=>x.id===c.scene.defaultChoice)?.id||c.list[0]?.id}
   _loopStart(s,d){return this._hasChoiceAt(s)?+s.choiceAt:Math.max(0,d-2)}
   _onEnded(){
     const c=this.cur;if(!c)return;const s=c.scene;
@@ -394,6 +424,33 @@ class IVEngine extends Emitter{
   }
 }
 
+/* 시작 화면 · 크레딧: 편집기와 내보낸 플레이어가 같이 씁니다.
+   project.intro = { sub: 소개 문구, note: 안내(이어폰 권장 등), credits: 크레딧 여러 줄 } */
+const Intro={
+  coverHtml(P,label){
+    const it=P.intro||{};
+    return`<div class="cv-in">${P.title?`<h1 class="cv-title">${esc(P.title)}</h1>`:''}${it.sub?`<p class="cv-sub">${esc(it.sub)}</p>`:''}
+      <button id="coverPlay">▶ ${label}</button>${it.note?`<p class="cv-note">${esc(it.note)}</p>`:''}
+      <p>숫자키 1–9로 선택 · Space 일시정지</p>${it.credits?'<button class="cv-cred" data-a="credits">크레딧 보기</button>':''}</div>`;
+  },
+  showCredits(stage,P){
+    if(!stage||!P.intro?.credits)return;
+    stage.querySelector('.credits')?.remove();
+    const d=document.createElement('div');d.className='credits';
+    d.innerHTML=`<div class="cr-roll"><h2>${esc(P.title||'크레딧')}</h2><p>${esc(P.intro.credits)}</p></div><button data-a="crclose">닫기</button>`;
+    d.addEventListener('click',e=>{if(e.target.closest('[data-a="crclose"]')||e.target===d)d.remove()});
+    stage.appendChild(d);
+  }
+};
+/* 엔딩 화면 공통: 장면의 endKind가 'over'면 게임 오버, endText는 아래 문구 */
+function fillEnd(end,scene,engine,label){
+  const over=scene?.endKind==='over';
+  end.classList.toggle('over',over);
+  end.querySelector('small').textContent=over?'GAME OVER':label;
+  end.querySelector('h3').textContent=scene?.title||'';
+  const m=end.querySelector('.end-msg');m.textContent=scene?.endText||'';m.hidden=!scene?.endText;
+  const cr=end.querySelector('[data-a="credits"]');if(cr)cr.hidden=!engine.project?.intro?.credits;
+}
 /* 스킨: mount(engine, root) → unmount 함수. Skins.register 한 번으로 추가됩니다 */
 const Skins={list:[],register(s){this.list.push(s)},get(id){return this.list.find(s=>s.id===id)||this.list[0]}};
 function bindSkinClicks(root,engine){
@@ -402,6 +459,7 @@ function bindSkinClicks(root,engine){
     if(b.dataset.id)engine.choose(b.dataset.id);
     if(b.dataset.a==='back')engine.back();
     if(b.dataset.a==='restart')engine.restart();
+    if(b.dataset.a==='credits')Intro.showCredits(root.closest('.stage'),engine.project);
   };
   root.addEventListener('click',f);return()=>root.removeEventListener('click',f);
 }
@@ -426,7 +484,7 @@ const HotLayer={mount(engine,root){
   const offs=[
     engine.on('scene',hide),engine.on('end',hide),
     engine.on('choices',({list,timeLimit,scene})=>{
-      const hot=list.filter(c=>c.hot);if(!hot.length){hide();return}
+      const hot=list.filter(c=>c.hot);if(!hot.length&&!engine.project.scenes[scene.missTarget]){hide();return}
       const onlyHot=hot.length===list.length;
       layer.innerHTML=hot.map(c=>{const r=hotRect(c);
         return`<button class="hot-btn ${scene.hotHint?'hint':''}" data-hid="${c.id}" aria-label="${esc(c.label||'클릭 영역')}" style="left:${r.x-r.w/2}%;top:${r.y-r.h/2}%;width:${r.w}%;height:${r.h}%"></button>`}).join('')+
@@ -455,8 +513,8 @@ Skins.register({
       <div class="cin-title"></div>
       <div class="cin-choices" role="group" aria-label="선택지"><div class="cin-row"></div><div class="cin-timer"><i></i></div></div>
       <div class="free-layer cin-free" role="group" aria-label="선택지" hidden></div>
-      <div class="cin-end" hidden><small>THE END</small><h3></h3>
-        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
+      <div class="cin-end" hidden><small>THE END</small><h3></h3><p class="end-msg" hidden></p>
+        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div></div></div>`;
     const $=s=>root.querySelector(s);
     const title=$('.cin-title'),box=$('.cin-choices'),row=$('.cin-row'),bar=$('.cin-timer i'),timer=$('.cin-timer'),end=$('.cin-end'),free=$('.cin-free');
     let tHide;
@@ -490,7 +548,7 @@ Skins.register({
         btns().forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
         setTimeout(()=>{box.classList.remove('show');free.hidden=true},250);
       }),
-      engine.on('end',({scene})=>{box.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';end.hidden=false}),
+      engine.on('end',({scene})=>{box.classList.remove('show');free.hidden=true;fillEnd(end,scene,engine,'THE END');end.hidden=false}),
       bindSkinClicks(root,engine)
     ];
     return()=>{offs.forEach(f=>f());clearTimeout(tHide);root.innerHTML=''};
@@ -505,8 +563,8 @@ Skins.register({
         <div class="cd-head"><svg class="cd-ring" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.66" stroke-dashoffset="0"/><text x="24" y="24"></text></svg><span>선택하세요</span></div>
         <div class="cd-list"></div></div>
       <div class="free-layer cd-free" role="group" aria-label="선택지" hidden></div>
-      <div class="cd-end" hidden><small>ENDING</small><h3></h3><div class="cd-path"></div>
-        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
+      <div class="cd-end" hidden><small>ENDING</small><h3></h3><p class="end-msg" hidden></p><div class="cd-path"></div>
+        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div></div></div>`;
     const $=s=>root.querySelector(s);
     const bar=$('.cd-bar'),panel=$('.cd-panel'),list=$('.cd-list'),ring=$('.cd-ring'),fg=$('.cd-ring .fg'),num=$('.cd-ring text'),end=$('.cd-end'),free=$('.cd-free');
     const btn=(c,i,def,st='')=>`<button class="cd-btn ${def?'def':''} ${st?'free-btn':''}" data-id="${c.id}" ${st?`style="${st}"`:''}><kbd>${i+1}</kbd><span>${esc(c.label)}</span></button>`;
@@ -540,7 +598,7 @@ Skins.register({
         setTimeout(()=>{panel.classList.remove('show');free.hidden=true},250);
       }),
       engine.on('end',({scene,path})=>{
-        panel.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';
+        panel.classList.remove('show');free.hidden=true;fillEnd(end,scene,engine,'ENDING');
         $('.cd-path').textContent=path.length?'경로: '+path.join(' → '):'';end.hidden=false;
       }),
       bindSkinClicks(root,engine)
@@ -554,8 +612,15 @@ const VarHud={mount(engine,root,getProject){
   root.innerHTML='<div class="varhud" hidden></div>';const box=root.firstChild;let last={};
   const draw=()=>{
     const P=getProject(),meta=P.varMeta||{},shown=Object.keys(P.vars||{}).filter(k=>meta[k]?.show);
-    box.innerHTML=shown.map(k=>{const v=engine.vars[k]??0,flag=meta[k]?.type==='flag';
-      return`<span class="vh ${last[k]!=null&&last[k]!==v?'bump':''}">${esc(k)}<b>${flag?(v?'✓':'—'):v}</b></span>`}).join('');
+    const chip=k=>{const v=engine.vars[k]??0,flag=meta[k]?.type==='flag';
+      return`<span class="vh ${last[k]!=null&&last[k]!==v?'bump':''}">${esc(k)}<b>${flag?(v?'✓':'—'):v}</b></span>`};
+    if(P.hud?.mode==='bag'){
+      // 가방 모드: 켜진 스위치만 물건으로 보여 주고, 숫자 점수는 옆에 따로 표시합니다
+      const isF=k=>meta[k]?.type==='flag',items=shown.filter(k=>isF(k)&&engine.vars[k]);
+      box.innerHTML=(shown.some(isF)?`<div class="bag"><span class="bag-h">${esc(P.hud.title||'🎒 가방')}</span>${items.length
+        ?items.map(k=>`<span class="bag-i ${last[k]!=null&&!last[k]?'new':''}">${meta[k].icon?`<i>${esc(meta[k].icon)}</i>`:''}${esc(k)}</span>`).join('')
+        :'<span class="bag-empty">비어 있음</span>'}</div>`:'')+shown.filter(k=>!isF(k)).map(chip).join('');
+    }else box.innerHTML=shown.map(chip).join('');
     shown.forEach(k=>last[k]=engine.vars[k]??0);
     box.hidden=!shown.length||!engine.cur;
     setTimeout(()=>box.querySelectorAll('.bump').forEach(e=>e.classList.remove('bump')),300);
@@ -572,7 +637,11 @@ Skins.get(P.skin).mount(engine,document.getElementById('skinRoot'));
 VarHud.mount(engine,document.getElementById('hudRoot'),()=>P);
 HotLayer.mount(engine,document.getElementById('hotRoot'));
 const cover=document.getElementById('cover'),g=id=>document.getElementById(id);
-g('coverPlay').onclick=()=>{cover.hidden=true;engine.start(P.start)};
+cover.innerHTML=Intro.coverHtml(P,'시작하기');
+cover.addEventListener('click',e=>{
+  if(e.target.closest('#coverPlay')){cover.hidden=true;engine.start(P.start)}
+  else if(e.target.closest('[data-a="credits"]'))Intro.showCredits(g('stage'),P);
+});
 g('cBack').onclick=()=>{if(cover.hidden)engine.back()};
 g('cRestart').onclick=()=>{cover.hidden=true;engine.restart()};
 g('cMute').onclick=()=>{engine.setMuted(!engine.muted);g('cMute').textContent=engine.muted?'소리 켜기':'소리 끄기'};

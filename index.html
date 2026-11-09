@@ -73,6 +73,34 @@
 .vh{font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#eef1f5;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);padding:.25em .75em;border-radius:999px;transition:transform .25s}
 .vh b{color:var(--accent);font-family:var(--f-mono);margin-left:.3em}
 .vh.bump{transform:scale(1.15)}
+/* 가방 모드: 켜진 스위치를 물건처럼 보여 줍니다 */
+.bag{display:flex;align-items:center;gap:.6cqw;flex-wrap:wrap;justify-content:flex-end;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:1.2cqw;padding:.5cqw .8cqw}
+.bag-h{font:700 clamp(9px,1.2cqw,13px) var(--f-ui);color:#c9ced6;letter-spacing:.05em;margin-right:.2cqw}
+.bag-i{display:inline-flex;align-items:center;gap:.35em;font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#f4efe6;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:.8cqw;padding:.2em .6em}
+.bag-i i{font-style:normal;font-size:1.15em}
+.bag-i.new{animation:bagIn .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes bagIn{from{transform:scale(.3) translateY(40%);opacity:0}to{transform:none;opacity:1}}
+.bag-empty{font:500 clamp(9px,1.2cqw,12px) var(--f-ui);color:#8a909a}
+/* 엔딩 / 게임 오버 */
+.end-msg{margin:0;font:500 clamp(12px,1.8cqw,19px) var(--f-ui);color:#d6d9de;text-align:center;padding:0 6cqw;white-space:pre-line}
+.cin-end.over,.cd-end.over{background:radial-gradient(ellipse at center,rgba(58,4,6,.93),rgba(0,0,0,.97))}
+.over small{color:#ff5a4f!important;letter-spacing:.4em}
+.over h3{color:#ffb4ad!important}
+.over .end-msg{color:#ff8a80}
+/* 시작 화면 */
+.cv-in{display:flex;flex-direction:column;align-items:center;gap:1.2cqw;padding:0 6cqw;text-align:center}
+.cv-title{margin:0 0 .4cqw;font:800 clamp(20px,5.4cqw,60px) var(--f-cine);color:#f4efe6;letter-spacing:-.01em}
+.cv-sub{margin:0 0 1cqw;font:clamp(12px,1.8cqw,18px)/1.55 var(--f-ui);color:#cfd3da;max-width:70cqw;white-space:pre-line}
+.cover .cv-note{color:#e8c46a}
+.cover .cv-cred{font:500 clamp(10px,1.3cqw,13px) var(--f-ui);border:0;padding:.3em .8em;color:#a9afb9;text-decoration:underline}
+.end-btns button[hidden]{display:none}
+/* 크레딧 */
+.credits{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqw;animation:freeIn .4s ease both}
+.cr-roll{max-height:72%;overflow:auto;text-align:center;padding:0 6cqw}
+.cr-roll h2{margin:0 0 2cqw;font:800 clamp(18px,3.6cqw,40px) var(--f-cine);color:#f4efe6}
+.cr-roll p{margin:0;font:clamp(11px,1.6cqw,17px)/1.9 var(--f-ui);color:#cfd3da;white-space:pre-line}
+.credits button{font:500 clamp(11px,1.5cqw,15px) var(--f-ui);background:transparent;color:#f4efe6;border:1px solid rgba(244,239,230,.4);border-radius:999px;padding:.4em 1.4em;cursor:pointer}
+@media
 /* 선택지 위치 프리셋 */
 .cin-choices.pos-top{top:0;bottom:auto;padding:4cqw 5cqw 8cqw;background:linear-gradient(rgba(0,0,0,.82),transparent);transform:translateY(-1.5cqw)}
 .cin-choices.pos-center{top:0;justify-content:center;background:rgba(0,0,0,.45);padding:5cqw}
@@ -495,6 +523,16 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .ed-top{display:flex;flex-direction:column;gap:8px}
 .ed-top .eyebrow{font-size:12px;color:var(--mute);display:flex;gap:6px;align-items:center}
 .pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line2);color:var(--mute)}
+.pill.over{color:var(--danger);border-color:var(--danger)}
+.nend.over{color:var(--danger)}
+.cv-edit{position:absolute;right:12px;bottom:10px;font:500 12px var(--f-ui)!important;padding:5px 10px!important;border-color:rgba(244,239,230,.25)!important;color:#c9ced6!important}
+.end-kind{margin:0 0 10px}
+.vp-hud{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.vp-hud .seg{display:inline-grid;grid-template-columns:1fr 1fr;gap:4px}
+.vp-hud .seg button{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--mute)}
+.vp-hud .seg button.on{border-color:var(--accent-ink);color:var(--fg);background:var(--accent-soft)}
+.vp-hud input{width:110px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px}
+.vicon{width:46px;text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 4px;font-size:14px}
 .pill.start{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--on-accent)}
 .ed-title{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:18px;font-weight:600;width:100%}
 .step{display:flex;flex-direction:column;gap:10px}
@@ -667,9 +705,10 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
         <button data-m="open">열기…<kbd>Ctrl+O</kbd><small>저장해 둔 프로젝트 고르기</small></button>
         <hr>
         <label>내보낸 zip / JSON 불러오기<small>다른 PC에서 만든 프로젝트 이어서 편집</small><input type="file" id="importIn" accept=".zip,.json" hidden></label>
+        <button data-m="intro">시작 화면 · 크레딧<small>제목, 소개, 안내, 크레딧(AI 사용 표시 등)</small></button>
         <button data-m="json">프로젝트 JSON 보기</button>
         <hr>
-        <button data-m="welcome">새로 만들기 · 템플릿<small>빈 프로젝트, 템플릿 4가지, zip 불러오기</small></button>
+        <button data-m="welcome">새로 만들기 · 템플릿<small>빈 프로젝트, 템플릿 6가지, zip 불러오기</small></button>
         <button data-m="new" class="danger">새 프로젝트 (전부 비우기)</button>
       </div>
     </div>
@@ -749,7 +788,7 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
         <div class="skin-root" id="skinRoot"></div>
         <div class="hud-root" id="hudRoot"></div>
         <div class="place-root" id="placeRoot" hidden></div>
-        <div class="cover" id="cover"><button id="coverPlay">▶ 처음부터 플레이</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div>
+        <div class="cover" id="cover"></div>
       </div>
     </div>
     <div class="pv-bar">
@@ -807,6 +846,20 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
   </div>
 </div>
 
+<div class="modal" id="introModal" hidden>
+  <div class="modal-box" role="dialog" aria-labelledby="introH">
+    <h2 id="introH">시작 화면 · 크레딧</h2>
+    <p class="hint">플레이어가 처음 보는 화면과, 엔딩에서 <b>크레딧</b> 버튼을 누르면 나오는 화면이에요. 내보낸 게임에도 그대로 나와요.</p>
+    <label class="field"><span>제목</span><input id="inTitle" placeholder="예: 없는 정류장"></label>
+    <label class="field"><span>소개 문구 <em>제목 아래에 나와요 · 줄바꿈 가능</em></span><textarea id="inSub" rows="3" placeholder="예: 막차에서 잠든 윤서가 노선도에 없는 심야 버스에서 깨어난다."></textarea></label>
+    <label class="field"><span>안내 <em>시작 버튼 아래 노란 글씨</em></span><input id="inNote" placeholder="예: 🎧 이어폰을 끼고 플레이하세요"></label>
+    <label class="field"><span>크레딧 <em>비우면 크레딧 버튼이 안 나와요 · 한 줄에 하나씩</em></span><textarea id="inCred" rows="8" placeholder="기획·연출: 이름&#10;영상: Google Veo (AI 생성)&#10;음성: ElevenLabs (AI 생성)&#10;배경음악: Suno (AI 생성)&#10;효과음: 출처 · 라이선스"></textarea></label>
+    <div class="actions">
+      <button class="btn" id="inPreview">크레딧 미리 보기</button>
+      <button class="btn primary" id="inClose">완료</button>
+    </div>
+  </div>
+</div>
 <div class="modal" id="jsonModal" hidden>
   <div class="modal-box" role="dialog" aria-labelledby="jsonH">
     <h2 id="jsonH">프로젝트 JSON</h2>
@@ -1074,14 +1127,16 @@ class IVEngine extends Emitter{
   }
   _showChoices(){
     const c=this.cur,s=c.scene,list=this._visible(s);
-    if(!list.length){c.phase='noChoice';return}
+    // 선택지가 하나도 없어도, 제한 시간 뒤 이동할 장면이 있으면 기다립니다 (가만히 있어야 통과하는 장면)
+    const waitEmpty=+s.timeLimit>0&&s.timeoutMode==='scene'&&this.project.scenes[s.timeoutTarget]&&!s.auto;
+    if(!list.length&&!waitEmpty){c.phase='noChoice';return}
     c.phase='waiting';c.list=list;
     if(s.auto){this.choose(list[0].id);return}   // 점수에 따라 자동 이동
     const lim=+s.timeLimit||0;
     c.deadline=lim>0?performance.now()+lim*1000:null;
     this.emit('choices',{list,timeLimit:lim,defaultId:this._defaultId(c),scene:s});
   }
-  _defaultId(c){return c.list.find(x=>x.id===c.scene.defaultChoice)?.id||c.list[0].id}
+  _defaultId(c){return c.list.find(x=>x.id===c.scene.defaultChoice)?.id||c.list[0]?.id}
   _loopStart(s,d){return this._hasChoiceAt(s)?+s.choiceAt:Math.max(0,d-2)}
   _onEnded(){
     const c=this.cur;if(!c)return;const s=c.scene;
@@ -1152,6 +1207,33 @@ class IVEngine extends Emitter{
   }
 }
 
+/* 시작 화면 · 크레딧: 편집기와 내보낸 플레이어가 같이 씁니다.
+   project.intro = { sub: 소개 문구, note: 안내(이어폰 권장 등), credits: 크레딧 여러 줄 } */
+const Intro={
+  coverHtml(P,label){
+    const it=P.intro||{};
+    return`<div class="cv-in">${P.title?`<h1 class="cv-title">${esc(P.title)}</h1>`:''}${it.sub?`<p class="cv-sub">${esc(it.sub)}</p>`:''}
+      <button id="coverPlay">▶ ${label}</button>${it.note?`<p class="cv-note">${esc(it.note)}</p>`:''}
+      <p>숫자키 1–9로 선택 · Space 일시정지</p>${it.credits?'<button class="cv-cred" data-a="credits">크레딧 보기</button>':''}</div>`;
+  },
+  showCredits(stage,P){
+    if(!stage||!P.intro?.credits)return;
+    stage.querySelector('.credits')?.remove();
+    const d=document.createElement('div');d.className='credits';
+    d.innerHTML=`<div class="cr-roll"><h2>${esc(P.title||'크레딧')}</h2><p>${esc(P.intro.credits)}</p></div><button data-a="crclose">닫기</button>`;
+    d.addEventListener('click',e=>{if(e.target.closest('[data-a="crclose"]')||e.target===d)d.remove()});
+    stage.appendChild(d);
+  }
+};
+/* 엔딩 화면 공통: 장면의 endKind가 'over'면 게임 오버, endText는 아래 문구 */
+function fillEnd(end,scene,engine,label){
+  const over=scene?.endKind==='over';
+  end.classList.toggle('over',over);
+  end.querySelector('small').textContent=over?'GAME OVER':label;
+  end.querySelector('h3').textContent=scene?.title||'';
+  const m=end.querySelector('.end-msg');m.textContent=scene?.endText||'';m.hidden=!scene?.endText;
+  const cr=end.querySelector('[data-a="credits"]');if(cr)cr.hidden=!engine.project?.intro?.credits;
+}
 /* 스킨: mount(engine, root) → unmount 함수. Skins.register 한 번으로 추가됩니다 */
 const Skins={list:[],register(s){this.list.push(s)},get(id){return this.list.find(s=>s.id===id)||this.list[0]}};
 function bindSkinClicks(root,engine){
@@ -1160,6 +1242,7 @@ function bindSkinClicks(root,engine){
     if(b.dataset.id)engine.choose(b.dataset.id);
     if(b.dataset.a==='back')engine.back();
     if(b.dataset.a==='restart')engine.restart();
+    if(b.dataset.a==='credits')Intro.showCredits(root.closest('.stage'),engine.project);
   };
   root.addEventListener('click',f);return()=>root.removeEventListener('click',f);
 }
@@ -1184,7 +1267,7 @@ const HotLayer={mount(engine,root){
   const offs=[
     engine.on('scene',hide),engine.on('end',hide),
     engine.on('choices',({list,timeLimit,scene})=>{
-      const hot=list.filter(c=>c.hot);if(!hot.length){hide();return}
+      const hot=list.filter(c=>c.hot);if(!hot.length&&!engine.project.scenes[scene.missTarget]){hide();return}
       const onlyHot=hot.length===list.length;
       layer.innerHTML=hot.map(c=>{const r=hotRect(c);
         return`<button class="hot-btn ${scene.hotHint?'hint':''}" data-hid="${c.id}" aria-label="${esc(c.label||'클릭 영역')}" style="left:${r.x-r.w/2}%;top:${r.y-r.h/2}%;width:${r.w}%;height:${r.h}%"></button>`}).join('')+
@@ -1213,8 +1296,8 @@ Skins.register({
       <div class="cin-title"></div>
       <div class="cin-choices" role="group" aria-label="선택지"><div class="cin-row"></div><div class="cin-timer"><i></i></div></div>
       <div class="free-layer cin-free" role="group" aria-label="선택지" hidden></div>
-      <div class="cin-end" hidden><small>THE END</small><h3></h3>
-        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
+      <div class="cin-end" hidden><small>THE END</small><h3></h3><p class="end-msg" hidden></p>
+        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div></div></div>`;
     const $=s=>root.querySelector(s);
     const title=$('.cin-title'),box=$('.cin-choices'),row=$('.cin-row'),bar=$('.cin-timer i'),timer=$('.cin-timer'),end=$('.cin-end'),free=$('.cin-free');
     let tHide;
@@ -1248,7 +1331,7 @@ Skins.register({
         btns().forEach(b=>b.classList.add(b.dataset.id===choice.id?'picked':'dim'));
         setTimeout(()=>{box.classList.remove('show');free.hidden=true},250);
       }),
-      engine.on('end',({scene})=>{box.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';end.hidden=false}),
+      engine.on('end',({scene})=>{box.classList.remove('show');free.hidden=true;fillEnd(end,scene,engine,'THE END');end.hidden=false}),
       bindSkinClicks(root,engine)
     ];
     return()=>{offs.forEach(f=>f());clearTimeout(tHide);root.innerHTML=''};
@@ -1263,8 +1346,8 @@ Skins.register({
         <div class="cd-head"><svg class="cd-ring" viewBox="0 0 48 48"><circle class="bg" cx="24" cy="24" r="20"/><circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.66" stroke-dashoffset="0"/><text x="24" y="24"></text></svg><span>선택하세요</span></div>
         <div class="cd-list"></div></div>
       <div class="free-layer cd-free" role="group" aria-label="선택지" hidden></div>
-      <div class="cd-end" hidden><small>ENDING</small><h3></h3><div class="cd-path"></div>
-        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button></div></div></div>`;
+      <div class="cd-end" hidden><small>ENDING</small><h3></h3><p class="end-msg" hidden></p><div class="cd-path"></div>
+        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div></div></div>`;
     const $=s=>root.querySelector(s);
     const bar=$('.cd-bar'),panel=$('.cd-panel'),list=$('.cd-list'),ring=$('.cd-ring'),fg=$('.cd-ring .fg'),num=$('.cd-ring text'),end=$('.cd-end'),free=$('.cd-free');
     const btn=(c,i,def,st='')=>`<button class="cd-btn ${def?'def':''} ${st?'free-btn':''}" data-id="${c.id}" ${st?`style="${st}"`:''}><kbd>${i+1}</kbd><span>${esc(c.label)}</span></button>`;
@@ -1298,7 +1381,7 @@ Skins.register({
         setTimeout(()=>{panel.classList.remove('show');free.hidden=true},250);
       }),
       engine.on('end',({scene,path})=>{
-        panel.classList.remove('show');free.hidden=true;end.querySelector('h3').textContent=scene?.title||'';
+        panel.classList.remove('show');free.hidden=true;fillEnd(end,scene,engine,'ENDING');
         $('.cd-path').textContent=path.length?'경로: '+path.join(' → '):'';end.hidden=false;
       }),
       bindSkinClicks(root,engine)
@@ -1312,8 +1395,15 @@ const VarHud={mount(engine,root,getProject){
   root.innerHTML='<div class="varhud" hidden></div>';const box=root.firstChild;let last={};
   const draw=()=>{
     const P=getProject(),meta=P.varMeta||{},shown=Object.keys(P.vars||{}).filter(k=>meta[k]?.show);
-    box.innerHTML=shown.map(k=>{const v=engine.vars[k]??0,flag=meta[k]?.type==='flag';
-      return`<span class="vh ${last[k]!=null&&last[k]!==v?'bump':''}">${esc(k)}<b>${flag?(v?'✓':'—'):v}</b></span>`}).join('');
+    const chip=k=>{const v=engine.vars[k]??0,flag=meta[k]?.type==='flag';
+      return`<span class="vh ${last[k]!=null&&last[k]!==v?'bump':''}">${esc(k)}<b>${flag?(v?'✓':'—'):v}</b></span>`};
+    if(P.hud?.mode==='bag'){
+      // 가방 모드: 켜진 스위치만 물건으로 보여 주고, 숫자 점수는 옆에 따로 표시합니다
+      const isF=k=>meta[k]?.type==='flag',items=shown.filter(k=>isF(k)&&engine.vars[k]);
+      box.innerHTML=(shown.some(isF)?`<div class="bag"><span class="bag-h">${esc(P.hud.title||'🎒 가방')}</span>${items.length
+        ?items.map(k=>`<span class="bag-i ${last[k]!=null&&!last[k]?'new':''}">${meta[k].icon?`<i>${esc(meta[k].icon)}</i>`:''}${esc(k)}</span>`).join('')
+        :'<span class="bag-empty">비어 있음</span>'}</div>`:'')+shown.filter(k=>!isF(k)).map(chip).join('');
+    }else box.innerHTML=shown.map(chip).join('');
     shown.forEach(k=>last[k]=engine.vars[k]??0);
     box.hidden=!shown.length||!engine.cur;
     setTimeout(()=>box.querySelectorAll('.bump').forEach(e=>e.classList.remove('bump')),300);
@@ -1430,7 +1520,8 @@ function tplScene(id,title,color,dur,caption,o={}){
   return{id,title,timeoutMode:o.timeoutMode||'',timeoutTarget:o.timeoutTarget||'',media:{type:'placeholder',color,duration:dur,caption,name:''},
     choiceAt:o.at??'',timeLimit:o.lim||0,loop:o.loop??true,ending:!!o.end,auto:!!o.auto,
     defaultChoice:o.def||'',enter:o.enter||'',choices:o.ch||[],pos:o.pos||null,
-    missTarget:o.miss||'',hotHint:!!o.hint,hideTimer:!!o.hideTimer};
+    missTarget:o.miss||'',hotHint:!!o.hint,hideTimer:!!o.hideTimer,
+    ...(o.next?{auto:true,next:true}:{}),endKind:o.over?'over':'',endText:o.etext||''};
 }
 function tplChoice(id,label,target,set='',cond=''){return{id,label,target,set,if:cond}}
 function tplHot(id,label,target,spot,set=''){return{id,label,target,set,if:'',hot:true,spot}}
@@ -1507,8 +1598,49 @@ const TEMPLATES=[
       stairs:tplScene('stairs','계단','#2a2026',5,'계단 아래에서 발소리가 올라온다.\n시간 막대도 보이지 않는다. 3초 안에!',{at:1,lim:3,hideTimer:true,pos:{x:580,y:0},timeoutMode:'scene',timeoutTarget:'taken',miss:'taken',
         ch:[tplHot('h3','난간 위의 손','escape',{x:60,y:72,w:18,h:16},'발견+=1')]}),
       escape:tplScene('escape','아침','#3b3a2a',6,'창밖이 밝아 온다.\n이상현상을 모두 찾아냈다.',{end:true,loop:false,pos:{x:870,y:0}}),
-      taken:tplScene('taken','이상현상에 당함','#3d1f22',5,'눈치채지 못한 사이\n그것이 바로 뒤에 서 있었다.',{end:true,loop:false,pos:{x:430,y:230}})
-    }})}
+      taken:tplScene('taken','이상현상에 당함','#3d1f22',5,'눈치채지 못한 사이\n그것이 바로 뒤에 서 있었다.',{end:true,loop:false,over:true,etext:'이상현상을 놓쳤습니다.',pos:{x:430,y:230}})
+    }})},
+  {id:'nostop',slug:'no-stop',name:'없는 정류장 (규칙 괴담)',desc:'노선도에 없는 심야 버스. 승객에게 물건을 모으고, 운행 규칙대로 이상 현상을 가려내 새벽역에 내려야 해요. 개발계획서 v3.2의 20개 장면이 모두 연결되어 있어요.',tags:['장면 20','가방','투명 클릭 영역','게임 오버 4','엔딩 2','크레딧'],
+   make:()=>{
+    const L=10,T=(id,title,color,dur,cap,o)=>tplScene(id,title,color,dur,cap,o),C=tplChoice;
+    const over=(id,title,cap,etext,pos)=>T(id,title,'#3a1416',6,cap,{end:true,over:true,loop:false,etext,pos});
+    return{title:'없는 정류장',start:'sc01',skin:'cinema',
+    intro:{sub:'막차에서 잠든 윤서가 노선도에 없는 심야 버스에서 깨어난다.\n운행 규칙을 기억하고, 달라진 것을 찾아 새벽역까지 살아서 내려야 한다.',
+      note:'🎧 이어폰을 끼고 플레이하세요 · 화면 속 이상 현상은 직접 클릭해요',
+      credits:'기획 · 연출 · 편집\n[이름]\n\n장면 영상: Google Veo / Kling AI / Runway (AI 생성)\n기준 이미지: ChatGPT 이미지 생성 / Midjourney (AI 생성)\n대사 · 내레이션: ElevenLabs / 타입캐스트 / 클로바더빙 (AI 생성)\n엔딩 배경음악: Suno / Udio (AI 생성)\n기획 문서 도움: DCU AI\n효과음: [출처 · 라이선스]\n\n등장하는 인물 · 회사 · 장소는 모두 가상입니다.\n제작 도구: 디지털스토리텔링 인터랙티브 비디오 제작용'},
+    hud:{mode:'bag',title:'🎒 가방'},
+    vars:{손전등:0,방울:0,승차권:0},
+    varMeta:{손전등:{type:'flag',show:true,icon:'🔦'},방울:{type:'flag',show:true,icon:'🔔'},승차권:{type:'flag',show:true,icon:'🎫'}},
+    scenes:{
+      sc01:T('sc01','SC-01 깨어난 버스','#1d2230',10,'02:17. 낯선 심야 버스에서 깨어났다.\n[운행 규칙] ① 처음과 다른 것을 보면 뒷자리로 가 눈을 감을 것\n② 불이 꺼지면 빛을 비출 것 ③ 이름을 불러도 대답하지 말 것\n④ 종점에서 승차권을 보일 것 ⑤ 빌린 것은 돌려줄 것',{pos:{x:0,y:0},
+        ch:[C('i01','주위를 둘러본다','sc02')]}),
+      sc02:T('sc02','SC-02 세 명의 승객','#222636',8,'손전등을 쥔 아이, 눈을 감은 노인,\n그리고 이상할 만큼 깨끗한 빈 좌석.',{pos:{x:290,y:0},
+        ch:[C('i02','아이에게 말을 건다','sc03','','손전등==0'),C('i03','노인 옆에 앉는다','sc04','','방울==0'),C('i04','빈 좌석을 살핀다','sc05','','승차권==0'),C('i05','앞자리로 가서 앉는다','sc06')]}),
+      sc03:T('sc03','SC-03 아이의 손전등','#2a2a3a',8,'"이거 빌려줄게요. 대신 내릴 때 꼭 돌려줘요."',{pos:{x:580,y:200},ch:[C('i06','손전등을 빌린다','sc02','손전등=1')]}),
+      sc04:T('sc04','SC-04 노인의 방울','#2b2630',8,'"밖에서 네 이름을 부를 거다. 대답하지 마라.\n이걸 흔들면 물러간다."',{pos:{x:580,y:330},ch:[C('i07','방울을 받는다','sc02','방울=1')]}),
+      sc05:T('sc05','SC-05 깨끗한 빈 좌석','#24282e',8,'좌석 아래 승차권 한 장.\n목적지 새벽역, 승객 이름 윤서.',{pos:{x:580,y:460},ch:[C('i08','승차권을 챙긴다','sc02','승차권=1')]}),
+      sc06:T('sc06','SC-06 이상 점검 ① 정차','#1f2230',8,'"이름 없는 정류장입니다." 아무도 타지 않았다. 그런데…\n(영상 속 늘어난 승객을 직접 클릭 · 지금은 왼쪽 아래 영역)',{at:3,lim:L,pos:{x:870,y:0},timeoutMode:'scene',timeoutTarget:'sc17',miss:'sc17',
+        ch:[tplHot('i09','늘어난 승객','sc07',{x:28,y:62,w:18,h:30})]}),
+      sc07:T('sc07','SC-07 관문 ① 어둠','#0c0d12',8,'버스의 불이 모두 꺼졌다.\n뒤에서 발소리가 다가온다.',{at:3,lim:L,pos:{x:1160,y:0},timeoutMode:'scene',timeoutTarget:'sc18',
+        ch:[C('i11','손전등을 켠다','sc08','','손전등==1'),C('i12','어둠 속을 더듬어 앞으로 간다','sc18')]}),
+      sc08:T('sc08','SC-08 빛 속의 통로','#30302a',7,'빛이 닿자 발소리가 멎었다.\n그림자가 좌석 사이로 사라진다.',{next:true,loop:false,pos:{x:1450,y:0},ch:[C('n08','','sc09')]}),
+      sc09:T('sc09','SC-09 이상 점검 ② 같은 풍경','#222636',8,'같은 터널, 같은 광고판, 승객 둘과 빈 좌석 하나.\n처음과… 같은가? (이상이 없으면 아무것도 누르지 마세요)',{at:3,lim:L,pos:{x:1740,y:0},timeoutMode:'scene',timeoutTarget:'sc10',miss:'sc17'}),
+      sc10:T('sc10','SC-10 관문 ② 창밖의 목소리','#1a1d28',8,'"윤서야, 엄마야. 문 열어."\n유리에 손자국이 하나씩 생긴다.',{at:3,lim:L,pos:{x:2030,y:0},timeoutMode:'scene',timeoutTarget:'sc19',
+        ch:[C('i15','방울을 흔든다','sc11','','방울==1'),C('i16','창문을 열고 대답한다','sc19')]}),
+      sc11:T('sc11','SC-11 방울 소리','#2c2e36',7,'맑은 방울 소리. 목소리가 비명으로 바뀌며 멀어진다.\n창밖이 아주 조금 밝아졌다.',{next:true,loop:false,pos:{x:2320,y:0},ch:[C('n11','','sc12')]}),
+      sc12:T('sc12','SC-12 이상 점검 ③ 백미러','#1f2230',8,'"곧 종점입니다." 기사는 평소처럼 운전하고 있었다.\n(백미러를 직접 클릭 · 지금은 위쪽 가운데 영역)',{at:3,lim:L,pos:{x:2610,y:0},timeoutMode:'scene',timeoutTarget:'sc17',miss:'sc17',
+        ch:[tplHot('i17','얼굴 없는 백미러','sc13',{x:50,y:16,w:24,h:16})]}),
+      sc13:T('sc13','SC-13 관문 ③ 종점 검표','#22252c',8,'"종점 새벽역입니다. 승차권 확인하겠습니다."',{at:3,lim:L,pos:{x:2900,y:0},timeoutMode:'scene',timeoutTarget:'sc20',
+        ch:[C('i19','승차권을 낸다','sc14','','승차권==1'),C('i20','표를 잃어버렸다고 말한다','sc20')]}),
+      sc14:T('sc14','SC-14 새벽역 앞문','#3a3528',8,'앞문이 열린다. 손에는 아직 아이의 손전등.\n빌린 것은 내리기 전에 돌려주십시오.',{pos:{x:3190,y:0},
+        ch:[C('i21','아이에게 손전등을 돌려주고 내린다','sc15','손전등=0'),C('i22','손전등을 쥔 채 그냥 내린다','sc16')]}),
+      sc15:T('sc15','엔딩 A · 새벽역','#4a4128',8,'"약속 지켰네요."\n버스는 새벽빛 속으로 사라졌다.',{end:true,loop:false,etext:'약속을 지키고 새벽역에 내렸습니다.',pos:{x:3480,y:0}}),
+      sc16:T('sc16','엔딩 B · 다음 승객','#1c1e26',8,'손전등이 꺼진다. 휴대폰이 다시 02:17.\n[하차 벨]',{end:true,loop:false,etext:'빌린 것은 돌려주십시오.',pos:{x:3480,y:170}}),
+      sc17:over('sc17','규칙 위반','승객들이 일제히 고개를 돌린다.\n눈앞에 얼굴 없는 "그것"이 서 있다.','규칙 ① 처음과 다른 것을 보면 뒷자리로 가 눈을 감으십시오.\n아무것도 다르지 않다면 움직이지 마십시오.',{x:1740,y:300}),
+      sc18:over('sc18','어둠','더듬던 손을 차가운 다른 손이 붙잡는다.','규칙 ② 불이 꺼지면 빛을 비추십시오.',{x:1160,y:300}),
+      sc19:over('sc19','대답','"찾았다."','규칙 ③ 이름을 불러도 대답하지 마십시오.',{x:2030,y:440}),
+      sc20:over('sc20','종점에 남은 승객','정신을 차리니 그 깨끗한 빈 좌석.\n안전벨트가 저절로 채워진다.','규칙 ④ 종점에서는 승차권을 확인합니다.',{x:2900,y:300})
+    }}}}
 ];
 function sampleProject(){return TEMPLATES.find(t=>t.id==='midnight').make()}
 function renderTemplates(){
@@ -1521,7 +1653,7 @@ const KEY='forkreel-project-v1';
 let P;try{P=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 const firstVisit=!(P&&P.scenes);
 /* 예전 데이터 호환: 변수 설명(varMeta)이 없으면 채워 넣습니다 */
-function migrate(p){p.vars??={};p.varMeta??={};for(const k in p.vars)p.varMeta[k]??={type:'num',show:false};return p}
+function migrate(p){p.vars??={};p.varMeta??={};p.intro??={};p.hud??={};for(const k in p.vars)p.varMeta[k]??={type:'num',show:false};return p}
 if(!P||!P.scenes)P=sampleProject();
 migrate(P);
 let sel=P.start,advOpen=false,saveTimer=null;
@@ -1768,7 +1900,13 @@ function setIcons({paused,muted}){
 }
 setIcons({paused:true,muted:false});
 engine.on('state',s=>setIcons(s));
-$('coverPlay').onclick=()=>playFrom(P.start);
+function renderCover(){cover.innerHTML=Intro.coverHtml(P,'처음부터 플레이')+'<button class="cv-edit" data-a="introedit">✎ 시작 화면 · 크레딧 꾸미기</button>'}
+cover.addEventListener('click',e=>{
+  if(e.target.closest('#coverPlay'))playFrom(P.start);
+  else if(e.target.closest('[data-a="credits"]'))Intro.showCredits($('stage'),P);
+  else if(e.target.closest('[data-a="introedit"]'))openIntro();
+});
+renderCover();
 $('bPlayAll').onclick=()=>{playFrom(P.start);if(!maxOpen())$('stage').scrollIntoView({behavior:'smooth',block:'center'})};
 $('bTheater').onclick=openTheater;
 /* 테마: 자동(시스템·뷰어 설정 따름) → 라이트 → 다크 */
@@ -1840,7 +1978,8 @@ const NW=210,HH=52,RH=30;
 const G={z:1,px:24,py:24,selEdge:null,selChoice:null,drag:null};
 const canvas=$('graph'),world=$('world');
 function hasTO(s){return!s.ending&&!s.auto&&+s.timeLimit>0}
-function nodeH(s){return HH+(s.ending?0:(s.choices.length+1+(hasTO(s)?1:0))*RH)+3}
+function addRow(s){return!(s.next&&s.choices.length)}   // '바로 다음' 장면은 연결이 하나뿐이라 ＋ 줄을 숨깁니다
+function nodeH(s){return HH+(s.ending?0:(s.choices.length+(addRow(s)?1:0)+(hasTO(s)?1:0))*RH)+3}
 function outPt(s,i){return{x:s.pos.x+NW+1,y:s.pos.y+1.5+HH+i*RH+15}}
 function inPt(s){return{x:s.pos.x-1,y:s.pos.y+26}}
 function curve(a,b){const back=b.x<a.x+40,dx=back?Math.max(90,Math.abs(b.y-a.y)*.45):Math.max(50,(b.x-a.x)*.5);return`M${a.x},${a.y} C${a.x+dx},${a.y} ${b.x-dx},${b.y} ${b.x},${b.y}`}
@@ -1886,7 +2025,8 @@ function zoomAt(cx,cy,f){
 function toWorld(e){const r=canvas.getBoundingClientRect();return{x:(e.clientX-r.left-G.px)/G.z,y:(e.clientY-r.top-G.py)/G.z}}
 function nodeSub(s){
   const open=openChoices(s).length,m=s.media||{};
-  const pre=s.auto?'자동 이동 · ':'';
+  const pre=s.next?'바로 다음 · ':s.auto?'자동 이동 · ':'';
+  if(s.ending&&s.endKind==='over')return['게임 오버'+(hasVideo(s)?` · 영상 ${fmt(m.duration)}`:''),false];
   if(open)return[`${s.auto?'연결 안 된 규칙':'연결 안 된 선택지'} ${open}개`,true];
   if(m.type==='file'&&m.name&&!Library.has(m.name))return['영상 다시 연결 필요',true];
   if(hasVideo(s))return[pre+`영상 ${fmt(m.duration)}`,false];
@@ -1936,17 +2076,17 @@ function renderGraph(){
   for(const s of Object.values(P.scenes)){
     const [sub,bad]=nodeSub(s);
     const rows=s.ending?'':s.choices.map((c,i)=>{
-      const txt=s.auto?(c.if?condText(c.if):'그 밖의 경우'):(c.label||'이름 없는 선택지');
+      const txt=s.next?'영상이 끝나면 바로':s.auto?(c.if?condText(c.if):'그 밖의 경우'):(c.label||'이름 없는 선택지');
       const bd=(c.hot?'<i class="bd h" title="투명 클릭 영역">영역</i>':'')+(!s.auto&&c.if?'<i class="bd c" title="조건이 있어요">조건</i>':'')+(c.set?'<i class="bd s" title="점수가 바뀌어요">점수</i>':'');
       return`<div class="nrow ${P.scenes[c.target]?'':'open'} ${!s.auto&&!c.label?'empty':''} ${G.selChoice&&G.selChoice.s===s.id&&G.selChoice.i===i?'rsel':''}" data-i="${i}" title="${esc(txt)}">
         <span class="k">${i+1}</span><span class="l">${esc(txt)}</span>${bd}<span class="port" data-port="${i}" title="끌어서 다른 장면에 연결"></span></div>`}).join('')+
       (hasTO(s)?(()=>{const tt=s.timeoutMode==='scene'&&P.scenes[s.timeoutTarget],di=s.choices.findIndex(c=>c.id===s.defaultChoice);
         const lab=s.timeoutMode==='scene'?(tt?`시간 초과 시 (${s.timeLimit}초)`:'시간 초과 시 → 연결 필요'):`시간 초과: ${di>=0?di+1:1}번 자동 선택`;
         return`<div class="nrow to ${s.timeoutMode==='scene'&&!tt?'open':''}" title="시간 안에 못 고르면 · 점을 끌어서 실패 엔딩 등에 연결"><span class="k">⏱</span><span class="l">${lab}</span><span class="port" data-port="timeout" title="끌어서 시간 초과 시 갈 장면에 연결"></span></div>`})():'')+
-      `<div class="nrow add"><span class="k">＋</span><span class="l">${s.auto?'끌어서 새 규칙':'끌어서 새 갈래'}</span><span class="port" data-port="add" title="끌어서 새로 만들기"></span></div>`;
+      (!addRow(s)?'':`<div class="nrow add"><span class="k">＋</span><span class="l">${s.auto?'끌어서 새 규칙':'끌어서 새 갈래'}</span><span class="port" data-port="add" title="끌어서 새로 만들기"></span></div>`);
     nodes+=`<div class="node ${s.id===sel?'sel':''} ${s.id===liveId?'live':''} ${s.auto?'auto':''}" data-id="${s.id}" style="left:${s.pos.x}px;top:${s.pos.y}px">
       ${P.start===s.id?'<span class="nflag">시작</span>':''}<span class="inport"></span>
-      <div class="nh" title="끌어서 이동 · 더블클릭하면 이 장면부터 재생">${s.ending?'<span class="nend">END</span>':''}
+      <div class="nh" title="끌어서 이동 · 더블클릭하면 이 장면부터 재생">${s.ending?(s.endKind==='over'?'<span class="nend over">OVER</span>':'<span class="nend">END</span>'):''}
         <div class="t">${esc(s.title||'제목 없음')}</div><div class="s ${bad?'bad':''}">${esc(sub)}</div></div>${rows}</div>`;
   }
   world.innerHTML=`<svg class="edges" id="edges"></svg>${nodes}
@@ -2136,7 +2276,7 @@ function renderInspector(){
   const missing=isFile&&m.name&&!Library.has(m.name);
   const d=+m.duration||0,ca=s.choiceAt!==''&&s.choiceAt!=null?+s.choiceAt:null,at=ca==null?d:Math.min(ca,d);
   const others=Object.values(P.scenes).filter(x=>x.id!==s.id);
-  const lib=Library.names(),mode=s.ending?'end':s.auto?'auto':'choice';
+  const lib=Library.names(),mode=s.ending?'end':s.next?'next':s.auto?'auto':'choice';
 
   let media;
   if(isFile&&m.name){
@@ -2167,8 +2307,9 @@ function renderInspector(){
       ${cards||'<p class="hint">아직 선택지가 없어요. 아래 버튼으로 추가하거나, 장면 지도에서 ＋ 점을 끌어 보세요.</p>'}
       <button class="addch" data-act="addch">＋ 선택지 추가</button>
       ${s.choices.some(c=>!c.hot)?cposPicker(s):''}
-      ${s.choices.some(c=>c.hot)?`<div class="hotset">
-        <div class="bl">🎯 투명 클릭 영역 설정<em>영상 속 물체를 직접 누르게 할 때</em></div>
+      ${s.choices.some(c=>c.hot)||!s.choices.length?`<div class="hotset">
+        <div class="bl">🎯 화면 클릭 설정<em>${s.choices.length?'영상 속 물체를 직접 누르게 할 때':'선택지 없이 "아무것도 누르지 않아야 통과"하는 장면'}</em></div>
+        ${s.choices.length?'':'<p class="hint">선택지를 비워 두고 <b>고급 설정 › 제한 시간</b>을 정한 뒤 <b>시간 안에 못 고르면 › 다른 장면으로 이동</b>을 다음 장면으로 연결하세요. 끝까지 참으면 통과, 화면을 누르면 아래 장면으로 가요.</p>'}
         <label class="field"><span>영역 밖(빈 곳)을 누르면</span><select id="f-miss" class="sel">
           <option value="">아무 일도 없음</option>
           ${others.map(x=>`<option value="${x.id}" ${x.id===s.missTarget?'selected':''}>${esc(x.title)}${x.ending?' (엔딩)':''}(으)로 이동</option>`).join('')}
@@ -2206,6 +2347,25 @@ function renderInspector(){
         <label class="check"><input type="checkbox" id="f-loop" ${s.loop?'checked':''}><span>고르는 동안 영상 반복<br><span class="hint">끄면 마지막 장면에서 멈춘 채 기다려요</span></span></label>
       </div>
     </details>`;
+  }else if(mode==='next'){
+    const c=s.choices[0]||{},ok=!!P.scenes[c.target];
+    step3=`<section class="step">
+      <h3><span class="sn">3</span>다음 장면</h3>
+      <p class="hint">영상이 끝나면 고르는 화면 없이 <b>바로 이 장면으로</b> 넘어가요. 장면 지도에서 점을 끌어 연결해도 돼요.</p>
+      <div class="ch" data-i="0"><div class="ch-row2"><span class="arrow">이동 →</span>
+        <select data-k="target" class="${ok?'':'need'}" aria-label="다음 장면"><option value="" ${ok?'':'selected'}>다음 장면 고르기…</option>
+          ${others.map(x=>`<option value="${x.id}" ${x.id===c.target?'selected':''}>${esc(x.title)}</option>`).join('')}
+          <option value="__new">＋ 새 장면 만들어서 연결</option></select>${ok?`<button class="link" data-goto="${c.target}">이동</button>`:''}</div></div>
+    </section>`;
+  }else if(mode==='end'){
+    const over=s.endKind==='over';
+    step3=`<section class="step">
+      <h3><span class="sn">3</span>엔딩 화면</h3>
+      <div class="ch-kind end-kind"><button data-ek="" class="${over?'':'on'}">🏁 엔딩</button><button data-ek="over" class="${over?'on':''}">💀 게임 오버</button></div>
+      <label class="field"><span>화면에 나올 문구 <em>장면 이름 아래 · 비워도 돼요</em></span>
+        <textarea id="f-endtxt" rows="2" placeholder="${over?'예: 규칙 ①을 지키지 못했습니다.':'예: 엔딩 A · 새벽역'}">${esc(s.endText||'')}</textarea></label>
+      <p class="hint">${over?'붉은 <b>GAME OVER</b> 화면이 나와요. "이전 선택으로"를 누르면 실패 직전 선택으로 돌아가 다시 도전해요.':'<b>THE END</b> 화면이 나와요. 시작 화면 · 크레딧에 크레딧을 쓰면 <b>크레딧</b> 버튼도 함께 나와요.'}</p>
+    </section>`;
   }else if(mode==='auto'){
     const last=s.choices[s.choices.length-1];
     step3=`<section class="step">
@@ -2220,7 +2380,7 @@ function renderInspector(){
 
   insp.innerHTML=`
     <div class="ed-top">
-      <div class="eyebrow">장면 편집 ${P.start===s.id?'<span class="pill start">시작 장면</span>':''}${s.ending?'<span class="pill">엔딩</span>':''}${s.auto?'<span class="pill">자동 이동</span>':''}</div>
+      <div class="eyebrow">장면 편집 ${P.start===s.id?'<span class="pill start">시작 장면</span>':''}${s.ending?'<span class="pill">엔딩</span>':''}${s.next?'<span class="pill">바로 다음</span>':s.auto?'<span class="pill">자동 이동</span>':''}${s.ending&&s.endKind==='over'?'<span class="pill over">게임 오버</span>':''}</div>
       <input class="ed-title" id="f-title" value="${esc(s.title)}" aria-label="장면 이름" placeholder="장면 이름">
     </div>
 
@@ -2235,7 +2395,8 @@ function renderInspector(){
       <div class="seg3">
         <button data-mode="choice" class="${mode==='choice'?'on':''}"><b>선택지 보여주기</b><span>플레이어가 다음 장면을 골라요</span></button>
         <button data-mode="auto" class="${mode==='auto'?'on':''}"><b>점수에 따라 자동 이동</b><span>점수를 보고 알아서 갈래를 나눠요</span></button>
-        <button data-mode="end" class="${mode==='end'?'on':''}"><b>여기서 끝 (엔딩)</b><span>엔딩 화면이 나와요</span></button>
+        <button data-mode="next" class="${mode==='next'?'on':''}"><b>바로 다음 장면</b><span>고르는 것 없이 이어서 재생해요</span></button>
+        <button data-mode="end" class="${mode==='end'?'on':''}"><b>여기서 끝 (엔딩)</b><span>엔딩 · 게임 오버 화면이 나와요</span></button>
       </div>
     </section>
 
@@ -2279,6 +2440,7 @@ insp.addEventListener('toggle',e=>{
 insp.addEventListener('input',e=>{
   const s=P.scenes[sel];if(!s)return;const t=e.target;
   if(t.id==='f-title')s.title=t.value;
+  else if(t.id==='f-endtxt')s.endText=t.value;
   else if(t.id==='f-caption')s.media.caption=t.value;
   else if(t.id==='f-color')s.media.color=t.value;
   else if(t.dataset.k==='label'){s.choices[+t.closest('.ch').dataset.i].label=t.value}
@@ -2362,10 +2524,16 @@ insp.addEventListener('click',e=>{
     save();renderGraph();renderInspector();return;
   }
   if(b.dataset.act==='placehot'){startPlacing(s.id);return}
+  if(b.dataset.ek!=null){s.endKind=b.dataset.ek;save();renderGraph();renderInspector();refreshPreview(s.id);return}
   if(b.dataset.tom){s.timeoutMode=b.dataset.tom==='scene'?'scene':'';advOpen=true;save();renderGraph();renderInspector();return}
   if(b.dataset.mt){s.media.type=b.dataset.mt;save();renderGraph();renderInspector();refreshPreview(s.id);return}
   else if(b.dataset.mode){
-    const md=b.dataset.mode;s.ending=md==='end';s.auto=md==='auto';
+    const md=b.dataset.mode,wasNext=s.next;s.ending=md==='end';s.auto=md==='auto'||md==='next';s.next=md==='next';
+    if(md==='next'){
+      if(s.choices.length>1)toast('첫 번째 연결만 남겼어요 · 되돌리려면 Ctrl+Z');
+      const c=s.choices[0]||{id:uid('c'),target:''};s.choices=[{...c,label:'',if:'',hot:false}];
+    }
+    if(wasNext&&md==='choice'&&s.choices[0]&&!s.choices[0].label)s.choices[0].label='다음으로';
     if(md==='auto'&&!varNames().length)toast('자동 이동은 점수 변수가 필요해요. 점수 변수 패널에서 먼저 만들어 주세요.');
   }
   else if(b.dataset.goto){selectScene(b.dataset.goto);return}
@@ -2497,7 +2665,7 @@ function addVar(base,type,start,show){
   P.vars[n]=type==='flag'?(start?1:0):(+start||0);P.varMeta[n]={type,show:!!show};return n;
 }
 function renderVarsPanel(){
-  const names=varNames();
+  const names=varNames(),bag=P.hud?.mode==='bag';
   const rows=names.map(n=>{
     const t=vtype(n),u=varUsage(n),m=P.varMeta[n]||{};
     return`<div class="vrow" data-v="${esc(n)}">
@@ -2505,7 +2673,8 @@ function renderVarsPanel(){
       <input class="vname" value="${esc(n)}" aria-label="변수 이름" spellcheck="false">
       ${t==='flag'?`<label class="vstart"><input type="checkbox" class="vval" ${P.vars[n]?'checked':''}> 처음에 켜짐</label>`
         :`<label class="vstart">시작값 <input type="number" class="vval" value="${P.vars[n]}" step="1"></label>`}
-      <label class="vshow" title="게임 화면 오른쪽 위에 표시"><input type="checkbox" class="vshowc" ${m.show?'checked':''}> 게임 화면에 표시</label>
+      <label class="vshow" title="게임 화면 오른쪽 위에 표시"><input type="checkbox" class="vshowc" ${m.show?'checked':''}> ${bag&&t==='flag'?'가방에 표시':'게임 화면에 표시'}</label>
+      ${bag&&t==='flag'?`<input class="vicon" value="${esc(m.icon||'')}" placeholder="아이콘" maxlength="4" title="가방에 같이 나올 그림 문자 (예: 🔦 🔔 🎫)" aria-label="${esc(n)} 아이콘">`:''}
       <button class="x" data-vdel title="삭제" aria-label="${esc(n)} 삭제">×</button>
       <div class="vuse"><span>${u?`선택지·장면 ${u}곳에서 사용 중`:'아직 아무 데서도 안 쓰는 중'}</span><span class="vnow" data-now="${esc(n)}"></span></div>
     </div>`;}).join('');
@@ -2519,6 +2688,9 @@ function renderVarsPanel(){
     </div>
     <div class="vp-ex"><span class="hint">예시로 바로 추가</span>
       ${VAR_EX.map((x,i)=>`<button class="chipbtn" data-vex="${i}" title="${esc(x[3])}">${esc(x[0])}<small>${x[1]==='flag'?'스위치':'점수'}</small></button>`).join('')}</div>
+    ${names.length?`<div class="vp-hud"><span class="hint">게임 화면 표시</span>
+      <span class="seg"><button data-hud="list" class="${bag?'':'on'}">점수 목록</button><button data-hud="bag" class="${bag?'on':''}">🎒 가방</button></span>
+      ${bag?`<input id="hudTitle" value="${esc(P.hud.title||'🎒 가방')}" aria-label="가방 이름" title="가방 이름"><span class="hint">스위치가 켜지면 물건처럼 가방에 들어가요</span>`:''}</div>`:''}
     <div class="vp-list">${rows||'<p class="hint">아직 변수가 없어요. 위 버튼으로 하나 만들어 보세요.</p>'}</div>
     <p class="hint">위 <b>점수 변수란?</b>을 누르면 자세한 사용법과 예시를 크게 볼 수 있어요. 지금 값은 각 변수 옆과 미리보기 아래에 실시간으로 나와요.</p>`;
   updateVarNow();
@@ -2552,8 +2724,20 @@ vp.addEventListener('click',e=>{
     save();renderVarsPanel();renderInspector();renderGraph();toast(`'${n}' 변수를 삭제했어요`);
   }
 });
+vp.addEventListener('click',e=>{
+  const b=e.target.closest('[data-hud]');if(!b)return;
+  P.hud={...(P.hud||{}),mode:b.dataset.hud};
+  if(b.dataset.hud==='bag'&&!varNames().some(n=>vtype(n)==='flag'))toast('가방에는 스위치 변수가 들어가요. ＋ 스위치로 물건을 만들어 보세요');
+  save();renderVarsPanel();engine.refreshUI();
+});
+vp.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='hudTitle'){P.hud={...(P.hud||{}),title:t.value};save();engine.refreshUI();return}
+  if(t.classList.contains('vicon')){const n=t.closest('.vrow').dataset.v;P.varMeta[n]={...(P.varMeta[n]||{type:'flag'}),icon:t.value.trim()};save();engine.refreshUI()}
+});
 vp.addEventListener('change',e=>{
   const t=e.target,row=t.closest('.vrow');if(!row)return;const n=row.dataset.v;
+  if(t.classList.contains('vicon'))return;
   if(t.classList.contains('vname')){
     const nw=t.value.trim().replace(/\s+/g,'_');
     if(nw===n)return;
@@ -2580,6 +2764,7 @@ $('menu').addEventListener('click',e=>{
   else if(m==='save'){closeMenu();saveProject(false)}
   else if(m==='saveas'){closeMenu();openSaveAs()}
   else if(m==='open'){closeMenu();openOpen()}
+  else if(m==='intro'){closeMenu();openIntro()}
   else if(m==='json'){closeMenu();$('jsonTa').value=JSON.stringify(P,null,2);$('jMsg').textContent='';$('jsonModal').hidden=false}
   else if(m==='welcome'){closeMenu();$('welcome').hidden=false}
   else if(m==='sample'){closeMenu();replaceProject(sampleProject());toast('예제 프로젝트를 열었어요')}
@@ -2593,9 +2778,21 @@ function replaceProject(np){
   P=migrate(np);if(!np.pid){delete P.pid;lastSavedSnap=null}engine.load(P);sel=P.start;save();
   $('pTitle').value=P.title||'';
   $('skinSel').value=Skins.get(P.skin).id;useSkin($('skinSel').value);
-  cover.hidden=false;G.selEdge=null;renderGraph();renderInspector();fitView();
+  renderCover();cover.hidden=false;G.selEdge=null;renderGraph();renderInspector();fitView();
 }
-$('pTitle').addEventListener('input',()=>{P.title=$('pTitle').value;save()});
+$('pTitle').addEventListener('input',()=>{P.title=$('pTitle').value;save();renderCover()});
+function openIntro(){
+  const it=P.intro||{};$('inTitle').value=P.title||'';$('inSub').value=it.sub||'';$('inNote').value=it.note||'';$('inCred').value=it.credits||'';
+  $('introModal').hidden=false;$('inSub').focus();
+}
+$('introModal').addEventListener('input',()=>{
+  P.title=$('inTitle').value;$('pTitle').value=P.title;
+  P.intro={sub:$('inSub').value,note:$('inNote').value,credits:$('inCred').value};
+  save();renderCover();
+});
+$('inClose').onclick=()=>{$('introModal').hidden=true;cover.hidden=false;toast('시작 화면을 바꿨어요 · 미리보기에서 확인해 보세요')};
+$('inPreview').onclick=()=>{if(!P.intro?.credits){toast('크레딧을 먼저 써 주세요',true);return}$('introModal').hidden=true;Intro.showCredits($('stage'),P)};
+$('introModal').addEventListener('click',e=>{if(e.target.id==='introModal')$('introModal').hidden=true});
 
 /* --- 저장 · 다른 이름으로 저장 · 열기 ------------------------------------
    · 작업 중인 내용은 지금처럼 자동 보관되고(새로고침해도 유지),
@@ -2798,7 +2995,7 @@ html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui
 [hidden]{display:none!important}
 </style></head><body>
 <div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="hot-root" id="hotRoot"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
-<div class="cover" id="cover"><button id="coverPlay">▶ 시작하기</button><p>숫자키 1–9로 선택 · Space 일시정지</p></div></div></div>
+<div class="cover" id="cover"></div></div></div>
 <div class="ctrl"><button id="cBack">↶ 이전 선택</button><button id="cRestart">처음부터</button><button id="cMute">소리 끄기</button><button id="cFull">전체화면</button></div>
 <script type="application/json" id="project">${data}<\/script>
 <script>${eng}<\/script>
@@ -2810,7 +3007,11 @@ Skins.get(P.skin).mount(engine,document.getElementById('skinRoot'));
 VarHud.mount(engine,document.getElementById('hudRoot'),()=>P);
 HotLayer.mount(engine,document.getElementById('hotRoot'));
 const cover=document.getElementById('cover'),g=id=>document.getElementById(id);
-g('coverPlay').onclick=()=>{cover.hidden=true;engine.start(P.start)};
+cover.innerHTML=Intro.coverHtml(P,'시작하기');
+cover.addEventListener('click',e=>{
+  if(e.target.closest('#coverPlay')){cover.hidden=true;engine.start(P.start)}
+  else if(e.target.closest('[data-a="credits"]'))Intro.showCredits(g('stage'),P);
+});
 g('cBack').onclick=()=>{if(cover.hidden)engine.back()};
 g('cRestart').onclick=()=>{cover.hidden=true;engine.restart()};
 g('cMute').onclick=()=>{engine.setMuted(!engine.muted);g('cMute').textContent=engine.muted?'소리 켜기':'소리 끄기'};
