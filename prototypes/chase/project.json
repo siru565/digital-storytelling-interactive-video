@@ -8,8 +8,31 @@
   "varMeta": {
     "실수": {
       "type": "num",
-      "show": true
+      "box": "m",
+      "disp": "icons",
+      "icon": "❌",
+      "max": 3,
+      "notify": true
     }
+  },
+  "hud": {
+    "boxes": [
+      {
+        "id": "m",
+        "kind": "hp",
+        "title": "",
+        "pos": "tl",
+        "layout": "row",
+        "frame": false,
+        "empty": "",
+        "def": {
+          "num": "icons",
+          "flag": "check",
+          "icon": "❤️",
+          "max": 3
+        }
+      }
+    ]
   },
   "scenes": {
     "run1": {
@@ -284,6 +307,5 @@
     }
   },
   "intro": {},
-  "hud": {},
-  "savedAt": 1794202588455
+  "savedAt": 1794204376312
 }

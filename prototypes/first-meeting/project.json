@@ -8,8 +8,30 @@
   "varMeta": {
     "호감": {
       "type": "num",
-      "show": true
+      "box": "g",
+      "disp": "bar",
+      "max": 3,
+      "icon": "💗",
+      "notify": true
     }
+  },
+  "hud": {
+    "boxes": [
+      {
+        "id": "g",
+        "kind": "gauge",
+        "title": "",
+        "pos": "tl",
+        "layout": "col",
+        "frame": true,
+        "empty": "",
+        "def": {
+          "num": "bar",
+          "flag": "check",
+          "max": 10
+        }
+      }
+    ]
   },
   "scenes": {
     "meet": {
@@ -254,6 +276,5 @@
     }
   },
   "intro": {},
-  "hud": {},
-  "savedAt": 1794202588383
+  "savedAt": 1794204376254
 }

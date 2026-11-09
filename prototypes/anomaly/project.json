@@ -8,7 +8,8 @@
   "varMeta": {
     "발견": {
       "type": "num",
-      "show": true
+      "box": "main",
+      "disp": "num"
     }
   },
   "scenes": {
@@ -209,6 +210,17 @@
     }
   },
   "intro": {},
-  "hud": {},
-  "savedAt": 1794202588493
+  "hud": {
+    "boxes": [
+      {
+        "id": "main",
+        "title": "",
+        "pos": "tr",
+        "layout": "row",
+        "frame": false,
+        "empty": ""
+      }
+    ]
+  },
+  "savedAt": 1794204376343
 }

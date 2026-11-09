@@ -8,8 +8,29 @@
   "varMeta": {
     "열쇠": {
       "type": "flag",
-      "show": true
+      "box": "bag",
+      "disp": "have",
+      "icon": "🔑",
+      "notify": true
     }
+  },
+  "hud": {
+    "boxes": [
+      {
+        "id": "bag",
+        "kind": "bag",
+        "title": "🎒 가방",
+        "pos": "tr",
+        "layout": "row",
+        "frame": true,
+        "empty": "비어 있음",
+        "def": {
+          "flag": "have",
+          "num": "num",
+          "notify": true
+        }
+      }
+    ]
   },
   "scenes": {
     "hall": {
@@ -224,6 +245,5 @@
     }
   },
   "intro": {},
-  "hud": {},
-  "savedAt": 1794202588419
+  "savedAt": 1794204376283
 }

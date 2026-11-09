@@ -8,12 +8,12 @@
   },
   "varMeta": {
     "courage": {
-      "type": "num",
-      "show": false
+      "type": "num"
     },
     "kind": {
       "type": "num",
-      "show": true
+      "box": "main",
+      "disp": "num"
     }
   },
   "scenes": {
@@ -251,6 +251,17 @@
     }
   },
   "intro": {},
-  "hud": {},
-  "savedAt": 1794202588337
+  "hud": {
+    "boxes": [
+      {
+        "id": "main",
+        "title": "",
+        "pos": "tr",
+        "layout": "row",
+        "frame": false,
+        "empty": ""
+      }
+    ]
+  },
+  "savedAt": 1794204376229
 }

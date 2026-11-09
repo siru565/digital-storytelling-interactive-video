@@ -69,18 +69,30 @@
 .cd-end small{font:600 clamp(10px,1.3cqw,13px) var(--f-mono);color:var(--branch);letter-spacing:.2em}
 .cd-path{font:clamp(10px,1.3cqw,13px) var(--f-mono);color:#aeb6c2;max-width:80cqw;text-align:center}
 .hud-root{position:absolute;inset:0;pointer-events:none}
-.varhud{position:absolute;right:2.4cqw;top:2cqw;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.8cqw;max-width:60cqw}
-.vh{font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#eef1f5;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);padding:.25em .75em;border-radius:999px;transition:transform .25s}
-.vh b{color:var(--accent);font-family:var(--f-mono);margin-left:.3em}
-.vh.bump{transform:scale(1.15)}
-/* 가방 모드: 켜진 스위치를 물건처럼 보여 줍니다 */
-.bag{display:flex;align-items:center;gap:.6cqw;flex-wrap:wrap;justify-content:flex-end;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:1.2cqw;padding:.5cqw .8cqw}
-.bag-h{font:700 clamp(9px,1.2cqw,13px) var(--f-ui);color:#c9ced6;letter-spacing:.05em;margin-right:.2cqw}
-.bag-i{display:inline-flex;align-items:center;gap:.35em;font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#f4efe6;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:.8cqw;padding:.2em .6em}
-.bag-i i{font-style:normal;font-size:1.15em}
-.bag-i.new{animation:bagIn .6s cubic-bezier(.2,1.4,.4,1)}
+.hpos{position:absolute;display:flex;flex-direction:column;gap:.8cqw;max-width:60cqw}
+.hpos.tl{left:2.4cqw;top:6.5cqw;align-items:flex-start}   /* 왼쪽 위 장면 제목과 겹치지 않게 조금 내려요 */.hpos.tc{left:50%;top:2cqw;transform:translateX(-50%);align-items:center}.hpos.tr{right:2.4cqw;top:2cqw;align-items:flex-end}
+.hpos.bl{left:2.4cqw;bottom:2cqw;align-items:flex-start}.hpos.bc{left:50%;bottom:2cqw;transform:translateX(-50%);align-items:center}.hpos.br{right:2.4cqw;bottom:2cqw;align-items:flex-end}
+.hbox{display:flex;align-items:center;gap:.6cqw;flex-wrap:wrap}
+.hbox.col{flex-direction:column;align-items:stretch}
+.hbox.frame{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:1.2cqw;padding:.55cqw .9cqw}
+.hb-t{font:700 clamp(9px,1.2cqw,13px) var(--f-ui);color:#c9ced6;letter-spacing:.05em}
+.hb-items{display:flex;flex-wrap:wrap;gap:.6cqw;align-items:center}
+.hbox.col .hb-items{flex-direction:column;align-items:stretch}
+.hb-empty{font:500 clamp(9px,1.2cqw,12px) var(--f-ui);color:#8a909a}
+.hi{display:inline-flex;align-items:center;gap:.4em;font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#f4efe6;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:.25em .75em;transition:transform .25s,opacity .25s}
+.hbox.frame .hi{background:rgba(255,255,255,.08);border-radius:.8cqw}
+.hi i{font-style:normal;font-size:1.1em}
+.hi b{color:var(--accent);font-family:var(--f-mono)}
+.hi.off{opacity:.5}
+.hi.bump{transform:scale(1.15)}
+.hi.new{animation:bagIn .6s cubic-bezier(.2,1.4,.4,1)}
 @keyframes bagIn{from{transform:scale(.3) translateY(40%);opacity:0}to{transform:none;opacity:1}}
-.bag-empty{font:500 clamp(9px,1.2cqw,12px) var(--f-ui);color:#8a909a}
+.hi em{font-style:normal;letter-spacing:.06em;font-size:1.1em}
+.hi em .e{opacity:.22;filter:grayscale(1)}
+.hi.bare{background:none;border-color:transparent;padding-left:0;padding-right:0}
+.hi s{display:inline-block;width:9cqw;height:.7cqw;min-height:4px;background:rgba(255,255,255,.18);border-radius:1cqw;overflow:hidden;text-decoration:none}
+.hi s u{display:block;height:100%;background:var(--accent);transition:width .4s}
+.htoasts{position:absolute;left:50%;top:8cqw;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5cqw}
 /* 엔딩 / 게임 오버 */
 .end-msg{margin:0;font:500 clamp(12px,1.8cqw,19px) var(--f-ui);color:#d6d9de;text-align:center;padding:0 6cqw;white-space:pre-line}
 .cin-end.over,.cd-end.over{background:radial-gradient(ellipse at center,rgba(58,4,6,.93),rgba(0,0,0,.97))}
@@ -99,8 +111,8 @@
 .end-hist span{width:100%;text-align:center;font:600 clamp(9px,1.1cqw,12px) var(--f-ui);color:#9aa0aa;letter-spacing:.08em;margin-bottom:.2cqw}
 .end-hist button{font:500 clamp(9px,1.2cqw,13px) var(--f-ui);background:rgba(255,255,255,.06);color:#d6d9de;border:1px solid rgba(255,255,255,.18);border-radius:.6cqw;padding:.3em .8em;cursor:pointer}
 .end-hist button:hover{border-color:var(--accent);color:var(--accent)}
-.bag-toast{position:absolute;right:2.4cqw;top:7cqw;font:600 clamp(11px,1.5cqw,16px) var(--f-ui);color:#f4efe6;background:rgba(0,0,0,.72);border:1px solid rgba(248,196,64,.6);border-radius:1cqw;padding:.45em .9em;animation:bagToast 2.4s ease forwards;pointer-events:none;white-space:nowrap}
-.bag-toast.off{border-color:rgba(255,255,255,.3);color:#c9ced6}
+.h-toast{font:600 clamp(11px,1.5cqw,16px) var(--f-ui);color:#f4efe6;background:rgba(0,0,0,.75);border:1px solid rgba(248,196,64,.6);border-radius:1cqw;padding:.45em .9em;animation:bagToast 2.4s ease forwards;white-space:nowrap}
+.h-toast.off{border-color:rgba(255,255,255,.3);color:#c9ced6}
 @keyframes bagToast{0%{opacity:0;transform:translateY(-30%)}12%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
 /* 크레딧 */
 .credits{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqw;animation:freeIn .4s ease both}
@@ -380,6 +392,11 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .vtype{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;flex:none}
 .vtype.num{color:var(--accent-ink);border:1px solid rgba(240,168,58,.45)}
 .vtype.flag{color:var(--branch-ink);border:1px solid rgba(94,196,212,.45)}
+.vtype.item{color:#b07d00;border:1px solid rgba(248,196,64,.7);background:rgba(248,196,64,.12)}
+:root[data-theme="dark"] .vtype.item{color:#f8c440}
+button.vtype{cursor:pointer;background:transparent;font-family:inherit}
+button.vtype.item{background:rgba(248,196,64,.12)}
+button.vtype:hover{filter:brightness(1.15);text-decoration:underline dotted}
 .vname{flex:1;min-width:90px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-weight:600}
 .vstart,.vshow{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--mute);white-space:nowrap}
 .vstart input[type=number]{width:58px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
@@ -535,11 +552,36 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
 .nend.over{color:var(--danger)}
 .cv-edit{position:absolute;right:12px;bottom:10px;font:500 12px var(--f-ui)!important;padding:5px 10px!important;border-color:rgba(244,239,230,.25)!important;color:#c9ced6!important}
 .end-kind{margin:0 0 10px}
-.vp-hud{display:flex;flex-wrap:wrap;align-items:center;gap:8px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
-.vp-hud .seg{display:inline-grid;grid-template-columns:1fr 1fr;gap:4px}
-.vp-hud .seg button{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--mute)}
-.vp-hud .seg button.on{border-color:var(--accent-ink);color:var(--fg);background:var(--accent-soft)}
-.vp-hud input{width:110px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12px}
+.vp-hud{display:flex;flex-direction:column;gap:8px;border-top:1px dashed var(--line);padding-top:12px;margin-top:4px}
+.vp-hud-h{display:flex;flex-direction:column;gap:2px}
+.vp-hud-h b{font-size:13.5px}
+.hb-presets{display:flex;flex-wrap:wrap;gap:6px}
+.hb-card{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.hb-card.open{border-color:var(--accent-ink)}
+.hb-head{display:flex;align-items:center;gap:6px}
+.hb-tog{width:24px;height:24px;border-radius:6px;background:none;border:1px solid var(--line);color:var(--mute);font-size:11px;flex:none}
+.hb-title{flex:1;min-width:80px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 8px;font-weight:600}
+.hb-where{font-size:11.5px;color:var(--mute);white-space:nowrap}
+.hb-card .x{width:28px;height:28px;border-radius:6px;background:none;border:1px solid transparent;color:var(--mute);font-size:17px;line-height:1;flex:none}
+.hb-card .x:hover{border-color:var(--line2);color:var(--danger)}
+.hb-card .x.armed{background:var(--danger);color:#fff;width:auto;padding:0 8px;font-size:12px}
+.hb-inside{display:flex;flex-wrap:wrap;gap:4px;padding-left:30px}
+.chip-v{font-size:12px;background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:1px 8px}
+.hb-body{display:flex;flex-direction:column;gap:8px;padding:6px 0 2px 30px}
+.hb-f{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.hb-f>span{width:60px;flex:none;color:var(--mute)}
+.hb-f input:not([type]),.hb-f .hb-empty-in{flex:1;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 8px;font-size:12.5px}
+.posgrid{display:grid;grid-template-columns:repeat(3,26px);grid-template-rows:repeat(2,17px);gap:3px;background:var(--monitor,#111);border-radius:6px;padding:4px}
+.posgrid button{border:1px solid var(--line2);border-radius:3px;background:transparent;padding:0}
+.posgrid button.on{background:var(--accent-fill);border-color:var(--accent-fill)}
+.seg2{display:inline-grid;grid-template-columns:1fr 1fr;gap:4px}
+.seg2 button{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:12px;color:var(--mute)}
+.seg2 button.on{border-color:var(--accent-ink);color:var(--fg);background:var(--accent-soft)}
+.vdisp{width:100%;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;font-size:12px}
+.vd-f{display:inline-flex;align-items:center;gap:5px;color:var(--mute)}
+.vd-f select{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12px;max-width:190px}
+.vd-c{display:inline-flex;align-items:center;gap:4px;color:var(--mute);white-space:nowrap}
+.vmax{width:52px;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:12px}
 .vicon{width:46px;text-align:center;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:3px 4px;font-size:14px}
 .pill.start{background:var(--accent-fill);border-color:var(--accent-fill);color:var(--on-accent)}
 .ed-title{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:18px;font-weight:600;width:100%}
@@ -899,18 +941,26 @@ select.sel{background:var(--panel2);border:1px solid var(--line);border-radius:6
     <p class="lead">플레이어가 고른 것을 <b>기억해 두는 값</b>이에요. 친절한 선택을 할 때마다 <span class="mono">호감</span>을 1씩 올리고, 마지막에 호감이 3 이상이면 다른 엔딩으로 보낼 수 있어요.</p>
     <div class="vh-kinds">
       <div><span class="vtype num">점수</span><b>숫자 점수</b><p>호감, 용기, 실수처럼 더하고 빼는 값. "3 이상일 때" 같은 조건에 써요.</p></div>
-      <div><span class="vtype flag">스위치</span><b>스위치</b><p>열쇠를 얻었는지, 비밀을 알았는지처럼 예/아니오로 기억하는 값이에요.</p></div>
+      <div><span class="vtype flag">스위치</span><b>스위치</b><p>비밀을 알았는지, 어떤 장면을 봤는지처럼 예/아니오로 기억하는 값이에요.</p></div>
+    </div>
+    <h3>게임 화면에 보여 주기</h3>
+    <p class="lead">패널 아래 <b>게임 화면 표시</b>에서 상자를 만들고, 변수의 <b>화면</b> 칸에서 그 상자를 고르면 플레이 화면에 나와요. 상자는 여러 개 만들 수 있고, 제목 · 위치(6곳) · 가로/세로 · 테두리를 바꿀 수 있어요.</p>
+    <div class="vh-kinds">
+      <div><b>🎒 가방 · 🔎 단서</b><p>스위치를 <i>있을 때만 보이기</i>로 넣으면 얻은 물건·단서만 아이콘과 함께 보여요. 선택지에서는 <code>얻기 / 잃기</code>, <code>가지고 있을 때</code>로 표시돼요.</p></div>
+      <div><b>❤️ 체력 하트</b><p>숫자 점수를 <i>아이콘을 값만큼</i>으로 넣으면 3 → ❤️❤️❤️. 최대를 정하면 줄어든 칸은 흐리게 보여요.</p></div>
+      <div><b>📊 게이지</b><p>숫자 점수를 <i>막대</i>로 넣으면 최대값 대비 막대로 보여요. 호감도·공포도 등에 좋아요.</p></div>
+      <div><b>🔔 바뀌면 알림</b><p>켜 두면 값이 바뀔 때 "🔑 열쇠를 얻었다", "❤️ 체력 −1" 같은 알림이 잠깐 떠요.</p></div>
     </div>
     <h3>3단계로 쓰기</h3>
     <ol class="vh-steps">
-      <li><b>만들기</b><span>점수 변수 패널에서 <i>＋ 숫자 점수</i>나 <i>＋ 스위치</i>, 또는 예시 버튼으로 추가해요.</span></li>
+      <li><b>만들기</b><span>점수 변수 패널에서 <i>＋ 숫자 점수</i>나 <i>＋ 스위치</i>, 또는 예시 버튼으로 추가해요. 플레이 화면에 보이려면 아래 <i>게임 화면 표시</i>에서 상자를 만들어 넣어요.</span></li>
       <li><b>바꾸기</b><span>장면 편집 › 선택지 › <i>조건 · 점수</i>를 펼치고 <i>고르면 점수 바꾸기</i>에서 정해요. 장면에 들어올 때 바꾸려면 아래쪽 <i>이 장면에 들어올 때 점수 바꾸기</i>를 써요.</span></li>
       <li><b>쓰기</b><span><i>이럴 때만 이 선택지 보이기</i>로 선택지를 조건부로 보이게 하거나, 장면의 <i>영상이 끝나면</i>을 <i>점수에 따라 자동 이동</i>으로 바꿔 갈래를 나눠요.</span></li>
     </ol>
     <h3>이렇게 써 보세요</h3>
     <div class="vh-recipes">
       <div class="recipe"><b>① 호감도에 따라 엔딩 나누기</b><p>친절한 선택지마다 <code>고르면: 호감 1 더하기</code>. 마지막 장면을 <code>점수에 따라 자동 이동</code>으로 바꾸고, 규칙1 <code>호감 3 이상 → 해피엔딩</code>, 규칙2 조건 없음 <code>→ 노멀엔딩</code>.</p></div>
-      <div class="recipe"><b>② 아이템이 있어야 열리는 선택지</b><p>창고 장면의 "열쇠를 줍는다"에 <code>고르면: 열쇠 켜기</code>. 문 앞 장면의 "문을 연다"에 <code>이럴 때만 보이기: 열쇠 켜져 있을 때</code>.</p></div>
+      <div class="recipe"><b>② 물건이 있어야 열리는 선택지 (가방)</b><p>스위치 <code>열쇠</code>를 만들고, <b>게임 화면 표시</b>에서 <i>🎒 가방</i> 상자를 만든 뒤 열쇠의 화면 칸을 가방으로. 창고의 "열쇠를 줍는다"에 <code>고르면: 열쇠 얻기</code> → 가방에 🔑. 문 앞의 "문을 연다"에 <code>이럴 때만 보이기: 열쇠 가지고 있을 때</code>.</p></div>
       <div class="recipe"><b>③ 한 번 본 장면 기억하기</b><p>회상 장면에서 <code>이 장면에 들어올 때: 비밀을_알았다 켜기</code>. 다른 장면의 "그 이야기 꺼내기"를 <code>비밀을_알았다 켜져 있을 때</code>만 보이게.</p></div>
       <div class="recipe"><b>④ 실수가 쌓이면 게임 오버</b><p>틀린 선택지마다 <code>고르면: 실수 1 더하기</code>. 중간 장면을 자동 이동으로 바꾸고 <code>실수 3 이상 → 게임 오버</code>, 조건 없음 <code>→ 계속 진행</code>.</p></div>
     </div>
@@ -1414,30 +1464,45 @@ Skins.register({
   }
 });
 
-/* 게임 화면 점수 표시: 변수 설정에서 '게임 화면에 표시'를 켠 값만 보여 줍니다 */
+/* 게임 화면 표시(HUD): 화면 표시 상자 여러 개에 변수를 담아 보여 줍니다.
+   project.hud.boxes = [{id, title, pos:'tl|tc|tr|bl|bc|br', layout:'row|col', frame, empty}]
+   varMeta[이름] = {box: 상자 id, disp, icon, max, hideName, notify}
+     스위치 disp: 'have'(켜졌을 때만 보임 · 물건) | 'check'(✓ / —)
+     숫자   disp: 'num'(숫자) | 'icons'(아이콘을 값만큼 · 하트) | 'bar'(막대 · 게이지) */
+const HUD_POS=['tl','tc','tr','bl','bc','br'];
+function hudDisp(m){return m?.type==='flag'?(m.disp==='check'?'check':'have'):(['icons','bar'].includes(m?.disp)?m.disp:'num')}
 const VarHud={mount(engine,root,getProject){
-  root.innerHTML='<div class="varhud" hidden></div>';const box=root.firstChild;let last={};
+  root.innerHTML=HUD_POS.map(p=>`<div class="hpos ${p}"></div>`).join('')+'<div class="htoasts"></div>';
+  let last={};
   const josa=(w,a,b)=>{const c=w.charCodeAt(w.length-1)-0xAC00;return w+(c>=0&&c<11172&&c%28?a:b)};
-  const toast=(txt,off)=>{const t=document.createElement('div');t.className='bag-toast'+(off?' off':'');t.textContent=txt;root.appendChild(t);setTimeout(()=>t.remove(),2500)};
+  const toast=(txt,off)=>{const t=document.createElement('div');t.className='h-toast'+(off?' off':'');t.textContent=txt;root.querySelector('.htoasts').appendChild(t);setTimeout(()=>t.remove(),2500)};
+  const item=(k,m,v)=>{
+    const d=hudDisp(m),ch=last[k]!=null&&last[k]!==v,ic=m.icon?`<i>${esc(m.icon)}</i>`:'',nm=m.hideName?'':`<span>${esc(k)}</span>`;
+    if(d==='have')return v?`<span class="hi ${ch?'new':''}">${ic}${nm}</span>`:'';
+    if(d==='check')return`<span class="hi ${v?'':'off'} ${ch?'bump':''}">${ic}${nm}<b>${v?'✓':'—'}</b></span>`;
+    if(d==='icons'){const n=Math.max(0,Math.min(30,v|0)),mx=Math.max(n,Math.min(30,+m.max||0)),g=esc(m.icon||'●');
+      return`<span class="hi ${m.hideName?'bare':''} ${ch?'bump':''}">${nm}<em>${g.repeat?Array.from({length:mx},(_,i)=>i<n?g:`<span class="e">${g}</span>`).join(''):''}</em></span>`}
+    if(d==='bar'){const mx=+m.max||10,pc=Math.max(0,Math.min(100,v/mx*100));return`<span class="hi ${ch?'bump':''}">${ic}${nm}<s><u style="width:${pc}%"></u></s><b>${v}</b></span>`}
+    return`<span class="hi ${ch?'bump':''}">${ic}${nm}<b>${v}</b></span>`;
+  };
   const draw=(ev)=>{
-    const P=getProject(),meta=P.varMeta||{},shown=Object.keys(P.vars||{}).filter(k=>meta[k]?.show);
-    // 가방 모드에서 선택으로 물건이 생기거나 없어지면 잠깐 알려 줍니다 (되돌리기 때는 알리지 않아요)
-    if(ev==='chosen'&&P.hud?.mode==='bag')shown.filter(k=>meta[k]?.type==='flag'&&last[k]!=null&&!!last[k]!==!!engine.vars[k]).forEach(k=>{
-      const on=!!engine.vars[k],ic=meta[k].icon?meta[k].icon+' ':'';
-      toast(on?`${ic}${josa(k,'을','를')} 얻었다`:`${ic}${josa(k,'을','를')} 내려놓았다`,!on);
+    const P=getProject(),meta=P.varMeta||{},boxes=P.hud?.boxes||[],names=Object.keys(P.vars||{});
+    // 선택으로 값이 바뀌면 '바뀌면 알림'을 켠 변수만 잠깐 알려 줍니다 (되돌리기 때는 알리지 않아요)
+    if(ev==='chosen')names.filter(k=>meta[k]?.notify&&last[k]!=null&&last[k]!==(engine.vars[k]??0)).forEach(k=>{
+      const m=meta[k],v=engine.vars[k]??0,ic=m.icon?m.icon+' ':'';
+      if(m.type==='flag')hudDisp(m)==='have'?toast(v?`${ic}${josa(k,'을','를')} 얻었다`:`${ic}${josa(k,'을','를')} 잃었다`,!v):toast(`${ic}${k} ${v?'✓':'해제'}`,!v);
+      else{const dv=v-last[k];toast(`${ic}${k} ${dv>0?'+'+dv:'−'+(-dv)}`,dv<0)}
     });
-    const chip=k=>{const v=engine.vars[k]??0,flag=meta[k]?.type==='flag';
-      return`<span class="vh ${last[k]!=null&&last[k]!==v?'bump':''}">${esc(k)}<b>${flag?(v?'✓':'—'):v}</b></span>`};
-    if(P.hud?.mode==='bag'){
-      // 가방 모드: 켜진 스위치만 물건으로 보여 주고, 숫자 점수는 옆에 따로 표시합니다
-      const isF=k=>meta[k]?.type==='flag',items=shown.filter(k=>isF(k)&&engine.vars[k]);
-      box.innerHTML=(shown.some(isF)?`<div class="bag"><span class="bag-h">${esc(P.hud.title||'🎒 가방')}</span>${items.length
-        ?items.map(k=>`<span class="bag-i ${last[k]!=null&&!last[k]?'new':''}">${meta[k].icon?`<i>${esc(meta[k].icon)}</i>`:''}${esc(k)}</span>`).join('')
-        :'<span class="bag-empty">비어 있음</span>'}</div>`:'')+shown.filter(k=>!isF(k)).map(chip).join('');
-    }else box.innerHTML=shown.map(chip).join('');
-    shown.forEach(k=>last[k]=engine.vars[k]??0);
-    box.hidden=!shown.length||!engine.cur;
-    setTimeout(()=>box.querySelectorAll('.bump').forEach(e=>e.classList.remove('bump')),300);
+    HUD_POS.forEach(pos=>{
+      root.querySelector('.hpos.'+pos).innerHTML=boxes.filter(b=>(b.pos||'tr')===pos).map(b=>{
+        const items=names.filter(k=>meta[k]?.box===b.id).map(k=>item(k,meta[k],engine.vars[k]??0)).filter(Boolean);
+        if(!items.length&&!b.empty&&!b.title)return'';
+        return`<div class="hbox ${b.frame?'frame':''} ${b.layout==='col'?'col':''}">${b.title?`<span class="hb-t">${esc(b.title)}</span>`:''}<div class="hb-items">${items.join('')||(b.empty?`<span class="hb-empty">${esc(b.empty)}</span>`:'')}</div></div>`;
+      }).join('');
+    });
+    names.forEach(k=>last[k]=engine.vars[k]??0);
+    root.querySelectorAll('.hpos').forEach(e=>e.hidden=!engine.cur);
+    setTimeout(()=>root.querySelectorAll('.bump').forEach(e=>e.classList.remove('bump')),300);
   };
   const offs=[engine.on('scene',()=>draw()),engine.on('chosen',()=>draw('chosen')),engine.on('end',()=>draw())];draw();
   return()=>{offs.forEach(f=>f());root.innerHTML=''};
@@ -1573,9 +1638,10 @@ const TEMPLATES=[
       adopt:tplScene('adopt','새 식구','#4a3a24',6,'수건으로 감싼 작은 몸이\n골골 소리를 낸다.',{end:true,loop:false,pos:{x:580,y:181}}),
       together:tplScene('together','둘이서 구조','#2c3f55',6,'퇴근한 알바생과 함께\n동물병원 문을 두드린다.',{end:true,loop:false,pos:{x:870,y:0}})
     }})},
-  {id:'meet',slug:'first-meeting',name:'첫 만남 · 호감도 엔딩',desc:'고를 때마다 호감이 오르내리고, 마지막에 호감 점수로 엔딩이 갈려요.',tags:['점수 변수','자동 이동','엔딩 2'],
+  {id:'meet',slug:'first-meeting',name:'첫 만남 · 호감도 엔딩',desc:'고를 때마다 호감이 오르내리고, 마지막에 호감 점수로 엔딩이 갈려요.',tags:['점수 변수','📊 게이지','자동 이동','엔딩 2'],
    make:()=>({title:'첫 만남',start:'meet',skin:'cards',
-    vars:{호감:0},varMeta:{호감:{type:'num',show:true}},
+    vars:{호감:0},varMeta:{호감:{type:'num',box:'g',disp:'bar',max:3,icon:'💗',notify:true}},
+    hud:{boxes:[{id:'g',kind:'gauge',title:'',pos:'tl',layout:'col',frame:true,empty:'',def:{num:'bar',flag:'check',max:10}}]},
     scenes:{
       meet:tplScene('meet','도서관','#2d3550',7,'같은 책을 동시에 집어 든 두 사람.',{at:4,pos:{x:0,y:0},
         ch:[tplChoice('a1','책을 양보한다','cafe','호감+=1'),tplChoice('a2','먼저 집어 간다','cafe')]}),
@@ -1588,9 +1654,10 @@ const TEMPLATES=[
       happy:tplScene('happy','다음 약속','#4a3a24',6,'"다음 주에 같이 책 보러 갈래요?"',{end:true,loop:false,pos:{x:1160,y:0}}),
       normal:tplScene('normal','스쳐 간 인연','#23262e',6,'그냥 스쳐 지나간 인연이었다.',{end:true,loop:false,pos:{x:1160,y:150}})
     }})},
-  {id:'escape',slug:'escape-room',name:'열쇠와 문 · 방 탈출',desc:'창고에서 열쇠를 주워야만 "문을 연다" 선택지가 나타나요.',tags:['스위치','조건 선택지','되돌아가기'],
+  {id:'escape',slug:'escape-room',name:'열쇠와 문 · 방 탈출',desc:'창고에서 열쇠를 주워야만 "문을 연다" 선택지가 나타나요.',tags:['스위치','🎒 가방','조건 선택지','되돌아가기'],
    make:()=>({title:'열쇠와 문',start:'hall',skin:'cinema',
-    vars:{열쇠:0},varMeta:{열쇠:{type:'flag',show:true}},
+    vars:{열쇠:0},varMeta:{열쇠:{type:'flag',box:'bag',disp:'have',icon:'🔑',notify:true}},
+    hud:{boxes:[{id:'bag',kind:'bag',title:'🎒 가방',pos:'tr',layout:'row',frame:true,empty:'비어 있음',def:{flag:'have',num:'num',notify:true}}]},
     scenes:{
       hall:tplScene('hall','낯선 복도','#262b33',6,'눈을 뜨니 낯선 복도.\n끝에 철문이 보인다.',{pos:{x:0,y:0},
         ch:[tplChoice('e1','창고를 뒤진다','storage'),tplChoice('e2','철문으로 간다','door')]}),
@@ -1604,7 +1671,8 @@ const TEMPLATES=[
     }})},
   {id:'chase',slug:'chase',name:'추격전 · 시간 초과 실패',desc:'제한 시간 안에 고르지 못하면 바로 붙잡히는 실패 엔딩으로 가고, 잘못 고르면 실수가 쌓여 결말이 달라져요.',tags:['제한 시간','시간 초과 → 실패 엔딩','실수 카운트','자동 이동'],
    make:()=>({title:'추격전',start:'run1',skin:'cards',
-    vars:{실수:0},varMeta:{실수:{type:'num',show:true}},
+    vars:{실수:0},varMeta:{실수:{type:'num',box:'m',disp:'icons',icon:'❌',max:3,notify:true}},
+    hud:{boxes:[{id:'m',kind:'hp',title:'',pos:'tl',layout:'row',frame:false,empty:'',def:{num:'icons',flag:'check',icon:'❤️',max:3}}]},
     scenes:{
       run1:tplScene('run1','갈림길','#3a2326',6,'누군가 뒤를 쫓아온다!\n4초 안에 길을 고르세요.',{at:1,lim:4,pos:{x:0,y:0},timeoutMode:'scene',timeoutTarget:'caught',
         ch:[tplChoice('q1','왼쪽 골목으로','run2'),tplChoice('q2','오른쪽 대로로','run2','실수+=1')]}),
@@ -1643,7 +1711,17 @@ const KEY='forkreel-project-v1';
 let P;try{P=JSON.parse(localStorage.getItem(KEY))}catch(e){}
 const firstVisit=!(P&&P.scenes);
 /* 예전 데이터 호환: 변수 설명(varMeta)이 없으면 채워 넣습니다 */
-function migrate(p){p.vars??={};p.varMeta??={};p.intro??={};p.hud??={};for(const k in p.vars)p.varMeta[k]??={type:'num',show:false};return p}
+function migrate(p){p.vars??={};p.varMeta??={};p.intro??={};p.hud??={};for(const k in p.vars)p.varMeta[k]??={type:'num',show:false};
+  // 예전 형식(게임 화면에 표시 체크 · 가방 모드)을 화면 표시 상자로 옮깁니다
+  if(!p.hud.boxes){
+    const B=p.hud.boxes=[],bagMode=p.hud.mode==='bag';
+    const metas=Object.entries(p.varMeta),items=metas.filter(([,m])=>m.type==='flag'&&(m.item||(bagMode&&m.show)));
+    if(items.length){B.push({id:'bag',title:p.hud.title||'🎒 가방',pos:'tr',layout:'row',frame:true,empty:'비어 있음'});items.forEach(([,m])=>{m.box='bag';m.disp='have';m.notify=true})}
+    const rest=metas.filter(([,m])=>m.show&&!m.box);
+    if(rest.length){B.push({id:'main',title:'',pos:'tr',layout:'row',frame:false,empty:''});rest.forEach(([,m])=>{m.box='main';m.disp=m.type==='flag'?'check':'num'})}
+    metas.forEach(([,m])=>{delete m.show;delete m.item});delete p.hud.mode;delete p.hud.title;
+  }
+  return p}
 if(!P||!P.scenes)P=sampleProject();
 migrate(P);
 let sel=P.start,advOpen=false,saveTimer=null;
@@ -2190,18 +2268,20 @@ const SET_NUM=[['+=','더하기'],['-=','빼기'],['=','로 바꾸기']];
 const OPN=Object.fromEntries(OPS_NUM);
 function varNames(){return Object.keys(P.vars||{})}
 function vtype(v){return P.varMeta?.[v]?.type==='flag'?'flag':'num'}
-function condText(expr){return Logic.parseCond(expr).map(r=>vtype(r.v)==='flag'?`${r.v} ${+r.n?'켜짐':'꺼짐'}`:`${r.v} ${r.n} ${OPN[r.op]||r.op}`).join(' 그리고 ')}
-function setText(expr){return Logic.parseSet(expr).map(r=>vtype(r.v)==='flag'?`${r.v} ${+r.n?'켜기':'끄기'}`:`${r.v} ${r.op==='+='?'+'+r.n:r.op==='-='?'−'+r.n:'= '+r.n}`).join(', ')}
+function isItem(v){const m=P.varMeta?.[v];return vtype(v)==='flag'&&!!m?.box&&hudDisp(m)==='have'}   // 화면에 '있을 때만 보이기'로 표시하는 스위치 = 물건
+function condText(expr){return Logic.parseCond(expr).map(r=>vtype(r.v)==='flag'?`${r.v} ${isItem(r.v)?(+r.n?'있음':'없음'):(+r.n?'켜짐':'꺼짐')}`:`${r.v} ${r.n} ${OPN[r.op]||r.op}`).join(' 그리고 ')}
+function setText(expr){return Logic.parseSet(expr).map(r=>vtype(r.v)==='flag'?`${r.v} ${isItem(r.v)?(+r.n?'얻기':'잃기'):(+r.n?'켜기':'끄기')}`:`${r.v} ${r.op==='+='?'+'+r.n:r.op==='-='?'−'+r.n:'= '+r.n}`).join(', ')}
 /* 조건/점수 변경을 고르기 상자로 편집하는 블록. 저장은 기존 문자열 형식 그대로 */
 function builderHtml(kind,ci,expr){
   const isCond=kind==='if',rows=isCond?Logic.parseCond(expr):Logic.parseSet(expr),names=varNames();
   if(!names.length&&!rows.length)return`<p class="hint">아직 점수 변수가 없어요. <button class="link" data-openvars>점수 변수 만들기</button></p>`;
-  const opt=v=>names.map(n=>`<option value="${esc(n)}" ${n===v?'selected':''}>${esc(n)}</option>`).join('')+(v&&!names.includes(v)?`<option value="${esc(v)}" selected>${esc(v)} (없는 변수)</option>`:'');
+  const opt=v=>names.map(n=>`<option value="${esc(n)}" ${n===v?'selected':''}>${isItem(n)?(P.varMeta[n].icon?P.varMeta[n].icon+' ':'🎒 '):''}${esc(n)}</option>`).join('')+(v&&!names.includes(v)?`<option value="${esc(v)}" selected>${esc(v)} (없는 변수)</option>`:'');
   const body=rows.map((r,ri)=>{
     const flag=vtype(r.v)==='flag';let mid;
-    if(isCond)mid=flag?`<select class="b-op" aria-label="상태"><option value="==1" ${+r.n?'selected':''}>켜져 있을 때</option><option value="==0" ${+r.n?'':'selected'}>꺼져 있을 때</option></select>`
+    const it=isItem(r.v);
+    if(isCond)mid=flag?`<select class="b-op" aria-label="상태"><option value="==1" ${+r.n?'selected':''}>${it?'가지고 있을 때':'켜져 있을 때'}</option><option value="==0" ${+r.n?'':'selected'}>${it?'없을 때':'꺼져 있을 때'}</option></select>`
       :`<input type="number" class="b-n" value="${r.n}" step="1" aria-label="값"><select class="b-op" aria-label="비교">${OPS_NUM.map(([o,l])=>`<option value="${o}" ${o===r.op?'selected':''}>${l}</option>`).join('')}</select>`;
-    else mid=flag?`<select class="b-op" aria-label="동작"><option value="=1" ${+r.n?'selected':''}>켜기</option><option value="=0" ${+r.n?'':'selected'}>끄기</option></select>`
+    else mid=flag?`<select class="b-op" aria-label="동작"><option value="=1" ${+r.n?'selected':''}>${it?'얻기':'켜기'}</option><option value="=0" ${+r.n?'':'selected'}>${it?'잃기':'끄기'}</option></select>`
       :`<input type="number" class="b-n" value="${r.n}" step="1" aria-label="값"><select class="b-op" aria-label="동작">${SET_NUM.map(([o,l])=>`<option value="${o}" ${o===r.op?'selected':''}>${l}</option>`).join('')}</select>`;
     return`<div class="brow" data-ri="${ri}"><select class="b-var" aria-label="변수">${opt(r.v)}</select>${mid}<button class="x b-del" title="이 줄 삭제" aria-label="이 줄 삭제">×</button></div>`;
   }).join('');
@@ -2646,28 +2726,74 @@ $('placeRoot').addEventListener('pointerup',()=>{
 });
 
 /* --- 점수 변수 패널 --- */
-const VAR_EX=[['호감','num',0,'친절한 선택마다 올리는 점수'],['용기','num',0,'용감한 선택마다 올리는 점수'],['돈','num',10,'10을 가지고 시작'],['실수','num',0,'틀린 선택 횟수'],['열쇠','flag',0,'얻었는지 아닌지'],['비밀을_알았다','flag',0,'한 번 본 장면 기억하기']];
+const VAR_EX=[['호감','num',0,'친절한 선택마다 올리는 점수','💗'],['체력','num',3,'3에서 시작해 실수하면 줄어드는 값','❤️'],['돈','num',10,'10을 가지고 시작','🪙'],['실수','num',0,'틀린 선택 횟수'],
+  ['열쇠','flag',0,'얻었는지 아닌지 · 물건','🔑'],['지도','flag',0,'얻었는지 아닌지 · 물건','🗺️'],['비밀을_알았다','flag',0,'한 번 본 장면 기억하기','💡']];
+/* 화면 표시 상자 만들기 버튼들: 상자 모양과, 상자에 변수를 넣었을 때 기본으로 쓸 표시 방식 */
+const HUD_PRESETS=[
+  ['bag','🎒 가방',{title:'🎒 가방',pos:'tr',layout:'row',frame:true,empty:'비어 있음'},{flag:'have',num:'num',notify:true},'얻은 물건만 아이콘과 함께'],
+  ['hp','❤️ 체력 하트',{title:'',pos:'tl',layout:'row',frame:false,empty:''},{num:'icons',flag:'check',icon:'❤️',max:3},'숫자만큼 하트(아이콘)로'],
+  ['gauge','📊 게이지',{title:'',pos:'tl',layout:'col',frame:true,empty:''},{num:'bar',flag:'check',max:10},'호감·용기 같은 값을 막대로'],
+  ['clue','🔎 단서 목록',{title:'🔎 단서',pos:'bl',layout:'col',frame:true,empty:'아직 없음'},{flag:'have',num:'num',notify:true},'알아낸 것을 세로 목록으로'],
+  ['score','🏷️ 점수판',{title:'',pos:'tr',layout:'row',frame:false,empty:''},{num:'num',flag:'check'},'값을 그대로 작은 꼬리표로'],
+  ['blank','＋ 빈 상자',{title:'새 표시',pos:'tc',layout:'row',frame:true,empty:''},{num:'num',flag:'have'},'처음부터 직접 꾸미기']];
 const VNAME=/^[A-Za-z가-힣_][\w가-힣]*$/;
 function varUsage(name){let n=0;const f=str=>{(str||'').replace(/[\w가-힣]+/g,m=>{if(m===name)n++;return m})};Object.values(P.scenes).forEach(s=>{f(s.enter);s.choices.forEach(c=>{f(c.if);f(c.set)})});return n}
 function mapRefs(fn){Object.values(P.scenes).forEach(s=>{s.enter=fn(s.enter||'','set');s.choices.forEach(c=>{c.if=fn(c.if||'','if');c.set=fn(c.set||'','set')})})}
-function addVar(base,type,start,show){
+function addVar(base,type,start,icon){
   let n=base,k=2;while(P.vars[n]!=null)n=base+k++;
-  P.vars[n]=type==='flag'?(start?1:0):(+start||0);P.varMeta[n]={type,show:!!show};return n;
+  P.vars[n]=type==='flag'?(start?1:0):(+start||0);P.varMeta[n]={type,box:'',icon:icon||''};return n;
+}
+/* 변수를 상자에 넣을 때: 상자의 기본 표시 방식을 따르되, 이미 정해 둔 모양이 있으면 그대로 둡니다 */
+function putInBox(n,boxId){
+  const m=P.varMeta[n],b=(P.hud.boxes||[]).find(x=>x.id===boxId);m.box=b?b.id:'';if(!b)return;
+  const d=b.def||{},t=m.type==='flag'?'flag':'num';
+  if(!m.disp||(t==='flag')!==['have','check'].includes(m.disp))m.disp=d[t]||(t==='flag'?'have':'num');
+  if(!m.icon&&d.icon&&m.disp==='icons')m.icon=d.icon;
+  if(m.max==null&&d.max&&['icons','bar'].includes(m.disp))m.max=Math.max(d.max,+P.vars[n]||0);
+  if(m.notify==null)m.notify=!!d.notify;
+}
+const DISP_OPTS={flag:[['have','있을 때만 보이기 (물건·단서)'],['check','✓ / — 로 보이기']],num:[['num','숫자'],['icons','아이콘을 값만큼 (하트)'],['bar','막대 (게이지)']]};
+const POS_NAME={tl:'왼쪽 위',tc:'가운데 위',tr:'오른쪽 위',bl:'왼쪽 아래',bc:'가운데 아래',br:'오른쪽 아래'};
+let openBox=null;
+function boxCard(b){
+  const inside=varNames().filter(n=>P.varMeta[n]?.box===b.id),op=openBox===b.id;
+  return`<div class="hb-card ${op?'open':''}" data-box="${b.id}">
+    <div class="hb-head"><button class="hb-tog" data-hbtog aria-expanded="${op}">${op?'▾':'▸'}</button>
+      <input class="hb-title" value="${esc(b.title)}" placeholder="제목 없음 (상자 제목을 안 보여요)" aria-label="상자 제목">
+      <span class="hb-where">${POS_NAME[b.pos]||''}</span>
+      <button class="x" data-hbdel title="상자 삭제" aria-label="상자 삭제">×</button></div>
+    <div class="hb-inside">${inside.length?inside.map(n=>`<span class="chip-v">${esc(P.varMeta[n].icon||'')} ${esc(n)}</span>`).join(''):'<span class="hint">비어 있어요 · 아래 변수의 <b>화면</b> 칸에서 이 상자를 고르세요</span>'}</div>
+    ${op?`<div class="hb-body">
+      <div class="hb-f"><span>위치</span><div class="posgrid">${HUD_POS.map(p=>`<button data-hbpos="${p}" class="${b.pos===p?'on':''}" title="${POS_NAME[p]}" aria-label="${POS_NAME[p]}"></button>`).join('')}</div></div>
+      <div class="hb-f"><span>배치</span><div class="seg2"><button data-hblay="row" class="${b.layout!=='col'?'on':''}">가로로</button><button data-hblay="col" class="${b.layout==='col'?'on':''}">세로로</button></div></div>
+      <label class="hb-f"><span>테두리</span><input type="checkbox" class="hb-frame" ${b.frame?'checked':''}> 어두운 상자로 감싸기</label>
+      <label class="hb-f"><span>비었을 때</span><input class="hb-empty-in" value="${esc(b.empty||'')}" placeholder="비우면 상자를 숨겨요"></label>
+    </div>`:''}
+  </div>`;
+}
+function varRow(n){
+  const t=vtype(n),u=varUsage(n),m=P.varMeta[n]||{},boxes=P.hud.boxes||[],d=hudDisp(m),shown=!!boxes.find(b=>b.id===m.box);
+  return`<div class="vrow" data-v="${esc(n)}">
+    <span class="vtype ${t}">${t==='flag'?'스위치':'점수'}</span>
+    <input class="vname" value="${esc(n)}" aria-label="변수 이름" spellcheck="false">
+    ${t==='flag'?`<label class="vstart"><input type="checkbox" class="vval" ${P.vars[n]?'checked':''}> 처음에 켜짐</label>`
+      :`<label class="vstart">시작값 <input type="number" class="vval" value="${P.vars[n]}" step="1"></label>`}
+    <button class="x" data-vdel title="삭제" aria-label="${esc(n)} 삭제">×</button>
+    <div class="vdisp">
+      <label class="vd-f"><span>화면</span><select class="v-box" aria-label="${esc(n)} 화면 표시">
+        <option value="">안 보임</option>${boxes.map(b=>`<option value="${b.id}" ${m.box===b.id?'selected':''}>${esc(b.title||HUD_PRESETS.find(x=>x[0]===b.kind)?.[1]||'제목 없는 상자')} · ${POS_NAME[b.pos]}</option>`).join('')}
+        <option value="__new">＋ 새 상자 만들기…</option></select></label>
+      ${shown?`<label class="vd-f"><span>모양</span><select class="v-disp">${DISP_OPTS[t].map(([v,l])=>`<option value="${v}" ${d===v?'selected':''}>${l}</option>`).join('')}</select></label>
+        <label class="vd-f"><span>아이콘</span><input class="vicon" value="${esc(m.icon||'')}" placeholder="${d==='icons'?'❤️':'없음'}" maxlength="4" title="그림 문자 하나 · Windows는 Win+. 키, Mac은 Ctrl+Cmd+Space로 고를 수 있어요"></label>
+        ${['icons','bar'].includes(d)?`<label class="vd-f"><span>최대</span><input type="number" class="vmax" min="1" max="30" value="${+m.max||(d==='bar'?10:'')}" placeholder="${d==='icons'?'없음':'10'}" title="${d==='icons'?'최대만큼 빈 아이콘을 흐리게 보여 줘요':'막대가 꽉 차는 값'}"></label>`:''}
+        <label class="vd-c"><input type="checkbox" class="vhidename" ${m.hideName?'checked':''}> 이름 숨기기</label>
+        <label class="vd-c"><input type="checkbox" class="vnotify" ${m.notify?'checked':''}> 바뀌면 알림</label>`:''}
+    </div>
+    <div class="vuse"><span>${u?`선택지·장면 ${u}곳에서 사용 중`:'아직 아무 데서도 안 쓰는 중'}</span><span class="vnow" data-now="${esc(n)}"></span></div>
+  </div>`;
 }
 function renderVarsPanel(){
-  const names=varNames(),bag=P.hud?.mode==='bag';
-  const rows=names.map(n=>{
-    const t=vtype(n),u=varUsage(n),m=P.varMeta[n]||{};
-    return`<div class="vrow" data-v="${esc(n)}">
-      <span class="vtype ${t}">${t==='flag'?'스위치':'점수'}</span>
-      <input class="vname" value="${esc(n)}" aria-label="변수 이름" spellcheck="false">
-      ${t==='flag'?`<label class="vstart"><input type="checkbox" class="vval" ${P.vars[n]?'checked':''}> 처음에 켜짐</label>`
-        :`<label class="vstart">시작값 <input type="number" class="vval" value="${P.vars[n]}" step="1"></label>`}
-      <label class="vshow" title="게임 화면 오른쪽 위에 표시"><input type="checkbox" class="vshowc" ${m.show?'checked':''}> ${bag&&t==='flag'?'가방에 표시':'게임 화면에 표시'}</label>
-      ${bag&&t==='flag'?`<input class="vicon" value="${esc(m.icon||'')}" placeholder="아이콘" maxlength="4" title="가방에 같이 나올 그림 문자 (예: 🔦 🔔 🎫)" aria-label="${esc(n)} 아이콘">`:''}
-      <button class="x" data-vdel title="삭제" aria-label="${esc(n)} 삭제">×</button>
-      <div class="vuse"><span>${u?`선택지·장면 ${u}곳에서 사용 중`:'아직 아무 데서도 안 쓰는 중'}</span><span class="vnow" data-now="${esc(n)}"></span></div>
-    </div>`;}).join('');
+  const names=varNames(),boxes=P.hud.boxes||[];
   $('varsPanel').innerHTML=`
     <button class="vp-help" data-vhelp aria-haspopup="dialog" title="눌러서 자세한 설명과 예시 보기">
       <span class="q">?</span><span><b>점수 변수란?</b> 플레이어가 고른 것을 기억해 두는 값이에요.</span>
@@ -2677,18 +2803,24 @@ function renderVarsPanel(){
       <button class="btn sm primary" data-vadd="flag">＋ 스위치</button>
     </div>
     <div class="vp-ex"><span class="hint">예시로 바로 추가</span>
-      ${VAR_EX.map((x,i)=>`<button class="chipbtn" data-vex="${i}" title="${esc(x[3])}">${esc(x[0])}<small>${x[1]==='flag'?'스위치':'점수'}</small></button>`).join('')}</div>
-    ${names.length?`<div class="vp-hud"><span class="hint">게임 화면 표시</span>
-      <span class="seg"><button data-hud="list" class="${bag?'':'on'}">점수 목록</button><button data-hud="bag" class="${bag?'on':''}">🎒 가방</button></span>
-      ${bag?`<input id="hudTitle" value="${esc(P.hud.title||'🎒 가방')}" aria-label="가방 이름" title="가방 이름"><span class="hint">스위치가 켜지면 물건처럼 가방에 들어가요</span>`:''}</div>`:''}
-    <div class="vp-list">${rows||'<p class="hint">아직 변수가 없어요. 위 버튼으로 하나 만들어 보세요.</p>'}</div>
+      ${VAR_EX.map((x,i)=>`<button class="chipbtn" data-vex="${i}" title="${esc(x[3])}">${x[4]?x[4]+' ':''}${esc(x[0])}<small>${x[1]==='flag'?'스위치':'점수'}</small></button>`).join('')}</div>
+    <div class="vp-list">${names.map(varRow).join('')||'<p class="hint">아직 변수가 없어요. 위 버튼으로 하나 만들어 보세요.</p>'}</div>
+    <section class="vp-hud">
+      <div class="vp-hud-h"><b>게임 화면 표시</b><span class="hint">변수를 플레이 화면 위에 보여 주는 상자예요. 상자를 만들고, 변수의 <b>화면</b> 칸에서 상자를 고르면 들어가요.</span></div>
+      <div class="hb-presets">${HUD_PRESETS.map(([k,l,,,desc])=>`<button class="chipbtn" data-hbadd="${k}" title="${esc(desc)}">${l}</button>`).join('')}</div>
+      ${boxes.map(boxCard).join('')}
+    </section>
     <p class="hint">위 <b>점수 변수란?</b>을 누르면 자세한 사용법과 예시를 크게 볼 수 있어요. 지금 값은 각 변수 옆과 미리보기 아래에 실시간으로 나와요.</p>`;
   updateVarNow();
+}
+function addBox(kind){
+  const pr=HUD_PRESETS.find(x=>x[0]===kind)||HUD_PRESETS[HUD_PRESETS.length-1];
+  const b={id:uid('hb'),kind:pr[0],...pr[2],def:pr[3]};(P.hud.boxes||(P.hud.boxes=[])).push(b);openBox=b.id;return b;
 }
 function updateVarNow(){
   document.querySelectorAll('#varsPanel .vnow').forEach(el=>{
     const n=el.dataset.now;if(!engine.cur){el.textContent='';return}
-    const v=engine.vars[n]??0;el.textContent='지금 '+(vtype(n)==='flag'?(v?'켜짐':'꺼짐'):v);
+    const v=engine.vars[n]??0;el.textContent='지금 '+(vtype(n)==='flag'?(isItem(n)?(v?'가지고 있음':'없음'):(v?'켜짐':'꺼짐')):v);
   });
 }
 const vp=$('varsPanel');
@@ -2696,38 +2828,56 @@ $('vhClose').onclick=()=>{$('varHelp').hidden=true};
 $('varHelp').addEventListener('click',e=>{if(e.target.id==='varHelp')$('varHelp').hidden=true});
 vp.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
+  const card=b.closest('.hb-card'),box=card&&(P.hud.boxes||[]).find(x=>x.id===card.dataset.box);
   if(b.hasAttribute('data-vhelp')){$('varHelp').hidden=false;$('varHelp').querySelector('.modal-box').scrollTop=0;$('vhClose').focus({preventScroll:true});return}
   if(b.dataset.vadd){
-    const t=b.dataset.vadd,n=addVar(t==='flag'?'스위치':'점수',t,0,false);
+    const t=b.dataset.vadd,n=addVar(t==='flag'?'스위치':'점수',t,0);
     save();renderVarsPanel();renderInspector();
     const inp=vp.querySelector(`.vrow[data-v="${CSS.escape(n)}"] .vname`);inp?.focus();inp?.select();
-    toast('이름을 알아보기 쉽게 바꿔 주세요 (예: 호감, 열쇠)');
-  }else if(b.dataset.vex!=null){
-    const[x,t,st,desc]=VAR_EX[+b.dataset.vex];
+    toast('이름을 알아보기 쉽게 바꿔 주세요 (예: 호감, 열쇠)');return;
+  }
+  if(b.dataset.vex!=null){
+    const[x,t,st,desc,ic]=VAR_EX[+b.dataset.vex];
     if(P.vars[x]!=null){toast(`'${x}' 변수는 이미 있어요`);return}
-    addVar(x,t,st,t==='num');save();renderVarsPanel();renderInspector();toast(`'${x}' 추가 · ${desc}`);
-  }else if(b.hasAttribute('data-vdel')){
+    addVar(x,t,st,ic);save();renderVarsPanel();renderInspector();toast(`'${x}' 추가 · ${desc} · 화면에 보이려면 아래 '게임 화면 표시'에서 상자를 만들어요`);return;
+  }
+  if(b.dataset.hbadd){
+    const nb=addBox(b.dataset.hbadd);save();renderVarsPanel();engine.refreshUI();
+    vp.querySelector(`.hb-card[data-box="${nb.id}"]`)?.scrollIntoView({block:'nearest',behavior:'smooth'});
+    toast(`'${HUD_PRESETS.find(x=>x[0]===nb.kind)[1]}' 상자를 만들었어요 · 변수의 '화면' 칸에서 이 상자를 고르세요`);return;
+  }
+  if(box){
+    if(b.hasAttribute('data-hbtog')){openBox=openBox===box.id?null:box.id;renderVarsPanel();return}
+    if(b.hasAttribute('data-hbdel')){
+      if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent='삭제?';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='×'}},2500);return}
+      P.hud.boxes=P.hud.boxes.filter(x=>x!==box);Object.values(P.varMeta).forEach(m=>{if(m.box===box.id)m.box=''});
+    }
+    else if(b.dataset.hbpos)box.pos=b.dataset.hbpos;
+    else if(b.dataset.hblay)box.layout=b.dataset.hblay;
+    else return;
+    save();renderVarsPanel();renderInspector();engine.refreshUI();return;
+  }
+  if(b.hasAttribute('data-vdel')){
     const n=b.closest('.vrow').dataset.v,u=varUsage(n);
     if(!b.classList.contains('armed')){b.classList.add('armed');b.textContent=u?`${u}곳에서 빠져요. 삭제?`:'삭제?';setTimeout(()=>{if(b.isConnected){b.classList.remove('armed');b.textContent='×'}},2800);return}
     mapRefs((str,kind)=>kind==='if'?Logic.condStr(Logic.parseCond(str).filter(r=>r.v!==n)):Logic.setStr(Logic.parseSet(str).filter(r=>r.v!==n)));
     delete P.vars[n];delete P.varMeta[n];
-    save();renderVarsPanel();renderInspector();renderGraph();toast(`'${n}' 변수를 삭제했어요`);
+    save();renderVarsPanel();renderInspector();renderGraph();engine.refreshUI();toast(`'${n}' 변수를 삭제했어요`);
   }
 });
-vp.addEventListener('click',e=>{
-  const b=e.target.closest('[data-hud]');if(!b)return;
-  P.hud={...(P.hud||{}),mode:b.dataset.hud};
-  if(b.dataset.hud==='bag'&&!varNames().some(n=>vtype(n)==='flag'))toast('가방에는 스위치 변수가 들어가요. ＋ 스위치로 물건을 만들어 보세요');
-  save();renderVarsPanel();engine.refreshUI();
-});
 vp.addEventListener('input',e=>{
-  const t=e.target;
-  if(t.id==='hudTitle'){P.hud={...(P.hud||{}),title:t.value};save();engine.refreshUI();return}
-  if(t.classList.contains('vicon')){const n=t.closest('.vrow').dataset.v;P.varMeta[n]={...(P.varMeta[n]||{type:'flag'}),icon:t.value.trim()};save();engine.refreshUI()}
+  const t=e.target,card=t.closest('.hb-card'),box=card&&(P.hud.boxes||[]).find(x=>x.id===card.dataset.box);
+  if(box&&t.classList.contains('hb-title')){box.title=t.value;save();engine.refreshUI();return}
+  if(box&&t.classList.contains('hb-empty-in')){box.empty=t.value;save();engine.refreshUI();return}
+  const row=t.closest('.vrow');if(!row)return;const n=row.dataset.v,m=P.varMeta[n];
+  if(t.classList.contains('vicon')){m.icon=t.value.trim();save();engine.refreshUI();vp.querySelectorAll(`.hb-card`).forEach(()=>{});return}
+  if(t.classList.contains('vmax')){m.max=Math.max(1,Math.min(30,+t.value||0))||'';save();engine.refreshUI();return}
 });
 vp.addEventListener('change',e=>{
   const t=e.target,row=t.closest('.vrow');if(!row)return;const n=row.dataset.v;
-  if(t.classList.contains('vicon'))return;
+  const cardC=t.closest('.hb-card'),boxC=cardC&&(P.hud.boxes||[]).find(x=>x.id===cardC.dataset.box);
+  if(boxC&&t.classList.contains('hb-frame')){boxC.frame=t.checked;save();engine.refreshUI();return}
+  if(t.classList.contains('vicon')||t.classList.contains('vmax')||t.classList.contains('hb-title')||t.classList.contains('hb-empty-in')){renderVarsPanel();renderInspector();return}
   if(t.classList.contains('vname')){
     const nw=t.value.trim().replace(/\s+/g,'_');
     if(nw===n)return;
@@ -2738,7 +2888,14 @@ vp.addEventListener('change',e=>{
     mapRefs(str=>str.replace(/[\w가-힣]+/g,m=>m===n?nw:m));
     toast(`이름을 바꾸고 쓰인 곳 ${varUsage(nw)}곳도 함께 고쳤어요`);
   }else if(t.classList.contains('vval'))P.vars[n]=t.type==='checkbox'?(t.checked?1:0):(+t.value||0);
-  else if(t.classList.contains('vshowc')){P.varMeta[n]={...(P.varMeta[n]||{type:'num'}),show:t.checked};engine.refreshUI()}
+  else if(t.classList.contains('v-box')){
+    if(t.value==='__new'){const nb=addBox(vtype(n)==='flag'?'bag':'score');putInBox(n,nb.id);toast('새 상자를 만들어 넣었어요 · 아래에서 제목·위치를 바꿀 수 있어요')}
+    else putInBox(n,t.value);
+    engine.refreshUI();
+  }
+  else if(t.classList.contains('v-disp')){const m=P.varMeta[n];m.disp=t.value;if(t.value==='icons'&&!m.icon)m.icon='❤️';if(t.value==='bar'&&!m.max)m.max=10;engine.refreshUI()}
+  else if(t.classList.contains('vhidename')){P.varMeta[n].hideName=t.checked;engine.refreshUI()}
+  else if(t.classList.contains('vnotify')){P.varMeta[n].notify=t.checked}
   else return;
   save();renderVarsPanel();renderInspector();renderGraph();
 });

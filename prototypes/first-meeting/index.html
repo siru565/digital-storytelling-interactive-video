@@ -62,18 +62,30 @@
 .cd-end small{font:600 clamp(10px,1.3cqw,13px) var(--f-mono);color:var(--branch);letter-spacing:.2em}
 .cd-path{font:clamp(10px,1.3cqw,13px) var(--f-mono);color:#aeb6c2;max-width:80cqw;text-align:center}
 .hud-root{position:absolute;inset:0;pointer-events:none}
-.varhud{position:absolute;right:2.4cqw;top:2cqw;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.8cqw;max-width:60cqw}
-.vh{font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#eef1f5;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);padding:.25em .75em;border-radius:999px;transition:transform .25s}
-.vh b{color:var(--accent);font-family:var(--f-mono);margin-left:.3em}
-.vh.bump{transform:scale(1.15)}
-/* 가방 모드: 켜진 스위치를 물건처럼 보여 줍니다 */
-.bag{display:flex;align-items:center;gap:.6cqw;flex-wrap:wrap;justify-content:flex-end;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:1.2cqw;padding:.5cqw .8cqw}
-.bag-h{font:700 clamp(9px,1.2cqw,13px) var(--f-ui);color:#c9ced6;letter-spacing:.05em;margin-right:.2cqw}
-.bag-i{display:inline-flex;align-items:center;gap:.35em;font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#f4efe6;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:.8cqw;padding:.2em .6em}
-.bag-i i{font-style:normal;font-size:1.15em}
-.bag-i.new{animation:bagIn .6s cubic-bezier(.2,1.4,.4,1)}
+.hpos{position:absolute;display:flex;flex-direction:column;gap:.8cqw;max-width:60cqw}
+.hpos.tl{left:2.4cqw;top:6.5cqw;align-items:flex-start}   /* 왼쪽 위 장면 제목과 겹치지 않게 조금 내려요 */.hpos.tc{left:50%;top:2cqw;transform:translateX(-50%);align-items:center}.hpos.tr{right:2.4cqw;top:2cqw;align-items:flex-end}
+.hpos.bl{left:2.4cqw;bottom:2cqw;align-items:flex-start}.hpos.bc{left:50%;bottom:2cqw;transform:translateX(-50%);align-items:center}.hpos.br{right:2.4cqw;bottom:2cqw;align-items:flex-end}
+.hbox{display:flex;align-items:center;gap:.6cqw;flex-wrap:wrap}
+.hbox.col{flex-direction:column;align-items:stretch}
+.hbox.frame{background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18);border-radius:1.2cqw;padding:.55cqw .9cqw}
+.hb-t{font:700 clamp(9px,1.2cqw,13px) var(--f-ui);color:#c9ced6;letter-spacing:.05em}
+.hb-items{display:flex;flex-wrap:wrap;gap:.6cqw;align-items:center}
+.hbox.col .hb-items{flex-direction:column;align-items:stretch}
+.hb-empty{font:500 clamp(9px,1.2cqw,12px) var(--f-ui);color:#8a909a}
+.hi{display:inline-flex;align-items:center;gap:.4em;font:600 clamp(10px,1.4cqw,14px) var(--f-ui);color:#f4efe6;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:.25em .75em;transition:transform .25s,opacity .25s}
+.hbox.frame .hi{background:rgba(255,255,255,.08);border-radius:.8cqw}
+.hi i{font-style:normal;font-size:1.1em}
+.hi b{color:var(--accent);font-family:var(--f-mono)}
+.hi.off{opacity:.5}
+.hi.bump{transform:scale(1.15)}
+.hi.new{animation:bagIn .6s cubic-bezier(.2,1.4,.4,1)}
 @keyframes bagIn{from{transform:scale(.3) translateY(40%);opacity:0}to{transform:none;opacity:1}}
-.bag-empty{font:500 clamp(9px,1.2cqw,12px) var(--f-ui);color:#8a909a}
+.hi em{font-style:normal;letter-spacing:.06em;font-size:1.1em}
+.hi em .e{opacity:.22;filter:grayscale(1)}
+.hi.bare{background:none;border-color:transparent;padding-left:0;padding-right:0}
+.hi s{display:inline-block;width:9cqw;height:.7cqw;min-height:4px;background:rgba(255,255,255,.18);border-radius:1cqw;overflow:hidden;text-decoration:none}
+.hi s u{display:block;height:100%;background:var(--accent);transition:width .4s}
+.htoasts{position:absolute;left:50%;top:8cqw;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5cqw}
 /* 엔딩 / 게임 오버 */
 .end-msg{margin:0;font:500 clamp(12px,1.8cqw,19px) var(--f-ui);color:#d6d9de;text-align:center;padding:0 6cqw;white-space:pre-line}
 .cin-end.over,.cd-end.over{background:radial-gradient(ellipse at center,rgba(58,4,6,.93),rgba(0,0,0,.97))}
@@ -87,6 +99,14 @@
 .cover .cv-note{color:#e8c46a}
 .cover .cv-cred{font:500 clamp(10px,1.3cqw,13px) var(--f-ui);border:0;padding:.3em .8em;color:#a9afb9;text-decoration:underline}
 .end-btns button[hidden]{display:none}
+.end-hist{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.6cqw;max-width:80cqw}
+.end-hist[hidden]{display:none}
+.end-hist span{width:100%;text-align:center;font:600 clamp(9px,1.1cqw,12px) var(--f-ui);color:#9aa0aa;letter-spacing:.08em;margin-bottom:.2cqw}
+.end-hist button{font:500 clamp(9px,1.2cqw,13px) var(--f-ui);background:rgba(255,255,255,.06);color:#d6d9de;border:1px solid rgba(255,255,255,.18);border-radius:.6cqw;padding:.3em .8em;cursor:pointer}
+.end-hist button:hover{border-color:var(--accent);color:var(--accent)}
+.h-toast{font:600 clamp(11px,1.5cqw,16px) var(--f-ui);color:#f4efe6;background:rgba(0,0,0,.75);border:1px solid rgba(248,196,64,.6);border-radius:1cqw;padding:.45em .9em;animation:bagToast 2.4s ease forwards;white-space:nowrap}
+.h-toast.off{border-color:rgba(255,255,255,.3);color:#c9ced6}
+@keyframes bagToast{0%{opacity:0;transform:translateY(-30%)}12%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
 /* 크레딧 */
 .credits{position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2cqw;animation:freeIn .4s ease both}
 .cr-roll{max-height:72%;overflow:auto;text-align:center;padding:0 6cqw}
@@ -148,7 +168,7 @@ html,body{margin:0;height:100%;background:#000;color:#eee;font-family:var(--f-ui
 <div class="wrap"><div class="stage" id="stage"><div class="layers" id="layers"></div><div class="hot-root" id="hotRoot"></div><div class="skin-root" id="skinRoot"></div><div class="hud-root" id="hudRoot"></div>
 <div class="cover" id="cover"></div></div></div>
 <div class="ctrl"><button id="cBack">↶ 이전 선택</button><button id="cRestart">처음부터</button><button id="cMute">소리 끄기</button><button id="cFull">전체화면</button></div>
-<script type="application/json" id="project">{"title":"첫 만남","start":"meet","skin":"cards","vars":{"호감":0},"varMeta":{"호감":{"type":"num","show":true}},"scenes":{"meet":{"id":"meet","title":"도서관","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#2d3550","duration":7,"caption":"같은 책을 동시에 집어 든 두 사람.","name":""},"choiceAt":4,"timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"a1","label":"책을 양보한다","target":"cafe","set":"호감+=1","if":""},{"id":"a2","label":"먼저 집어 간다","target":"cafe","set":"","if":""}],"pos":{"x":0,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"cafe":{"id":"cafe","title":"카페","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3d3226","duration":7,"caption":"며칠 뒤, 카페에서 다시 마주쳤다.","name":""},"choiceAt":4,"timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"a3","label":"반갑게 인사한다","target":"rain","set":"호감+=1","if":""},{"id":"a4","label":"모른 척한다","target":"rain","set":"호감-=1","if":""}],"pos":{"x":290,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"rain":{"id":"rain","title":"갑작스러운 비","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#22303b","duration":7,"caption":"가게를 나서자 비가 쏟아진다.\n상대는 우산이 없다.","name":""},"choiceAt":4,"timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"a5","label":"우산을 같이 쓰자고 한다","target":"judge","set":"호감+=1","if":""},{"id":"a6","label":"혼자 뛰어간다","target":"judge","set":"","if":""}],"pos":{"x":580,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"judge":{"id":"judge","title":"그날 밤","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#1e2230","duration":4,"caption":"그날 밤, 휴대폰이 울렸다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":true,"defaultChoice":"","enter":"","choices":[{"id":"r1","label":"","target":"happy","set":"","if":"호감>=2"},{"id":"r2","label":"","target":"normal","set":"","if":""}],"pos":{"x":870,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"happy":{"id":"happy","title":"다음 약속","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#4a3a24","duration":6,"caption":"\"다음 주에 같이 책 보러 갈래요?\"","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":1160,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"normal":{"id":"normal","title":"스쳐 간 인연","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#23262e","duration":6,"caption":"그냥 스쳐 지나간 인연이었다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":1160,"y":150},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""}},"intro":{},"hud":{},"savedAt":1794202588383}</script>
+<script type="application/json" id="project">{"title":"첫 만남","start":"meet","skin":"cards","vars":{"호감":0},"varMeta":{"호감":{"type":"num","box":"g","disp":"bar","max":3,"icon":"💗","notify":true}},"hud":{"boxes":[{"id":"g","kind":"gauge","title":"","pos":"tl","layout":"col","frame":true,"empty":"","def":{"num":"bar","flag":"check","max":10}}]},"scenes":{"meet":{"id":"meet","title":"도서관","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#2d3550","duration":7,"caption":"같은 책을 동시에 집어 든 두 사람.","name":""},"choiceAt":4,"timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"a1","label":"책을 양보한다","target":"cafe","set":"호감+=1","if":""},{"id":"a2","label":"먼저 집어 간다","target":"cafe","set":"","if":""}],"pos":{"x":0,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"cafe":{"id":"cafe","title":"카페","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#3d3226","duration":7,"caption":"며칠 뒤, 카페에서 다시 마주쳤다.","name":""},"choiceAt":4,"timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"a3","label":"반갑게 인사한다","target":"rain","set":"호감+=1","if":""},{"id":"a4","label":"모른 척한다","target":"rain","set":"호감-=1","if":""}],"pos":{"x":290,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"rain":{"id":"rain","title":"갑작스러운 비","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#22303b","duration":7,"caption":"가게를 나서자 비가 쏟아진다.\n상대는 우산이 없다.","name":""},"choiceAt":4,"timeLimit":0,"loop":true,"ending":false,"auto":false,"defaultChoice":"","enter":"","choices":[{"id":"a5","label":"우산을 같이 쓰자고 한다","target":"judge","set":"호감+=1","if":""},{"id":"a6","label":"혼자 뛰어간다","target":"judge","set":"","if":""}],"pos":{"x":580,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"judge":{"id":"judge","title":"그날 밤","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#1e2230","duration":4,"caption":"그날 밤, 휴대폰이 울렸다.","name":""},"choiceAt":"","timeLimit":0,"loop":true,"ending":false,"auto":true,"defaultChoice":"","enter":"","choices":[{"id":"r1","label":"","target":"happy","set":"","if":"호감>=2"},{"id":"r2","label":"","target":"normal","set":"","if":""}],"pos":{"x":870,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"happy":{"id":"happy","title":"다음 약속","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#4a3a24","duration":6,"caption":"\"다음 주에 같이 책 보러 갈래요?\"","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":1160,"y":0},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""},"normal":{"id":"normal","title":"스쳐 간 인연","timeoutMode":"","timeoutTarget":"","media":{"type":"placeholder","color":"#23262e","duration":6,"caption":"그냥 스쳐 지나간 인연이었다.","name":""},"choiceAt":"","timeLimit":0,"loop":false,"ending":true,"auto":false,"defaultChoice":"","enter":"","choices":[],"pos":{"x":1160,"y":150},"missTarget":"","hotHint":false,"hideTimer":false,"endKind":"","endText":""}},"intro":{},"savedAt":1794204376254}</script>
 <script>
 /* 발행 이벤트 (UI는 이것만 구독하면 됩니다)
    scene {scene,vars} · time {t,d,scene,phase} · choices {list,timeLimit,defaultId}
@@ -394,6 +414,14 @@ class IVEngine extends Emitter{
     setTimeout(()=>{if(seq===this._seq)this.goto(choice.target)},420);
   }
   chooseIndex(i){const c=this.cur,l=c?.list.filter(x=>!x.hot)||[];if(c?.phase==='waiting'&&l[i])this.choose(l[i].id)}   // 숫자키는 글자 버튼만 (투명 영역은 직접 눌러야 해요)
+  /* 선택 기록에서 n단계 전으로 한 번에 돌아갑니다 (n=1이면 back과 같아요) */
+  rewind(n){
+    n=Math.max(1,Math.min(n|0,this.history.length));let h;
+    for(let i=0;i<n;i++)h=this.history.pop();
+    if(!h){this.restart();return}
+    this.vars=h.vars;this.paused=false;this.emit('state',this.stateInfo());
+    this.goto(h.sceneId);
+  }
   back(){
     const h=this.history.pop();
     if(!h){this.restart();return}
@@ -450,6 +478,13 @@ function fillEnd(end,scene,engine,label){
   end.querySelector('h3').textContent=scene?.title||'';
   const m=end.querySelector('.end-msg');m.textContent=scene?.endText||'';m.hidden=!scene?.endText;
   const cr=end.querySelector('[data-a="credits"]');if(cr)cr.hidden=!engine.project?.intro?.credits;
+  // 게임 오버: 지나온 선택 지점을 보여 주고, 눌러서 그 지점으로 바로 돌아가게 합니다
+  const hl=end.querySelector('.end-hist'),H=engine.history,sc=engine.project?.scenes||{};
+  if(hl){
+    const show=over&&H.length>1;hl.hidden=!show;
+    hl.innerHTML=show?'<span>이 지점으로 돌아가기</span>'+H.map((h,i)=>({h,n:H.length-i})).reverse().slice(0,6)
+      .map(({h,n})=>`<button data-a="rewind" data-n="${n}" title="${esc(h.label||'')}">${esc(sc[h.sceneId]?.title||'장면')}</button>`).join(''):'';
+  }
 }
 /* 스킨: mount(engine, root) → unmount 함수. Skins.register 한 번으로 추가됩니다 */
 const Skins={list:[],register(s){this.list.push(s)},get(id){return this.list.find(s=>s.id===id)||this.list[0]}};
@@ -459,6 +494,7 @@ function bindSkinClicks(root,engine){
     if(b.dataset.id)engine.choose(b.dataset.id);
     if(b.dataset.a==='back')engine.back();
     if(b.dataset.a==='restart')engine.restart();
+    if(b.dataset.a==='rewind')engine.rewind(+b.dataset.n);
     if(b.dataset.a==='credits')Intro.showCredits(root.closest('.stage'),engine.project);
   };
   root.addEventListener('click',f);return()=>root.removeEventListener('click',f);
@@ -514,7 +550,7 @@ Skins.register({
       <div class="cin-choices" role="group" aria-label="선택지"><div class="cin-row"></div><div class="cin-timer"><i></i></div></div>
       <div class="free-layer cin-free" role="group" aria-label="선택지" hidden></div>
       <div class="cin-end" hidden><small>THE END</small><h3></h3><p class="end-msg" hidden></p>
-        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div></div></div>`;
+        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div><div class="end-hist" hidden></div></div></div>`;
     const $=s=>root.querySelector(s);
     const title=$('.cin-title'),box=$('.cin-choices'),row=$('.cin-row'),bar=$('.cin-timer i'),timer=$('.cin-timer'),end=$('.cin-end'),free=$('.cin-free');
     let tHide;
@@ -564,7 +600,7 @@ Skins.register({
         <div class="cd-list"></div></div>
       <div class="free-layer cd-free" role="group" aria-label="선택지" hidden></div>
       <div class="cd-end" hidden><small>ENDING</small><h3></h3><p class="end-msg" hidden></p><div class="cd-path"></div>
-        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div></div></div>`;
+        <div class="end-btns"><button data-a="back">↶ 이전 선택으로</button><button data-a="restart">처음부터</button><button data-a="credits" hidden>크레딧</button></div><div class="end-hist" hidden></div></div></div>`;
     const $=s=>root.querySelector(s);
     const bar=$('.cd-bar'),panel=$('.cd-panel'),list=$('.cd-list'),ring=$('.cd-ring'),fg=$('.cd-ring .fg'),num=$('.cd-ring text'),end=$('.cd-end'),free=$('.cd-free');
     const btn=(c,i,def,st='')=>`<button class="cd-btn ${def?'def':''} ${st?'free-btn':''}" data-id="${c.id}" ${st?`style="${st}"`:''}><kbd>${i+1}</kbd><span>${esc(c.label)}</span></button>`;
@@ -607,25 +643,47 @@ Skins.register({
   }
 });
 
-/* 게임 화면 점수 표시: 변수 설정에서 '게임 화면에 표시'를 켠 값만 보여 줍니다 */
+/* 게임 화면 표시(HUD): 화면 표시 상자 여러 개에 변수를 담아 보여 줍니다.
+   project.hud.boxes = [{id, title, pos:'tl|tc|tr|bl|bc|br', layout:'row|col', frame, empty}]
+   varMeta[이름] = {box: 상자 id, disp, icon, max, hideName, notify}
+     스위치 disp: 'have'(켜졌을 때만 보임 · 물건) | 'check'(✓ / —)
+     숫자   disp: 'num'(숫자) | 'icons'(아이콘을 값만큼 · 하트) | 'bar'(막대 · 게이지) */
+const HUD_POS=['tl','tc','tr','bl','bc','br'];
+function hudDisp(m){return m?.type==='flag'?(m.disp==='check'?'check':'have'):(['icons','bar'].includes(m?.disp)?m.disp:'num')}
 const VarHud={mount(engine,root,getProject){
-  root.innerHTML='<div class="varhud" hidden></div>';const box=root.firstChild;let last={};
-  const draw=()=>{
-    const P=getProject(),meta=P.varMeta||{},shown=Object.keys(P.vars||{}).filter(k=>meta[k]?.show);
-    const chip=k=>{const v=engine.vars[k]??0,flag=meta[k]?.type==='flag';
-      return`<span class="vh ${last[k]!=null&&last[k]!==v?'bump':''}">${esc(k)}<b>${flag?(v?'✓':'—'):v}</b></span>`};
-    if(P.hud?.mode==='bag'){
-      // 가방 모드: 켜진 스위치만 물건으로 보여 주고, 숫자 점수는 옆에 따로 표시합니다
-      const isF=k=>meta[k]?.type==='flag',items=shown.filter(k=>isF(k)&&engine.vars[k]);
-      box.innerHTML=(shown.some(isF)?`<div class="bag"><span class="bag-h">${esc(P.hud.title||'🎒 가방')}</span>${items.length
-        ?items.map(k=>`<span class="bag-i ${last[k]!=null&&!last[k]?'new':''}">${meta[k].icon?`<i>${esc(meta[k].icon)}</i>`:''}${esc(k)}</span>`).join('')
-        :'<span class="bag-empty">비어 있음</span>'}</div>`:'')+shown.filter(k=>!isF(k)).map(chip).join('');
-    }else box.innerHTML=shown.map(chip).join('');
-    shown.forEach(k=>last[k]=engine.vars[k]??0);
-    box.hidden=!shown.length||!engine.cur;
-    setTimeout(()=>box.querySelectorAll('.bump').forEach(e=>e.classList.remove('bump')),300);
+  root.innerHTML=HUD_POS.map(p=>`<div class="hpos ${p}"></div>`).join('')+'<div class="htoasts"></div>';
+  let last={};
+  const josa=(w,a,b)=>{const c=w.charCodeAt(w.length-1)-0xAC00;return w+(c>=0&&c<11172&&c%28?a:b)};
+  const toast=(txt,off)=>{const t=document.createElement('div');t.className='h-toast'+(off?' off':'');t.textContent=txt;root.querySelector('.htoasts').appendChild(t);setTimeout(()=>t.remove(),2500)};
+  const item=(k,m,v)=>{
+    const d=hudDisp(m),ch=last[k]!=null&&last[k]!==v,ic=m.icon?`<i>${esc(m.icon)}</i>`:'',nm=m.hideName?'':`<span>${esc(k)}</span>`;
+    if(d==='have')return v?`<span class="hi ${ch?'new':''}">${ic}${nm}</span>`:'';
+    if(d==='check')return`<span class="hi ${v?'':'off'} ${ch?'bump':''}">${ic}${nm}<b>${v?'✓':'—'}</b></span>`;
+    if(d==='icons'){const n=Math.max(0,Math.min(30,v|0)),mx=Math.max(n,Math.min(30,+m.max||0)),g=esc(m.icon||'●');
+      return`<span class="hi ${m.hideName?'bare':''} ${ch?'bump':''}">${nm}<em>${g.repeat?Array.from({length:mx},(_,i)=>i<n?g:`<span class="e">${g}</span>`).join(''):''}</em></span>`}
+    if(d==='bar'){const mx=+m.max||10,pc=Math.max(0,Math.min(100,v/mx*100));return`<span class="hi ${ch?'bump':''}">${ic}${nm}<s><u style="width:${pc}%"></u></s><b>${v}</b></span>`}
+    return`<span class="hi ${ch?'bump':''}">${ic}${nm}<b>${v}</b></span>`;
   };
-  const offs=[engine.on('scene',draw),engine.on('chosen',draw),engine.on('end',draw)];draw();
+  const draw=(ev)=>{
+    const P=getProject(),meta=P.varMeta||{},boxes=P.hud?.boxes||[],names=Object.keys(P.vars||{});
+    // 선택으로 값이 바뀌면 '바뀌면 알림'을 켠 변수만 잠깐 알려 줍니다 (되돌리기 때는 알리지 않아요)
+    if(ev==='chosen')names.filter(k=>meta[k]?.notify&&last[k]!=null&&last[k]!==(engine.vars[k]??0)).forEach(k=>{
+      const m=meta[k],v=engine.vars[k]??0,ic=m.icon?m.icon+' ':'';
+      if(m.type==='flag')hudDisp(m)==='have'?toast(v?`${ic}${josa(k,'을','를')} 얻었다`:`${ic}${josa(k,'을','를')} 잃었다`,!v):toast(`${ic}${k} ${v?'✓':'해제'}`,!v);
+      else{const dv=v-last[k];toast(`${ic}${k} ${dv>0?'+'+dv:'−'+(-dv)}`,dv<0)}
+    });
+    HUD_POS.forEach(pos=>{
+      root.querySelector('.hpos.'+pos).innerHTML=boxes.filter(b=>(b.pos||'tr')===pos).map(b=>{
+        const items=names.filter(k=>meta[k]?.box===b.id).map(k=>item(k,meta[k],engine.vars[k]??0)).filter(Boolean);
+        if(!items.length&&!b.empty&&!b.title)return'';
+        return`<div class="hbox ${b.frame?'frame':''} ${b.layout==='col'?'col':''}">${b.title?`<span class="hb-t">${esc(b.title)}</span>`:''}<div class="hb-items">${items.join('')||(b.empty?`<span class="hb-empty">${esc(b.empty)}</span>`:'')}</div></div>`;
+      }).join('');
+    });
+    names.forEach(k=>last[k]=engine.vars[k]??0);
+    root.querySelectorAll('.hpos').forEach(e=>e.hidden=!engine.cur);
+    setTimeout(()=>root.querySelectorAll('.bump').forEach(e=>e.classList.remove('bump')),300);
+  };
+  const offs=[engine.on('scene',()=>draw()),engine.on('chosen',()=>draw('chosen')),engine.on('end',()=>draw())];draw();
   return()=>{offs.forEach(f=>f());root.innerHTML=''};
 }};
 </script>
